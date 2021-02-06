@@ -1,0 +1,23 @@
+.btn-custom {
+  background-color: transparent;
+  border: 1px solid transparent;
+  margin: .375rem;
+  border-radius: 3px;
+  //min-width: 90px;
+  max-width: 100px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+  vertical-align: middle;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  &__title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #d6f0f2;
+  }
+  &:disabled {
+    opacity: .65;
+  }
+  &:hover {
+    box-shadow: 0 2px 5px 0 #999999,0 2px 10px 0 #6c6c6c;
+  }
+
+}

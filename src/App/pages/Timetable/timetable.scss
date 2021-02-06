@@ -1,0 +1,22 @@
+.table-wrap{
+    overflow-x:auto;
+}
+table.table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    @media screen and (max-width: 576px) {
+        font-size: 0.6rem;
+    }
+    @media screen and (min-width: 576px) and (max-width: 768px){
+        font-size: 0.8rem;
+    }
+
+    @media screen and (min-width: 768px){
+        font-size: 0.9rem;
+    }
+    th {
+        font-weight: 400;
+    }
+}
+
