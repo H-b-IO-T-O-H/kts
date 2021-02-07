@@ -16,9 +16,14 @@ const Auth = () => {
         password: "12345678"
     }
 
+    const userpr={
+        email:"prc@c.ru",
+        password: "qwer1234"
+    }
+
     const userCheck = (e:any) => {
         e.preventDefault();
-        if (email === user.email && password === user.password) {
+        if (email === (user.email || userpr.email) && password  === (user.password || userpr.password)) {
             alert("Ok")
         } else setUserError('Неверное имя пользователя или пароль')
     }
