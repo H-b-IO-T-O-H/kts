@@ -3,19 +3,18 @@ import {v4 as uuid} from 'uuid';
 import styled from 'styled-components';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import ButtonTimetable from "@components/ButtonTimetable";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faTimes} from '@fortawesome/free-solid-svg-icons'
 
-// a little function to help us with reordering the result
-const reorder = (list: Iterable<unknown> | ArrayLike<unknown>, startIndex: number, endIndex: number) => {
+const reorder = (list: Array<object>, startIndex: number, endIndex: number) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
 
     return result;
 };
-/**
- * Moves an item from one list to another list.
- */
-const copy = (source: Iterable<unknown> | ArrayLike<unknown>, destination: Iterable<unknown> | ArrayLike<unknown>, droppableSource: { index: string | number; }, droppableDestination: { index: number; }) => {
+
+const copy = (source: Array<object>, destination: Array<object>, droppableSource: { index: number }, droppableDestination: { index: number }) => {
     const sourceClone = Array.from(source);
     const destClone = Array.from(destination);
     const item = sourceClone[droppableSource.index];
@@ -24,7 +23,7 @@ const copy = (source: Iterable<unknown> | ArrayLike<unknown>, destination: Itera
     return destClone;
 };
 
-const move = (source: Iterable<unknown> | ArrayLike<unknown>, destination: Iterable<unknown> | ArrayLike<unknown>, droppableSource: { index: number; droppableId: string | number; }, droppableDestination: { index: number; droppableId: string | number; }) => {
+const move = (source: Array<object>, destination: Array<object>, droppableSource: { index: number; droppableId: string }, droppableDestination: { index: number; droppableId: string }) => {
     const sourceClone = Array.from(source);
     const destClone = Array.from(destination);
     const [removed] = sourceClone.splice(droppableSource.index, 1);
@@ -37,6 +36,18 @@ const move = (source: Iterable<unknown> | ArrayLike<unknown>, destination: Itera
 
     return result;
 };
+
+const removeItem = (source: Array<object>, index: number) => {
+    const list = Array.from(source);
+    list.splice(index, 1);
+
+    return list;
+}
+
+const removeList = (source: object, key: string) => {
+    delete(source[key]);
+    return source;
+}
 
 const Content = styled.div`
   margin-right: 200px;
@@ -245,9 +256,13 @@ class DAndD extends Component {
         this.setState({[uuid()]: []});
     };
 
-    removeList = () => {
-        this.setState({})
+    removeItem = (list: string, index: number) => {
+        this.setState({[list]:removeItem(this.state[list], index)});
     };
+
+    removeList = (list: string) => {
+        this.setState(removeList(this.state, list))
+    }
 
     render() {
         return (
@@ -266,7 +281,7 @@ class DAndD extends Component {
                                                   {...provided.draggableProps}
                                                   {...provided.dragHandleProps}
                                                   isDragging={snapshot.isDragging}
-                                                  >
+                                            >
                                                 {item.element}
                                             </Item>
                                             {snapshot.isDragging && (<Clone>{item.element}</Clone>)}
@@ -274,6 +289,7 @@ class DAndD extends Component {
                                     )}
                                 </Draggable>
                             ))}
+                            {provided.placeholder}
                         </Kiosk>
                     )}
                 </Droppable>
@@ -287,64 +303,63 @@ class DAndD extends Component {
                         </svg>
                         <ButtonText>Add List</ButtonText>
                     </Button>
-                    <Button onClick={this.removeList}>
-                        <svg width="24" height="24" viewBox="0 0 24 24">
-                            <path
-                                fill="currentColor"
-                                d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
-                            />
-                        </svg>
-                        <ButtonText>Remove List</ButtonText>
-                    </Button>
-                    {Object.keys(this.state).map((list, i) => (
+
+                    {Object.keys(this.state).map((list) => (
                         <Droppable key={list} droppableId={list}>
                             {(provided, snapshot) => (
                                 <Container
-
                                     ref={provided.innerRef}
                                     isDraggingOver={snapshot.isDraggingOver}>
-                                    {this.state[list].length
-                                        ? this.state[list].map(
-                                            (item: { id: string, element: any }, index) => (
-                                                <Draggable
-                                                    key={item.id}
-                                                    draggableId={item.id}
-                                                    index={index}>
-                                                    {(provided, snapshot) => (
-                                                        <Item ref={provided.innerRef}
-                                                              {...provided.draggableProps}
-                                                              isDragging={
-                                                                  snapshot.isDragging
-                                                              }
-                                                              style={
-                                                                  provided.draggableProps.style
-                                                              }>
-                                                            <Handle
-                                                                {...provided.dragHandleProps}>
-                                                                <svg
-                                                                    width="24"
-                                                                    height="24"
-                                                                    viewBox="0 0 24 24">
-                                                                    <path
-                                                                        fill="currentColor"
-                                                                        d="M3,15H21V13H3V15M3,19H21V17H3V19M3,11H21V9H3V11M3,5V7H21V5H3Z"
-                                                                    />
-                                                                </svg>
-                                                            </Handle>
-                                                            {item.element}
-                                                        </Item>
-                                                    )}
-                                                </Draggable>
-                                            )
+                                    {this.state[list].length ? this.state[list].map((item: { id: string, element: any }, index) => (
+                                            <Draggable key={item.id} draggableId={item.id} index={index}>
+                                                {(provided, snapshot) => (
+                                                    <Item ref={provided.innerRef}
+                                                          {...provided.draggableProps}
+                                                          isDragging={
+                                                              snapshot.isDragging
+                                                          }
+                                                          style={
+                                                              provided.draggableProps.style
+                                                          }>
+                                                        <Handle
+                                                            {...provided.dragHandleProps}>
+                                                            <svg
+                                                                width="24"
+                                                                height="24"
+                                                                viewBox="0 0 24 24">
+                                                                <path
+                                                                    fill="currentColor"
+                                                                    d="M3,15H21V13H3V15M3,19H21V17H3V19M3,11H21V9H3V11M3,5V7H21V5H3Z"
+                                                                />
+                                                            </svg>
+                                                        </Handle>
+                                                        {item.element}
+                                                        <button className="btn" onClick={() => {
+                                                            this.removeItem(list, index)
+                                                        }}><FontAwesomeIcon icon={faTimes} size={"lg"}
+                                                                            color={"red"}/></button>
+                                                    </Item>
+                                                )}
+                                            </Draggable>
                                         )
-                                        : !provided.placeholder && (
-                                        <Notice>Drop items here</Notice>
-                                    )}
+                                        )
+                                        :
+                                        <div>
+                                            <Notice>Drop items here</Notice>
+                                            <button className="btn" onClick={() => {
+                                                this.removeList(list)
+                                            }}><FontAwesomeIcon icon={faTimes} size={"lg"}
+                                                                color={"red"}/></button>
+                                        </div>
+
+
+                                    }
                                     {provided.placeholder}
                                 </Container>
                             )}
                         </Droppable>
                     ))}
+
                 </Content>
             </DragDropContext>
         );
