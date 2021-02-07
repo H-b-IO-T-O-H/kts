@@ -3,6 +3,8 @@ import ButtonTimetable from "@components/ButtonTimetable";
 import HiddenInput from "@components/HiddenInput";
 import "./timetable.scss"
 
+import DAndD from "@components/DragAndDrop";
+
 
 const Table = () => (
     <div className="table-wrap">
@@ -160,49 +162,53 @@ const Timetable = () => {
     const [activeBtn, setActive] = React.useState(
         {id: ""}
     );
+
+
     const ids = ["btn-0", "btn-1", "btn-2", "btn-3", "btn-4", "btn-5", "btn-6"]
 
     const setActiveBtn = (id: string) => {
         setActive({id: activeBtn.id !== id ? id : ""});
     }
 
+    // return (
+    //     <div className="d-flex flex-row">
+    //         <div className="col-8 ">
+    //             <Table/>
+    //         </div>
+    //         <div className="d-flex flex-row align-content-start col-4 ">
+    //             <div className="d-flex flex-column">
+    //                 <ButtonTimetable id={ids[0]} onChange={setActiveBtn}
+    //                                  disabled={ids[0] !== activeBtn.id && activeBtn.id !== ""}
+    //                                  color={"#348A3D"} title={"CЕМ"}/>
+    //                 <ButtonTimetable id={ids[1]} onChange={setActiveBtn}
+    //                                  disabled={ids[1] !== activeBtn.id && activeBtn.id !== ""}
+    //                                  color={"#62d76e"} title={"ЛЕК"}/>
+    //                 <ButtonTimetable id={ids[2]} onChange={setActiveBtn}
+    //                                  disabled={ids[2] !== activeBtn.id && activeBtn.id !== ""}
+    //                                  color={"#8ebd3b"} title={"ЛР"}/>
+    //                 <ButtonTimetable id={ids[3]} onChange={setActiveBtn}
+    //                                  disabled={ids[3] !== activeBtn.id && activeBtn.id !== ""}
+    //                                  color={"#e8722c"} title={"ДЗ"}/>
+    //                 <ButtonTimetable id={ids[4]} onChange={setActiveBtn}
+    //                                  disabled={ids[4] !== activeBtn.id && activeBtn.id !== ""}
+    //                                  color={"#eabf19"} title={"РК"}/>
+    //                 <ButtonTimetable id={ids[5]} onChange={setActiveBtn}
+    //                                  disabled={ids[5] !== activeBtn.id && activeBtn.id !== ""}
+    //                                  color={"#5c70d9"} title={"КОНС"}/>
+    //                 <ButtonTimetable id={ids[6]} onChange={setActiveBtn}
+    //                                  disabled={ids[6] !== activeBtn.id && activeBtn.id !== ""}
+    //                                  color={"#ce2c2c"} title={"ЭКЗ"}/>
+    //                 <div className="text-black-50"><HiddenInput disabled={false}
+    //                                                             title={"Добавление описание события (необязательно)"}/>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     </div>
+    // )
     return (
-        <div>
-            <div className="d-flex flex-row">
-                <div className="">
-                    <Table/>
-                </div>
-                <div className="d-flex flex-row flex-wrap align-content-start ">
-                    <div className="d-flex flex-column">
-                        <ButtonTimetable id={ids[0]} onChange={setActiveBtn}
-                                         disabled={ids[0] !== activeBtn.id && activeBtn.id !== ""}
-                                         color={"#348A3D"} title={"CЕМ"}/>
-                        <ButtonTimetable id={ids[1]} onChange={setActiveBtn}
-                                         disabled={ids[1] !== activeBtn.id && activeBtn.id !== ""}
-                                         color={"#62d76e"} title={"ЛЕК"}/>
-                        <ButtonTimetable id={ids[2]} onChange={setActiveBtn}
-                                         disabled={ids[2] !== activeBtn.id && activeBtn.id !== ""}
-                                         color={"#8ebd3b"} title={"ЛР"}/>
-                        <ButtonTimetable id={ids[3]} onChange={setActiveBtn}
-                                         disabled={ids[3] !== activeBtn.id && activeBtn.id !== ""}
-                                         color={"#e8722c"} title={"ДЗ"}/>
-                        <ButtonTimetable id={ids[4]} onChange={setActiveBtn}
-                                         disabled={ids[4] !== activeBtn.id && activeBtn.id !== ""}
-                                         color={"#eabf19"} title={"РК"}/>
-                        <ButtonTimetable id={ids[5]} onChange={setActiveBtn}
-                                         disabled={ids[5] !== activeBtn.id && activeBtn.id !== ""}
-                                         color={"#5c70d9"} title={"КОНС"}/>
-                        <ButtonTimetable id={ids[6]} onChange={setActiveBtn}
-                                         disabled={ids[6] !== activeBtn.id && activeBtn.id !== ""}
-                                         color={"#ce2c2c"} title={"ЭКЗ"}/>
-                    </div>
-                    <div className="ml-3 text-black-50"><HiddenInput disabled={false}
-                                                                     title={"Добавление описание события (необязательно)"}/>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <DAndD/>
     )
+
 }
 
 export default Timetable;

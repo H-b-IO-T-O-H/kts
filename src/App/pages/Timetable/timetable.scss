@@ -1,18 +1,19 @@
+@import "src/App/App";
+
 .table-wrap{
     overflow-x:auto;
 }
 table.table {
     border-collapse: collapse;
     border-spacing: 0;
-    width: 100%;
-    @media screen and (max-width: 576px) {
+    @media screen and (max-width: #{$little-screen-min}) {
         font-size: 0.6rem;
     }
-    @media screen and (min-width: 576px) and (max-width: 768px){
+    @media screen and (min-width: #{$little-screen-min}) and (max-width: #{$medium-screen-min}){
         font-size: 0.8rem;
     }
 
-    @media screen and (min-width: 768px){
+    @media screen and (min-width: #{$medium-screen-min}){
         font-size: 0.9rem;
     }
     th {
