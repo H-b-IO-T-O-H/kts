@@ -1,13 +1,12 @@
 import React from 'react';
-//import Timetable from "./pages/Timetable";
+import Timetable from "./pages/Timetable";
 import "./App.scss"
-import Auth from "./pages/authorization";
+//import Auth from "./pages/authorization";
 
 const App = () => {
     return (
         <div className="App h-100">
-
-            <Auth/>
+           <Timetable/>
         </div>
     )
 }
