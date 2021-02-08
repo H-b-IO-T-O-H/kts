@@ -300,7 +300,6 @@ class DAndD extends Component {
                         <Droppable key={list} droppableId={list}>
                             {(provided, snapshot) => (
                                 <Container
-
                                     ref={provided.innerRef}
                                     isDraggingOver={snapshot.isDraggingOver}>
                                     {this.state[list].length

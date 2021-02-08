@@ -6,8 +6,7 @@ import Card from "@components/Card";
 
 const Home = () => {
     return (
-        <div className="Home">
-            <div className="d-flex flex-row">
+        <div className="Home d-flex flex-row flex-nowrap">
             <Card title={'День недели и дата'} item1={'Дисциплина'} item2={'Дисциплина'} item3={'Дисциплина'} item4={'Дисциплина'}/>
             <Card title={'День недели и дата'} item1={'Дисциплина'} item2={'Дисциплина'} item3={'Дисциплина'} item4={'Дисциплина'}/>
             <Card title={'День недели и дата'} item1={'Дисциплина'} item2={'Дисциплина'} item3={'Дисциплина'} item4={'Дисциплина'}/>
@@ -15,7 +14,6 @@ const Home = () => {
             <Card title={'День недели и дата'} item1={'Дисциплина'} item2={'Дисциплина'} item3={'Дисциплина'} item4={'Дисциплина'}/>
             <Card title={'День недели и дата'} item1={'Дисциплина'} item2={'Дисциплина'} item3={'Дисциплина'} item4={'Дисциплина'}/>
             <Card title={'День недели и дата'} item1={'Дисциплина'} item2={'Дисциплина'} item3={'Дисциплина'} item4={'Дисциплина'}/>
-            </div>
         </div>
     )
 }
