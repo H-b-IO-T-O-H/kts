@@ -1,15 +1,21 @@
-.HomeCard {
-  width: 1000px;
-  height: 170px;
+.Home-Card {
+  min-width: 220px;
+  height: 150px;
   margin: 15px;
-  overflow-y: auto;
+  border-radius: 10px;
 }
 
-.HomeCard__title {
+.Home-Card__title {
   background-color: #5bc3c3;
-  border-radius: 5px;
+  margin-bottom: 0px;
   color: aliceblue;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
-.HomeCard__list__item {
+.Home-Card-list__item {
   height: 40px;
+
+}
+.Home-Card__list {
+  overflow-y: auto;
 }
