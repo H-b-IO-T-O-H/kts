@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import {v4 as uuid} from 'uuid';
 import styled from 'styled-components';
+import "./DAndD.scss"
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import ButtonTimetable from "@components/ButtonTimetable";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faTimes} from '@fortawesome/free-solid-svg-icons'
+import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes'
+import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 
 const reorder = (list: Array<object>, startIndex: number, endIndex: number) => {
     const result = Array.from(list);
@@ -44,14 +46,11 @@ const removeItem = (source: Array<object>, index: number) => {
     return list;
 }
 
-const removeList = (source: object, key: string) => {
-    delete(source[key]);
+const removeList = (source: object, key: number) => {
+    delete (source[key]);
     return source;
 }
 
-const Content = styled.div`
-  margin-right: 200px;
-`;
 
 interface ItemStyled {
     isDragging?: boolean;
@@ -91,61 +90,17 @@ const Handle = styled.div`
   color: #000;
 `;
 
-interface ListStyled {
-    isDraggingOver?: boolean;
-}
 
-const List = styled.div<ListStyled>`
-  border: 1px ${props => (props.isDraggingOver ? 'dashed #000' : 'solid #ddd')};
-  background: #fff;
-  padding: 0.5rem 0.5rem 0;
-  border-radius: 3px;
-  flex: 0 0 150px;
-  font-family: sans-serif;
-`;
+const Week = [
+    {id: 0, day: "Понедельник"},
+    {id: 1, day: "Вторник"},
+    {id: 2, day: "Среда"},
+    {id: 3, day: "Четверг"},
+    {id: 4, day: "Пятница"},
+    {id: 5, day: "Суббота"},
+    {id: 6, day: "Воскресенье"},
+]
 
-const Kiosk = styled(List)`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 200px;
-`;
-
-const Container = styled(List)`
-  margin: 0.5rem 0.5rem 1.5rem;
-`;
-
-const Notice = styled.div`
-  display: flex;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  padding: 0.5rem;
-  margin: 0 0.5rem 0.5rem;
-  border: 1px solid transparent;
-  line-height: 1.5;
-  color: #aaa;
-`;
-
-const Button = styled.button`
-  display: flex;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  margin: 0.5rem;
-  padding: 0.5rem;
-  color: #000;
-  border: 1px solid #ddd;
-  background: #fff;
-  border-radius: 3px;
-  font-size: 1rem;
-  cursor: pointer;
-`;
-
-const ButtonText = styled.div`
-  margin: 0 1rem;
-`;
 
 const ITEMS = [
     {
@@ -203,14 +158,25 @@ const ITEMS = [
         }}
                                   disabled={false}
                                   color={"#ce2c2c"} title={"ЭКЗ"}/>
+    },
+    {
+        id: uuid(),
+        fixed: true,
+        element: <ButtonTimetable id={uuid()} onChange={() => {
+            alert(1)
+        }}
+                                  disabled={false}
+                                  color={"#000000"} title={"Fixed"}/>
     }
 ];
 
 
 class DAndD extends Component {
+
     state = {
-        [uuid()]: []
+        0: []
     };
+
     onDragEnd = (result: any) => {
         const {source, destination} = result;
 
@@ -253,115 +219,119 @@ class DAndD extends Component {
     };
 
     addList = () => {
-        this.setState({[uuid()]: []});
+        let idx = 0;
+        const isFull = !Week.some((item) => {
+            if (!this.state[item.id]) {
+                idx = item.id;
+                return true;
+            }
+            return false;
+        })
+
+        if (isFull) {
+            return;
+        }
+        this.setState({[idx]: []});
     };
 
     removeItem = (list: string, index: number) => {
-        this.setState({[list]:removeItem(this.state[list], index)});
+        this.setState({[list]: removeItem(this.state[list], index)});
     };
 
-    removeList = (list: string) => {
+    removeList = (list: number) => {
         this.setState(removeList(this.state, list))
     }
 
     render() {
         return (
-            <DragDropContext onDragEnd={this.onDragEnd}>
-                <Droppable droppableId="ITEMS" isDropDisabled={true}>
-                    {(provided, snapshot) => (
-                        <Kiosk ref={provided.innerRef} isDraggingOver={snapshot.isDraggingOver}>
-                            {ITEMS.map((item, index) => (
-                                <Draggable
-                                    key={item.id}
-                                    draggableId={item.id}
-                                    index={index}>
-                                    {(provided, snapshot) => (
-                                        <React.Fragment>
-                                            <Item ref={provided.innerRef}
-                                                  {...provided.draggableProps}
-                                                  {...provided.dragHandleProps}
-                                                  isDragging={snapshot.isDragging}
-                                            >
-                                                {item.element}
-                                            </Item>
-                                            {snapshot.isDragging && (<Clone>{item.element}</Clone>)}
-                                        </React.Fragment>
-                                    )}
-                                </Draggable>
-                            ))}
-                            {provided.placeholder}
-                        </Kiosk>
-                    )}
-                </Droppable>
-                <Content>
-                    <Button onClick={this.addList}>
-                        <svg width="24" height="24" viewBox="0 0 24 24">
-                            <path
-                                fill="currentColor"
-                                d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
-                            />
-                        </svg>
-                        <ButtonText>Add List</ButtonText>
-                    </Button>
+            <div className="d-flex flex-row">
+                <DragDropContext onDragEnd={this.onDragEnd}>
+                    <div className="col-lg-6">
+                        <div className="DAndD__Week">
+                        <ButtonTimetable
+                            onChange={this.addList}
+                            id={uuid()}
+                            disabled={false}
+                            color={"#11233b"}
+                        >
+                            <FontAwesomeIcon icon={faPlus} size={"lg"}
+                                             color={"white"}/>
+                        </ButtonTimetable>
+                        {Object.keys(this.state).map((list) => (
+                            <Droppable key={list} droppableId={list}>
+                                {(provided, snapshot) => (
+                                    <div className="DAndD__container" ref={provided.innerRef}
+                                         style={{border: snapshot.isDraggingOver ? '3px dashed #000' : '3px solid #ddd'}}>
+                                        <h3 className="text-black-50 text-center">{Week[list].day}</h3>
 
-                    {Object.keys(this.state).map((list) => (
-                        <Droppable key={list} droppableId={list}>
-                            {(provided, snapshot) => (
-                                <Container
-                                    ref={provided.innerRef}
-                                    isDraggingOver={snapshot.isDraggingOver}>
-                                    {this.state[list].length ? this.state[list].map((item: { id: string, element: any }, index) => (
-                                            <Draggable key={item.id} draggableId={item.id} index={index}>
-                                                {(provided, snapshot) => (
-                                                    <Item ref={provided.innerRef}
-                                                          {...provided.draggableProps}
-                                                          isDragging={
-                                                              snapshot.isDragging
-                                                          }
-                                                          style={
-                                                              provided.draggableProps.style
-                                                          }>
-                                                        <Handle
-                                                            {...provided.dragHandleProps}>
-                                                            <svg
-                                                                width="24"
-                                                                height="24"
-                                                                viewBox="0 0 24 24">
-                                                                <path
-                                                                    fill="currentColor"
-                                                                    d="M3,15H21V13H3V15M3,19H21V17H3V19M3,11H21V9H3V11M3,5V7H21V5H3Z"
-                                                                />
-                                                            </svg>
-                                                        </Handle>
-                                                        {item.element}
-                                                        <button className="btn" onClick={() => {
-                                                            this.removeItem(list, index)
-                                                        }}><FontAwesomeIcon icon={faTimes} size={"lg"}
-                                                                            color={"red"}/></button>
-                                                    </Item>
-                                                )}
-                                            </Draggable>
-                                        )
-                                        )
-                                        :
-                                        <div>
-                                            <Notice>Drop items here</Notice>
-                                            <button className="btn" onClick={() => {
-                                                this.removeList(list)
-                                            }}><FontAwesomeIcon icon={faTimes} size={"lg"}
-                                                                color={"red"}/></button>
-                                        </div>
+                                        {this.state[list].length ? this.state[list].map((item: { id: string, element: any, fixed?: boolean }, index: number) => (
+                                                <Draggable key={item.id} draggableId={item.id} index={index}
+                                                           isDragDisabled={item.fixed}>
+                                                    {(provided, snapshot) => (
 
+                                                        <div ref={provided.innerRef} {...provided.draggableProps}
+                                                             style={
+                                                                 provided.draggableProps.style
+                                                             }>
+                                                            <div className="DAndD__container__item d-flex flex-row" style={{border: snapshot.isDragging ? '1px dashed #000' : '1px solid #ddd'}} {...provided.dragHandleProps}>
+                                                                {item.element}
+                                                                <button className="btn" onClick={() => {
+                                                                    this.removeItem(list, index)
+                                                                }}><FontAwesomeIcon icon={faTimes} size={"lg"}
+                                                                                    color={"red"}/></button>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            )
+                                            )
+                                            :
+                                            <div>
+                                                <span className="text-black-50">Drop items here</span>
+                                                <button className="btn" onClick={() => {
+                                                    this.removeList(parseInt(list))
+                                                }}><FontAwesomeIcon icon={faTimes} size={"lg"}
+                                                                    color={"red"}/></button>
+                                            </div>
+                                        }
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        ))}
+                        </div>
 
-                                    }
-                                    {provided.placeholder}
-                                </Container>
-                            )}
-                        </Droppable>
-                    ))}
-
-                </Content>
-            </DragDropContext>
+                    </div>
+                    <Droppable droppableId="ITEMS" isDropDisabled={true}>
+                        {(provided) => (
+                            <div ref={provided.innerRef}>
+                                {ITEMS.map((item, index) => (
+                                    <Draggable
+                                        key={item.id}
+                                        draggableId={item.id}
+                                        index={index}
+                                        //isDragDisabled={true}
+                                    >
+                                        {(provided, snapshot) => (
+                                            <React.Fragment>
+                                                <Item ref={provided.innerRef}
+                                                      {...provided.draggableProps}
+                                                      {...provided.dragHandleProps}
+                                                      isDragging={snapshot.isDragging}
+                                                >
+                                                    {item.element}
+                                                </Item>
+                                                {snapshot.isDragging && (<Clone>{item.element}</Clone>)}
+                                            </React.Fragment>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
+            </div>
         );
     }
 }
