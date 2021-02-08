@@ -1,0 +1,15 @@
+.HomeCard {
+  width: 1000px;
+  height: 170px;
+  margin: 15px;
+  overflow-y: auto;
+}
+
+.HomeCard__title {
+  background-color: #5bc3c3;
+  border-radius: 5px;
+  color: aliceblue;
+}
+.HomeCard__list__item {
+  height: 40px;
+}
