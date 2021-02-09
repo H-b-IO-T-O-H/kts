@@ -2,6 +2,6 @@ export const Urls = {
     root: "/",
     home: "/home",
     auth: "/auth",
-    timetable: "/timetable",
+    timetableCreate: "/timetable/create",
     notFound: "*",
 }

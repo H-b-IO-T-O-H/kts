@@ -1,0 +1,14 @@
+div.DAndD{
+  &__Week {
+    max-width: 50%;
+  }
+  &__container {
+    border-radius: 15px;
+    margin: 1rem;
+  }
+  &__item {
+    user-select: none;
+    border-radius: 5px;
+    margin: 3px;
+  }
+}
