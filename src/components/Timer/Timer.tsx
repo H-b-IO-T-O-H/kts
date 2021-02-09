@@ -1,74 +1,68 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {PROTECTED_SESSION_TIME} from "@utils/constants";
 
-type MyProps = { onZero: () => void };
-type MyState = { time: { h: number, m: number, s: number }, seconds: number };
+//type MyProps = { onZero: () => void };
+//type MyState = { time: { h: number, m: number, s: number }, seconds: number };
 
-class Timer extends React.Component<MyProps, MyState> {
-    private timer: any;
+const secondsToTime = (s: number) => {
+    const h = Math.trunc(s / 3600);
+    const m = Math.trunc(s / 60 - 60 * h);
+    s = s - 3600 * h - 60 * m
+    return {
+        "h": h,
+        "m": m,
+        "s": s
+    };
+}
 
-    constructor(props: any) {
-        super(props);
-        this.state = {time: {h: 0, m: 0, s: 0}, seconds:PROTECTED_SESSION_TIME};
-        this.timer = 0;
+type Props = {
+    id?: string,
+    onZero?: any,
+}
 
-        this.startTimer = this.startTimer.bind(this);
-        this.countDown = this.countDown.bind(this);
+const Timer: React.FC<Props> = ({id, onZero}) => {
 
-        this.startTimer();
-    }
+    const [time, changeTime] = useState({time: secondsToTime(PROTECTED_SESSION_TIME), seconds: PROTECTED_SESSION_TIME});
+    const [isActive, setActive] = useState(true);
 
-    secondsToTime(s: number) {
-        const h = Math.trunc(s / 3600);
-        const m = Math.trunc(s / 60 - 60 * h);
-        s = s - 3600 * h - 60 * m
-        return {
-            "h": h,
-            "m": m,
-            "s": s
-        };
-    }
+    useEffect(() => {
+        let timer: null | ReturnType<typeof setInterval> | number = 0;
+        // if (!timer && time.seconds > 0) {
+        if (isActive) {
+            timer = setInterval(countDown, 1000);
+        } else if (!isActive && time.seconds !== 0) {
+            clearInterval(timer);
+        }
+        return () => clearInterval(timer as NodeJS.Timeout);
+        //}
+    }, [isActive, time.seconds]);
 
-    componentDidMount() {
-        let timeLeftVar = this.secondsToTime(this.state.seconds);
-        this.setState({time: timeLeftVar});
-    }
-
-    componentWillUnmount() {
-        this.stopTimer();
-    }
-
-    startTimer() {
-        if (this.timer === 0 && this.state.seconds > 0) {
-            this.timer = setInterval(this.countDown, 1000);
+    const StopTimer = () => {
+        if (isActive) {
+            setActive(!isActive);
         }
     }
 
-    stopTimer() {
-        clearInterval(this.timer);
-    }
-
-    countDown() {
-        let seconds = this.state.seconds - 1;
-        this.setState({
-            time: this.secondsToTime(seconds),
+    const countDown = () => {
+        let seconds = time.seconds - 1;
+        changeTime({
+            time: secondsToTime(seconds),
             seconds: seconds,
         });
         if (seconds === 0) {
-            clearInterval(this.timer);
-            this.props.onZero();
+            StopTimer();
+            onZero();
         }
     }
 
-    render() {
-        return (
-            <div className="d-flex ">
-                <div>
-                    {this.state.time.h}:{this.state.time.m}:{this.state.time.s}
-                </div>
+    return (
+        <div key={id} className="d-flex">
+            <div>
+                {time.time.h}:{time.time.m}:{time.time.s}
             </div>
-        );
-    }
+        </div>
+    );
+
 }
 
 export default Timer;
