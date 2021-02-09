@@ -3,21 +3,21 @@ import "./ButtonTimetable.scss"
 
 type Props = {
     id: string,
-    onChange: any,
-    disabled: boolean,
+    onChange?: any,
+    disabled?: boolean,
     color: string
-    title: string
+    title?: string
 }
 
-const ButtonTimetable: React.FC<Props> = ({id, onChange, disabled, color, title}) => {
+const ButtonTimetable: React.FC<Props> = ({id, onChange, disabled, color, title, children}) => {
     return (
-        <button id={id} className="btn-custom" type="button"
+        <button key={id} className="btn-custom" type="button"
                 disabled={disabled}
                 onClick={() => {
                     onChange(id)
                 }}
                 style={{background: color}}>
-            <span className="btn-custom__title">{title}</span>
+            {title ? <span className="btn-custom__title">{title}</span> : children}
         </button>
     )
 }
