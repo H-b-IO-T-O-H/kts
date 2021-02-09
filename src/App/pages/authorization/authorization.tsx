@@ -6,7 +6,7 @@ import {useHistory} from "react-router-dom"
 
 export const Logout = (history: any) => {
     localStorage.setItem("loginTime", "");
-    history.push(Urls.auth)
+    history.replace(Urls.auth)
 }
 
 export const DefaultCheckLogin = () => {

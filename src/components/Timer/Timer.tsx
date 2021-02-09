@@ -9,12 +9,7 @@ class Timer extends React.Component<MyProps, MyState> {
 
     constructor(props: any) {
         super(props);
-        if (!props.timeLeft) {
-            this.state = {time: {h: 0, m: 0, s: 0}, seconds: PROTECTED_SESSION_TIME};
-        } else {
-            this.state = {time: {h: 0, m: 0, s: 0}, seconds: props.timeLeft};
-        }
-
+        this.state = {time: {h: 0, m: 0, s: 0}, seconds:PROTECTED_SESSION_TIME};
         this.timer = 0;
 
         this.startTimer = this.startTimer.bind(this);

@@ -248,59 +248,60 @@ class DragAndDrop extends Component {
                 <DragDropContext onDragEnd={this.onDragEnd}>
                     <div className="col-lg-6">
                         <div className="DAndD__Week">
-                        <ButtonTimetable
-                            onChange={this.addList}
-                            id={uuid()}
-                            disabled={false}
-                            color={"#11233b"}
-                        >
-                            <FontAwesomeIcon icon={faPlus} size={"lg"}
-                                             color={"white"}/>
-                        </ButtonTimetable>
-                        {Object.keys(this.state).map((list) => (
-                            <Droppable key={list} droppableId={list}>
-                                {(provided, snapshot) => (
-                                    <div className="DAndD__container" ref={provided.innerRef}
-                                         style={{border: snapshot.isDraggingOver ? '3px dashed #000' : '3px solid #ddd'}}>
-                                        <h3 className="text-black-50 text-center">{Week[list].day}</h3>
+                            <ButtonTimetable
+                                onChange={this.addList}
+                                id={uuid()}
+                                disabled={false}
+                                color={"#11233b"}
+                            >
+                                <FontAwesomeIcon icon={faPlus} size={"lg"}
+                                                 color={"white"}/>
+                            </ButtonTimetable>
+                            {Object.keys(this.state).map((list) => (
+                                <Droppable key={list} droppableId={list}>
+                                    {(provided, snapshot) => (
+                                        <div className="DAndD__container" ref={provided.innerRef}
+                                             style={{border: snapshot.isDraggingOver ? '3px dashed #000' : '3px solid #ddd'}}>
+                                            <h3 className="text-black-50 text-center">{Week[list].day}</h3>
 
-                                        {this.state[list].length ? this.state[list].map((item: { id: string, element: any, fixed?: boolean }, index: number) => (
-                                                <Draggable key={item.id} draggableId={item.id} index={index}
-                                                           isDragDisabled={item.fixed}>
-                                                    {(provided, snapshot) => (
+                                            {this.state[list].length ? this.state[list].map((item: { id: string, element: any, fixed?: boolean }, index: number) => (
+                                                    <Draggable key={item.id} draggableId={item.id} index={index}
+                                                               isDragDisabled={item.fixed}>
 
-                                                        <div ref={provided.innerRef} {...provided.draggableProps}
-                                                             style={
-                                                                 provided.draggableProps.style
-                                                             }>
-                                                            <div className="DAndD__container__item d-flex flex-row" style={{border: snapshot.isDragging ? '1px dashed #000' : '1px solid #ddd'}} {...provided.dragHandleProps}>
-                                                                {item.element}
-                                                                <button className="btn" onClick={() => {
-                                                                    this.removeItem(list, index)
-                                                                }}><FontAwesomeIcon icon={faTimes} size={"lg"}
-                                                                                    color={"red"}/></button>
+                                                        {(provided, snapshot) => (
+
+                                                            <div ref={provided.innerRef} {...provided.draggableProps}
+                                                                 style={
+                                                                     provided.draggableProps.style
+                                                                 }>
+                                                                <div className="DAndD__container__item d-flex flex-row"
+                                                                     style={{border: snapshot.isDragging ? '1px dashed #000' : '1px solid #ddd'}} {...provided.dragHandleProps}>
+                                                                    {item.element}
+                                                                    <button className="btn" onClick={() => {
+                                                                        this.removeItem(list, index)
+                                                                    }}><FontAwesomeIcon icon={faTimes} size={"lg"}
+                                                                                        color={"red"}/></button>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    )}
-                                                </Draggable>
-                                            )
-                                            )
-                                            :
-                                            <div>
-                                                <span className="text-black-50">Drop items here</span>
-                                                <button className="btn" onClick={() => {
-                                                    this.removeList(parseInt(list))
-                                                }}><FontAwesomeIcon icon={faTimes} size={"lg"}
-                                                                    color={"red"}/></button>
-                                            </div>
-                                        }
-                                        {provided.placeholder}
-                                    </div>
-                                )}
-                            </Droppable>
-                        ))}
+                                                        )}
+                                                    </Draggable>
+                                                )
+                                                )
+                                                :
+                                                <div>
+                                                    <span className="text-black-50">Drop items here</span>
+                                                    <button className="btn" onClick={() => {
+                                                        this.removeList(parseInt(list))
+                                                    }}><FontAwesomeIcon icon={faTimes} size={"lg"}
+                                                                        color={"red"}/></button>
+                                                </div>
+                                            }
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                            ))}
                         </div>
-
                     </div>
                     <Droppable droppableId="ITEMS" isDropDisabled={true}>
                         {(provided) => (
