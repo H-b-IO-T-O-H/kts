@@ -1,6 +1,5 @@
-import React, {Component, useEffect, useState} from "react";
+import React, {useState} from "react";
 import {v4 as uuid} from "uuid";
-import styled from "styled-components";
 import "./DAndD.scss"
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import ButtonTimetable from "@components/ButtonTimetable";
@@ -60,27 +59,26 @@ const DragAndDrop: React.FC<Props> = ({items}) => {
             return;
         }
 
+        const newList = {...Lists};
+
         switch (source.droppableId) {
             case destination.droppableId:
-                ChangeList({
-                    [destination.droppableId]: reorder(
-                        Lists[source.droppableId],
-                        source.index,
-                        destination.index
-                    )
-                });
+                newList[destination.droppableId] = reorder(
+                    Lists[source.droppableId],
+                    source.index,
+                    destination.index
+                )
                 break;
             case "items":
-                ChangeList({
-                    [destination.droppableId]: copy(
-                        items,
-                        Lists[destination.droppableId],
-                        source,
-                        destination
-                    )
-                })
+                newList[destination.droppableId] = copy(
+                    items,
+                    newList[destination.droppableId],
+                    source,
+                    destination
+                )
                 break;
         }
+        ChangeList(newList);
     };
 
     const AddList = () => {
@@ -98,6 +96,7 @@ const DragAndDrop: React.FC<Props> = ({items}) => {
         const newList = {...Lists};
         newList[idx] = []
         ChangeList(newList)
+        console.log(newList)
     };
 
     const removeItem = (list: string, index: number) => {
@@ -147,7 +146,7 @@ const DragAndDrop: React.FC<Props> = ({items}) => {
                                             </button>
                                         </div>
 
-                                        {Lists[list].length ? Lists[list].map((item: { id: string, element: any, fixed?: boolean, description: string}, index: number) => (
+                                        {Lists[list].length ? Lists[list].map((item: { id: string, element: any, fixed?: boolean, description: string }, index: number) => (
                                                 <Draggable key={item.id} draggableId={item.id} index={index}
                                                            isDragDisabled={item.fixed}>
                                                     {(provided, snapshot) => (
@@ -177,7 +176,6 @@ const DragAndDrop: React.FC<Props> = ({items}) => {
                                                                     <FontAwesomeIcon icon={faEllipsisH} size={"sm"}
                                                                                      color={"grey"}/>
                                                                 </button>
-                                                                {console.log(Lists)}
                                                                 {ItemText.id === item.id ?
                                                                     <span>
                                                                         {item.description}
