@@ -162,6 +162,8 @@ const Timetable = () => {
         {id: ""}
     );
 
+    const [Value, ChangeValue] = React.useState("");
+
     const buttonsContent = [
         {id: "btn-0", title: "СЕМ", color: "#348A3D"},
         {id: "btn-1", title: "ЛЕК", color: "#62d76e"},
@@ -172,22 +174,34 @@ const Timetable = () => {
         {id: "btn-6", title: "ЭКЗ", color: "#ce2c2c"},
     ]
 
+    const ChangeInputValue = () => {
+
+    }
+
     const setActiveBtn = (id: string) => {
         setActive({id: activeBtn.id !== id ? id : ""});
     }
 
     const buttons = buttonsContent.map((button) => (
         {
-            id: button.id, description: "12", element:
-                <div className="d-flex flex-row align-content-end">
-                    <ButtonTimetable disabled={button.id !== activeBtn.id && activeBtn.id !== ""}
-                                     title={button.title} color={button.color} onChange={setActiveBtn}
-                                     id={button.id} key={button.id}/>
-                    <div className="m-1">
-                        <HiddenInput buttonId={button.id} disabled={button.id !== activeBtn.id} title={"Описание"}/>
-                    </div>
-                </div>
-
+            id: button.id, description: Value, element:
+                {
+                    buttons:
+                        <ButtonTimetable disabled={button.id !== activeBtn.id && activeBtn.id !== ""}
+                                         title={button.title} color={button.color} onChange={setActiveBtn}
+                                         id={button.id} key={button.id}/>,
+                    inputs: <HiddenInput value={Value} onChange={ChangeValue} id={button.id} disabled={button.id !== activeBtn.id} title={"Описание"}/>
+                }
+            //     <div className="d-flex flex-row align-content-end">
+            //         <ButtonTimetable disabled={button.id !== activeBtn.id && activeBtn.id !== ""}
+            //                          title={button.title} color={button.color} onChange={setActiveBtn}
+            //                          id={button.id} key={button.id}/>
+            //         <div className="m-1">
+            //             <HiddenInput buttonId={button.id} disabled={button.id !== activeBtn.id} title={"Описание"}/>
+            //         </div>
+            //     </div>,
+            // input:
+            //     <HiddenInput buttonId={button.id} disabled={button.id !== activeBtn.id} title={"Описание"}/>
 
         }))
     return (

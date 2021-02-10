@@ -39,7 +39,7 @@ const Week = [
 type Props = {
     id?: string,
     onChange?: any
-    items: Array<{ id: string, element: object, description: string }>
+    items: Array<{ id: string, element: { buttons: object, inputs: object}, description: string }>
 }
 
 const DragAndDrop: React.FC<Props> = ({items}) => {
@@ -146,7 +146,7 @@ const DragAndDrop: React.FC<Props> = ({items}) => {
                                             </button>
                                         </div>
 
-                                        {Lists[list].length ? Lists[list].map((item: { id: string, element: any, fixed?: boolean, description: string }, index: number) => (
+                                        {Lists[list].length ? Lists[list].map((item: { id: string, element: any, fixed?: boolean, description: string}, index: number) => (
                                                 <Draggable key={item.id} draggableId={item.id} index={index}
                                                            isDragDisabled={item.fixed}>
                                                     {(provided, snapshot) => (
@@ -157,8 +157,9 @@ const DragAndDrop: React.FC<Props> = ({items}) => {
 
                                                             <div className="DAndD-container__item d-flex flex-row"
                                                                  style={{border: snapshot.isDragging ? "1px dashed #000" : "1px solid #ddd"}} {...provided.dragHandleProps}>
-                                                                {item.element}
-
+                                                                <div className="d-flex flex-row align-content-end">
+                                                                    {item.element.buttons}
+                                                                </div>
                                                                 <button type="button"
                                                                         className="link-button"
                                                                         onClick={() => {
@@ -226,13 +227,18 @@ const DragAndDrop: React.FC<Props> = ({items}) => {
                                                                      icon={faBars} size={"lg"}
                                                                      style={{color: snapshot.isDragging ? "#35b8b8" : ""}}/>
 
-                                                    {item.element}
+                                                    <div className="d-flex flex-row align-content-end">
+                                                        {item.element.buttons}
+                                                        <div className="m-1">
+                                                            {item.element.inputs}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             {snapshot.isDragging && (
                                                 <div className="DAndD-items__column__dragged">
                                                     <div style={{opacity: "0"}}>
-                                                        {item.element}
+                                                        {item.element.buttons}
                                                     </div>
                                                 </div>)
                                             }

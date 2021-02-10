@@ -2,16 +2,26 @@ import React from "react";
 import "./HiddenInput.scss"
 
 type Props = {
-    id?: string,
+    value: string,
+    onChange: any,
+    id: string,
     disabled: boolean,
     title?: string
     buttonId?: string,
 }
 
-const HiddenInput: React.FC<Props> = ({buttonId, id, disabled, title}) => {
+const HiddenInput: React.FC<Props> = ({id, disabled, title, onChange, value}) => {
+
+
+    const HandleChange = React.useCallback(() => {
+        onChange(value);
+    }, [onChange, value]);
+
     return (
-        <div className="hidden d-flex flex-column text-black-50">
-            <textarea placeholder={title && !disabled ? title: ""} className="hidden__text" style={{display: disabled ? "none" : ""}}/>
+        <div key={id} className="hidden d-flex flex-column text-black-50">
+            <textarea value={value} onChange={HandleChange} placeholder={title && !disabled ? title : ""}
+                      className="hidden__text"
+                      style={{display: disabled ? "none" : ""}}/>
         </div>
     )
 }
