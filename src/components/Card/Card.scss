@@ -1,21 +1,28 @@
-.HomeCard {
-  min-width: 300px;
 
-  height: 170px;
+.Home-Card {
+  min-width: 220px;
+  height: 155px;
   margin: 15px;
-  //overflow-y: auto;
+  border: 1px solid #dfdfdf;
+  display: flex;
+  flex-direction: column;
+  border-radius: 11px;
 }
 
-.HomeCard__title {
+.Home-Card__title {
   background-color: #5bc3c3;
-  border-radius: 5px;
+  margin-bottom: 0;
   color: aliceblue;
+  text-align: center;
+  border-radius: 10px 10px 0 0;
 }
 
-.HomeCard-list {
+.Home-Card-list__item {
+  //height: 20px;
+  padding: 5px;
+
+}
+.Home-Card__list {
+  margin: 5px;
   overflow-y: auto;
-}
-
-.HomeCard-list__item {
-  height: 40px;
 }

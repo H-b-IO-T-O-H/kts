@@ -2,7 +2,7 @@ import React from "react";
 import "./Home.scss"
 import Card from "@components/Card";
 
-// <a href="#" className="btn btn-primary">Переход куда-нибудь</a> под параграфом
+// <a href="#" className="btn btn-primary">Переход куда-нибудь(кнопка в карточку для перехода по ссылке)"</a> под параграфом
 
 const Home = () => {
     return (
