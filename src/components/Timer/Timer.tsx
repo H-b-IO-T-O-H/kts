@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import {PROTECTED_SESSION_TIME} from "@utils/constants";
 
 //type MyProps = { onZero: () => void };
@@ -9,9 +9,9 @@ const secondsToTime = (s: number) => {
     const m = Math.trunc(s / 60 - 60 * h);
     s = s - 3600 * h - 60 * m
     return {
-        "h": h,
-        "m": m,
-        "s": s
+        h: h,
+        m: m,
+        s: s
     };
 }
 
@@ -25,35 +25,32 @@ const Timer: React.FC<Props> = ({id, onZero}) => {
     const [time, changeTime] = useState({time: secondsToTime(PROTECTED_SESSION_TIME), seconds: PROTECTED_SESSION_TIME});
     const [isActive, setActive] = useState(true);
 
+    const OnStopCallback = useCallback(
+        () => {
+            onZero();
+        },
+        [onZero],
+    );
+
     useEffect(() => {
-        let timer: null | ReturnType<typeof setInterval> | number = 0;
-        // if (!timer && time.seconds > 0) {
+        let timer: ReturnType<typeof setInterval> | number = 0;
         if (isActive) {
-            timer = setInterval(countDown, 1000);
+            timer = setInterval(() => {
+                let seconds = time.seconds - 1;
+                changeTime({
+                    time: secondsToTime(seconds),
+                    seconds: seconds,
+                });
+                if (seconds === 0 && isActive) {
+                    setActive(!isActive);
+                    OnStopCallback();
+                }
+            }, 1000);
         } else if (!isActive && time.seconds !== 0) {
             clearInterval(timer);
         }
         return () => clearInterval(timer as NodeJS.Timeout);
-        //}
-    }, [isActive, time.seconds]);
-
-    const StopTimer = () => {
-        if (isActive) {
-            setActive(!isActive);
-        }
-    }
-
-    const countDown = () => {
-        let seconds = time.seconds - 1;
-        changeTime({
-            time: secondsToTime(seconds),
-            seconds: seconds,
-        });
-        if (seconds === 0) {
-            StopTimer();
-            onZero();
-        }
-    }
+    }, [isActive, time.seconds, OnStopCallback]);
 
     return (
         <div key={id} className="d-flex">

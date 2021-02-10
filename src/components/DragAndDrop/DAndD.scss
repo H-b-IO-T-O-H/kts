@@ -1,14 +1,46 @@
-div.DAndD{
+@import "src/App/App";
+
+.DAndD {
   &__Week {
-    max-width: 50%;
+    //width: 50%;
   }
-  &__container {
+
+  &-container {
     border-radius: 15px;
     margin: 1rem;
+    &__header {
+      border-radius: 10px 10px 0 0;
+      background-color: #bbe8e1;
+      &__text {
+        font-weight: bold;
+        color: grey;
+        margin-left: 5px;
+      }
+    }
+    &__item {
+      border-radius: 5px;
+      margin: 5px;
+    }
   }
-  &__item {
-    user-select: none;
-    border-radius: 5px;
-    margin: 3px;
+
+  &-items__column {
+    max-height: 120px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #efefef;
+    border-radius: 10px;
+    margin-top: 3px;
+    &__dragged {
+      border: 1px dotted black;
+      border-radius: 10px;
+      background-color: transparent;
+    }
+    &__drop {
+      color: grey;
+      &:hover {
+        color: #35b8b8;
+      }
+    }
   }
 }

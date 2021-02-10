@@ -23,16 +23,18 @@
   }
 
   @media screen and (max-width: #{$little-screen-min}) {
-    width: 60px;
+    width: 40px;
     height: 2rem;
     font-size: 0.7rem;
   }
   @media screen and (min-width: #{$little-screen-min}) and (max-width: #{$medium-screen-min}) {
     width: 70px;
+    max-height: 25px;
     font-size: 0.9rem;
   }
   @media screen and (min-width: #{$medium-screen-min}) {
     width: 80px;
+    max-height: 25px;
     font-size: 1rem;
   }
 }

@@ -2,3 +2,15 @@ $little-screen-min: 576px;
 $medium-screen-min: 768px;
 $large-screen-min: 992px;
 $xl-screen-min: 1200px;
+
+body{
+  @media screen and (max-width: #{$little-screen-min}) {
+    font-size: 0.8rem;
+  }
+  @media screen and (min-width: #{$little-screen-min}) and (max-width: #{$medium-screen-min}) {
+    font-size: 0.9rem;
+  }
+  @media screen and (min-width: #{$medium-screen-min}) {
+    font-size: 1.2rem;
+  }
+}

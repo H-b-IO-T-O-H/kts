@@ -1,0 +1,30 @@
+@import "src/App/App";
+
+textarea.hidden__text {
+  max-height: 100px;
+  height: 30px;
+  min-height: 30px;
+  border: 1px solid #a8a8a8;
+  border-radius: 10px;
+  color: #6c6c6c;
+  font-size: 1rem;
+  outline: none;
+  -moz-appearance: none;
+  @media screen and (max-width: #{$little-screen-min}) {
+    width: 70px;
+    height: 50px;
+    font-size: 0.8rem;
+    &::placeholder {
+      font-size: 0.7rem;
+    }
+  }
+}
+
+textarea.hidden__text:focus {
+  border-color: #4db6ac;
+}
+
+textarea::placeholder {
+  color: #bbbbbb;
+  font-size: 0.9rem;
+}
