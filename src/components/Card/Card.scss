@@ -2,20 +2,27 @@
   min-width: 220px;
   height: 155px;
   margin: 15px;
-  border-radius: 10px;
+  border: 1px solid #dfdfdf;
+  display: flex;
+  flex-direction: column;
+  border-radius: 11px;
 }
 
 .Home-Card__title {
   background-color: #5bc3c3;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   color: aliceblue;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  text-align: center;
+  border-radius: 10px 10px 0 0;
 }
+
 .Home-Card-list__item {
-  height: 40px;
+  //height: 20px;
+  padding: 5px;
 
 }
+
 .Home-Card__list {
+  margin: 5px;
   overflow-y: auto;
 }

@@ -3,11 +3,11 @@
   width: 86%;
   margin-left: auto;
   margin-right: auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  border-radius: 15px;
+  box-shadow: 0 0 5px #d2d2d2;
   margin-top: 10px;
 }
 ::-webkit-scrollbar-button {
-  background-image:url('');
   background-repeat:no-repeat;
   width:4px;
   height:0px
@@ -30,7 +30,6 @@
 }
 
 ::-webkit-resizer{
-  background-image:url('');
   background-repeat:no-repeat;
   width:4px;
   height:0px

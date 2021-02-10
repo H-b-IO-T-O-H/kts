@@ -11,8 +11,8 @@ type Props = {
 
 const Card: React.FC<Props> = ({title, item1,item2,item3,item4}) => {
     return(
-        <div className="card Home-Card">
-                <h5 className="card-title Home-Card__title">{title}</h5>
+        <div className="Home-Card">
+                <h5 className=" Home-Card__title">{title}</h5>
                 <ul className="list-group Home-Card__list">
                     <li className="list-group-item Home-Card-list__item">{item1}</li>
                     <li className="list-group-item Home-Card-list__item">{item2}</li>
