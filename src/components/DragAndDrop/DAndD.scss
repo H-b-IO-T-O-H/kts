@@ -1,20 +1,21 @@
 @import "src/App/App";
 
 .DAndD {
-  &__Week {
-    //width: 50%;
-  }
-
+  min-width: 320px;
   &-container {
     border-radius: 15px;
-    margin: 1rem;
+    margin-bottom: 1rem;
     &__header {
       border-radius: 10px 10px 0 0;
       background-color: #bbe8e1;
+      font-weight: bold;
       &__text {
-        font-weight: bold;
         color: grey;
         margin-left: 5px;
+        &_white {
+          color: white;
+          margin-left: 5px;
+        }
       }
     }
     &__item {
@@ -25,6 +26,8 @@
 
   &-items__column {
     max-height: 120px;
+    max-width: 330px;
+    min-width: 140px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -32,6 +35,9 @@
     border-radius: 10px;
     margin-top: 3px;
     &__dragged {
+      max-height: 120px;
+      max-width: 330px;
+      min-width: 140px;
       border: 1px dotted black;
       border-radius: 10px;
       background-color: transparent;
@@ -43,4 +49,8 @@
       }
     }
   }
+}
+
+.icon-remover:hover {
+  color: red;
 }

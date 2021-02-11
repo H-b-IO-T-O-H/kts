@@ -3,7 +3,7 @@ import "./HiddenInput.scss"
 
 type Props = {
     value: string,
-    onChange: any,
+    onChange: (s: string, id: string) => void,
     id: string,
     disabled: boolean,
     title?: string
@@ -11,15 +11,15 @@ type Props = {
 }
 
 const HiddenInput: React.FC<Props> = ({id, disabled, title, onChange, value}) => {
-
-
-    const HandleChange = React.useCallback(() => {
-        onChange(value);
-    }, [onChange, value]);
+    const HandleChange = React.useCallback((value: string, id: string) => {
+        onChange(value, id);
+    }, [onChange]);
 
     return (
         <div key={id} className="hidden d-flex flex-column text-black-50">
-            <textarea value={value} onChange={HandleChange} placeholder={title && !disabled ? title : ""}
+            <textarea value={value} onChange={e => {
+                HandleChange(e.target.value, id)
+            }} placeholder={title && !disabled ? title : ""}
                       className="hidden__text"
                       style={{display: disabled ? "none" : ""}}/>
         </div>
