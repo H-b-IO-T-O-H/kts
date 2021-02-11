@@ -15,7 +15,7 @@ const HiddenInput: React.FC<Props> = ({id, disabled, title, onChange, value}) =>
         if (onChange) {
             onChange(e.target.value, id);
         }
-    }, [onChange, value]);
+    }, [onChange, id]);
 
     return (
         <div key={id} className="hidden d-flex flex-column text-black-50">

@@ -11,7 +11,7 @@ import {
     MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem
 } from "mdbreact";
 import "./Header.scss"
-import {Link, useHistory, useLocation} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 import Timer from "@components/Timer";
 import Avatar from "@media/Musya.png"
 import {Urls} from "@config/urls";
