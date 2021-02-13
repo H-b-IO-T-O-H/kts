@@ -6,9 +6,9 @@ import ButtonTimetable from "@components/ButtonTimetable";
 import ButtonWithInput from "@components/ButtonWithInput";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes"
-import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 import {faBars} from "@fortawesome/free-solid-svg-icons/faBars";
 import ButtonsLogo from "@components/ButtonsLogo";
+import AdminPanel from "@components/AdminPanel";
 
 const PlusComponent = () => (
     <FontAwesomeIcon className={"icon-remover"} icon={faTimes} size={"lg"}
@@ -225,20 +225,7 @@ const DragAndDrop = () => {
         <div className="DAndD text-center">
 
             <div className="mb-1">
-                {dayIdx !== -1 ?
-                    <ButtonTimetable
-                        onChange={AddList}
-                        disabled={false}
-                        btn={{id: uuid(), color: "#4fbfb4"}}
-                    >
-                        <div className="d-flex flex-row flex-nowrap justify-content-around">
-                            <FontAwesomeIcon icon={faPlus} size={"lg"}
-                                             color={"white"}/>
-                            <span
-                                className="DAndD-container__header__text_white">{Week[dayIdx].day}</span>
-                        </div>
-                    </ButtonTimetable>
-                    : null}
+                <AdminPanel dayIdx={dayIdx} changeDay={AddList}/>
             </div>
 
             <div className="d-flex flex-row">
