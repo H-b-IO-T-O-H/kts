@@ -18,9 +18,10 @@ const secondsToTime = (s: number) => {
 type Props = {
     id?: string,
     onZero?: any,
+    size: { sm?: boolean, xs?: boolean, lg?: boolean }
 }
 
-const Timer: React.FC<Props> = ({id, onZero}) => {
+const Timer: React.FC<Props> = ({id, onZero, size}) => {
 
     const [time, changeTime] = useState({time: secondsToTime(PROTECTED_SESSION_TIME), seconds: PROTECTED_SESSION_TIME});
     const [isActive, setActive] = useState(true);
@@ -31,6 +32,13 @@ const Timer: React.FC<Props> = ({id, onZero}) => {
         },
         [onZero],
     );
+
+    const getSize = () => {
+        if (size.xs) {
+            return "0.7rem";
+        }
+        return size.lg ? "1.2rem" : "0.9rem";
+    }
 
     useEffect(() => {
         let timer: ReturnType<typeof setInterval> | number = 0;
@@ -54,7 +62,7 @@ const Timer: React.FC<Props> = ({id, onZero}) => {
 
     return (
         <div key={id} className="d-flex">
-            <div>
+            <div style={{fontSize: getSize()}}>
                 {time.time.h}:{time.time.m}:{time.time.s}
             </div>
         </div>

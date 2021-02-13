@@ -51,9 +51,10 @@ const buttonsContent = [
     {id: "btn-4", title: "РК", color: "#eabf19"},
     {id: "btn-5", title: "КОНС", color: "#5c70d9"},
     {id: "btn-6", title: "ЭКЗ", color: "#ce2c2c"},
+    {id: "btn-7", title: "СР", color: "#3ca490", disableInputs: true},
 ]
 
-/*const LessonsTime = [
+const LessonsTime = [
     "8:30 - 10:05",
     "10:15 - 11:50",
     "12:00 - 13:35",
@@ -61,7 +62,7 @@ const buttonsContent = [
     "15:40 - 17:15",
     "17:25 - 19:00",
     "19:10 - 20:45",
-]*/
+]
 
 
 const FindNextDay = (Lists: object) => {
@@ -80,7 +81,14 @@ const FindNextDay = (Lists: object) => {
 const DragAndDrop = () => {
     const [Lists, ChangeList] = useState<object>({0: []})
     const [dayIdx, ChangeDayIdx] = useState<number>(1)
+    const [areasValue, setAreasValues] = useState({})
     const [inputsValue, setValues] = useState({})
+
+    const changeArea = (id: string, value: string) => {
+        const oldAreas = areasValue
+        oldAreas[id] = value
+        setAreasValues(oldAreas);
+    }
 
     const changeInput = (id: string, value: string) => {
         const oldInputs = inputsValue
@@ -89,10 +97,8 @@ const DragAndDrop = () => {
     }
 
     const droppableColumn = buttonsContent.map((btn, idx) => (
-        <ButtonWithInput key={idx} btn={btn} onInputChange={changeInput}/>
+        <ButtonWithInput key={idx} btn={btn} onAreaChange={changeArea} onInputChange={changeInput} inputs={{maxInputLength: 5, maxAreaLength: 70}}/>
     ))
-
-
 
     const addWeek = () => {
         return (
@@ -163,10 +169,18 @@ const DragAndDrop = () => {
                 )
                 break;
             case "items":
-                const draggableColumn = buttonsContent.map((btn, idx) => (
-                    <div key={idx}>
-                        <ButtonsLogo color={btn.color}>{btn.title}</ButtonsLogo>
-                        {inputsValue[btn.id]}
+                if (Lists[destination.droppableId].length === Week.length) {
+                    return;
+                }
+                const draggableColumn = buttonsContent.map((btn) => (
+                    <div>
+                        <div className="DAndD-item__header" key={btn.id}>
+                            <span className="DAndD-item__header__text">{btn.title !== "СР" ? areasValue[btn.id] : "Самостоятельная работа"}</span>
+                        </div>
+                        <div className="d-flex flex-row justify-content-between">
+                            <ButtonsLogo color={btn.color}>{btn.title}</ButtonsLogo>
+                            <span className="DAndD-item__header__text mt-1 mr-1">{inputsValue[btn.id]}</span>
+                        </div>
                     </div>
                 ))
                 newList[destination.droppableId] = copy(
@@ -230,7 +244,6 @@ const DragAndDrop = () => {
             <div className="d-flex flex-row">
                 <DragDropContext onDragEnd={onDragEnd}>
                     <div className="col-6">
-
                         {Object.keys(Lists).map((list) => (
                             <Droppable key={list} droppableId={list}>
                                 {(provided, snapshot) => (
@@ -259,19 +272,18 @@ const DragAndDrop = () => {
                                                                  style={
                                                                      provided.draggableProps.style
                                                                  }>
-
-                                                                <div className="DAndD-container__item d-flex flex-row"
+                                                                <div className="DAndD-item"
                                                                      style={{border: snapshot.isDragging ? "1px dashed #000" : "1px solid #ddd"}} {...provided.dragHandleProps}>
-                                                                    <div className="d-flex flex-row align-content-end">
-                                                                        {item}
-                                                                    </div>
                                                                     <button type="button"
-                                                                            className="link-button"
+                                                                            className="link-button DAndD-item__close"
                                                                             onClick={() => {
                                                                                 removeItem(list, index)
                                                                             }}>
                                                                         {PlusComponent()}
                                                                     </button>
+                                                                    {item}
+                                                                    <div
+                                                                        className="DAndD-item__lessons">{LessonsTime[index]}</div>
                                                                 </div>
                                                             </div>
                                                         )}
@@ -290,6 +302,11 @@ const DragAndDrop = () => {
                     {addWeek()}
                 </DragDropContext>
             </div>
+            <ButtonTimetable
+                onChange={() => (console.log(Lists))}
+                disabled={false}
+                btn={{id: uuid(), color: "#870046"}}
+            >Test</ButtonTimetable>
         </div>
     );
 }

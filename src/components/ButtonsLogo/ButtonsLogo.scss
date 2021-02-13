@@ -9,9 +9,9 @@ div.btn-logo {
   vertical-align: middle;
   transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
   color: #d6f0f2;
+  font-weight: 600;
   @media screen and (max-width: #{$little-screen-min}) {
     width: 45px;
-    height: 2rem;
     font-size: 0.7rem;
   }
   @media screen and (min-width: #{$little-screen-min}) and (max-width: #{$medium-screen-min}) {

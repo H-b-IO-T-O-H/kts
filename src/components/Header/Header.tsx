@@ -60,9 +60,11 @@ const Header = () => {
                                 <MDBNavItem
                                     className="container-fluid flex-column justify-content-center text-center">
                                     <span className="main__title">Кошка Муся</span>
-                                    <Timer onZero={() => {
-                                        Logout(history);
-                                    }}/>
+                                    <div className="text-black-50">
+                                        <Timer size={{sm: true}} onZero={() => {
+                                            Logout(history);
+                                        }}/>
+                                    </div>
                                 </MDBNavItem>
                                 <MDBNavItem>
                                     <MDBDropdown>

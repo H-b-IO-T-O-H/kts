@@ -5,7 +5,7 @@ type Props = {
     value: string,
     onChange: (s: string, id: string) => void,
     id: string,
-    disabled: boolean,
+    disabled?: boolean,
     title?: string
     buttonId?: string,
 }

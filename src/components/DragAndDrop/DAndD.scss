@@ -2,31 +2,76 @@
 
 .DAndD {
   min-width: 320px;
+
   &-container {
     border-radius: 15px;
     margin-bottom: 1rem;
+
     &__header {
       border-radius: 10px 10px 0 0;
       background-color: #bbe8e1;
       font-weight: bold;
+
       &__text {
         color: grey;
         margin-left: 5px;
+
         &_white {
           color: white;
           margin-left: 5px;
         }
       }
     }
-    &__item {
-      border-radius: 5px;
-      margin: 5px;
+  }
+
+  &-item {
+    border-radius: 5px;
+    margin: 5px;
+
+    &__close {
+      position: absolute;
+      margin-left: 20%;
+      @media screen and (min-width: #{$screen-min}) {
+        margin-left: 25%;
+      }
+      @media screen and (min-width: #{$little-screen-min}) and (max-width: #{$medium-screen-min}) {
+        margin-left: 35%;
+      }
+      @media screen and (min-width: #{$medium-screen-min}) {
+        margin-left: 38%;
+      }
+      @media screen and (min-width: #{$xl-screen-min}) {
+        margin-left: 42%;
+      }
+    }
+
+    &__header {
+      border-radius: 5px 5px 0 0;
+      background-color: #efefef;
+      font-weight: bold;
+
+      &__text {
+        word-break:break-all;
+        color: grey;
+      }
+    }
+
+    &__lessons {
+      font-weight: bold;
+      color: #2096ff;
+      font-size: 0.7rem;
+      margin-top: -0.3125em;
+      @media screen and (min-width: #{$little-screen-min}) {
+        font-size: 0.9rem;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100%);
+      }
     }
   }
 
   &-items__column {
     max-height: 120px;
-    max-width: 330px;
     min-width: 140px;
     display: flex;
     flex-direction: row;
@@ -34,6 +79,7 @@
     background-color: #efefef;
     border-radius: 10px;
     margin-top: 3px;
+
     &__dragged {
       max-height: 120px;
       max-width: 330px;
@@ -42,8 +88,10 @@
       border-radius: 10px;
       background-color: transparent;
     }
+
     &__drop {
       color: grey;
+
       &:hover {
         color: #35b8b8;
       }
@@ -53,4 +101,10 @@
 
 .icon-remover:hover {
   color: red;
+}
+
+div.item-card {
+  &__text {
+    // max-width: 50%;
+  }
 }

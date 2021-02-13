@@ -12,11 +12,11 @@ textarea.hidden__text {
   outline: none;
   -moz-appearance: none;
   @media screen and (max-width: #{$little-screen-min}) {
-    width: 55px;
+    width: 40px;
     height: 50px;
     font-size: 0.8rem;
     &::placeholder {
-      font-size: 0.6rem;
+      font-size: 0.5rem;
     }
   }
   @media screen and (min-width: #{$little-screen-min}) and (max-width: #{$medium-screen-min}) {
