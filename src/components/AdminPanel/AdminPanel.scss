@@ -2,6 +2,7 @@ div.panel {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   flex-wrap: nowrap;
   border-radius: 10px;
   max-width: 400px;

@@ -1,3 +1,5 @@
+@import "src/App/App";
+
 input.btn-mdb-input {
   width: 100%;
   max-width: 40px;
@@ -13,8 +15,11 @@ input.btn-mdb-input {
     border-color: #4db6ac;
   }
   &::placeholder {
+    font-size: 0.9rem;
+    @media screen and (max-width: #{$little-screen-min}) {
+      font-size: 0.7rem;
+    }
     color: #bbbbbb;
-    font-size: 0.5rem;
   }
 }
 
