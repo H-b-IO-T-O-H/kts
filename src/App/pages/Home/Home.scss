@@ -8,6 +8,12 @@
   margin-top: 10px;
 }
 
+.Error {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+}
+
 ::-webkit-scrollbar-button {
   background-repeat: no-repeat;
   width: 4px;
