@@ -68,15 +68,19 @@ const AdminPanel: React.FC<Props> = ({dayIdx, changeDay}) => {
                         </div>
                     </ButtonTimetable>
                     : null}
+                <div className="ml-1">
                 <InputNumber placeholder="Неделя" id="input-for-week" min={1} max={17} onChange={changeLabelInfo}/>
+                </div>
                 <InputNumber placeholder="Группа" id="input-for-group" min={1} max={5} onChange={changeLabelInfo}/>
                 <InputNumber placeholder="Семестр" id="input-for-sem" min={1} max={12} onChange={changeLabelInfo}/>
-                <select id="input-for-week-type" defaultValue={"1"} className="panel__select" onChange={(e) => {
-                    changeLabelInfo("input-for-week-type", e.target.value)
-                }}>
-                    <option value="Чс">Чс</option>
-                    <option value="Зн">Зн</option>
-                </select>
+                <div className="mr-1">
+                    <select id="input-for-week-type" defaultValue={"1"} className="panel__select" onChange={(e) => {
+                        changeLabelInfo("input-for-week-type", e.target.value)
+                    }}>
+                        <option value="Чс">Чс</option>
+                        <option value="Зн">Зн</option>
+                    </select>
+                </div>
             </div>
             {panelLabel}
         </div>
