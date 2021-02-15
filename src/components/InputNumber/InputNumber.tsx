@@ -24,7 +24,8 @@ const InputNumber: React.FC<Props> = ({id, min, max, onChange, placeholder}) => 
     }, [onChange, id, min, max])
 
     return (
-        <input type="number" placeholder={placeholder} className="input-number" value={value} onChange={(e) => {changeInputValue(e)}}/>
+        <input type="number" placeholder={placeholder} className="input-number" value={value}
+               onChange={(e) => {changeInputValue(e)}}/>
     );
 
 }

@@ -7,8 +7,12 @@ import ButtonWithInput from "@components/ButtonWithInput";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes"
 import {faBars} from "@fortawesome/free-solid-svg-icons/faBars";
+import {faSave} from "@fortawesome/free-solid-svg-icons/faSave";
 import ButtonsLogo from "@components/ButtonsLogo";
 import AdminPanel from "@components/AdminPanel";
+import {useHistory} from "react-router-dom";
+import {Urls} from "@config/urls";
+import {buttonsContent, LessonsTime, Week} from "@config/config";
 
 const PlusComponent = () => (
     <FontAwesomeIcon className={"icon-remover"} icon={faTimes} size={"lg"}
@@ -32,38 +36,6 @@ const copy = (source: Array<object>, destination: Array<object>, droppableSource
     return destClone;
 };
 
-const Week = [
-    {id: 0, day: "Пн", date: ""},
-    {id: 1, day: "Вт", date: ""},
-    {id: 2, day: "Ср", date: ""},
-    {id: 3, day: "Чт", date: ""},
-    {id: 4, day: "Пт", date: ""},
-    {id: 5, day: "Сб", date: ""},
-    {id: 6, day: "Вс", date: ""},
-]
-
-
-const buttonsContent = [
-    {id: "btn-0", title: "СЕМ", color: "#348A3D"},
-    {id: "btn-1", title: "ЛЕК", color: "#62d76e"},
-    {id: "btn-2", title: "ЛР", color: "#8ebd3b"},
-    {id: "btn-3", title: "ДЗ", color: "#e8722c"},
-    {id: "btn-4", title: "РК", color: "#eabf19"},
-    {id: "btn-5", title: "КОНС", color: "#5c70d9"},
-    {id: "btn-6", title: "ЭКЗ", color: "#ce2c2c"},
-    {id: "btn-7", title: "СР", color: "#3ca490", disableInputs: true},
-]
-
-const LessonsTime = [
-    "8:30 - 10:05",
-    "10:15 - 11:50",
-    "12:00 - 13:35",
-    "13:50 - 15:25",
-    "15:40 - 17:15",
-    "17:25 - 19:00",
-    "19:10 - 20:45",
-]
-
 
 const FindNextDay = (Lists: object) => {
     let idx = 0;
@@ -79,6 +51,7 @@ const FindNextDay = (Lists: object) => {
 
 
 const DragAndDrop = () => {
+    const history = useHistory();
     const [Lists, ChangeList] = useState<object>({0: []})
     const [dayIdx, ChangeDayIdx] = useState<number>(1)
     const [areasValue, setAreasValues] = useState({})
@@ -97,7 +70,8 @@ const DragAndDrop = () => {
     }
 
     const droppableColumn = buttonsContent.map((btn, idx) => (
-        <ButtonWithInput key={idx} btn={btn} onAreaChange={changeArea} onInputChange={changeInput} inputs={{maxInputLength: 5, maxAreaLength: 70}}/>
+        <ButtonWithInput key={idx} btn={btn} onAreaChange={changeArea} onInputChange={changeInput}
+                         inputs={{maxInputLength: 5, maxAreaLength: 70}}/>
     ))
 
     const addWeek = () => {
@@ -172,13 +146,14 @@ const DragAndDrop = () => {
                 if (Lists[destination.droppableId].length === Week.length) {
                     return;
                 }
-                const draggableColumn = buttonsContent.map((btn) => (
+                const draggableColumn = buttonsContent.map((btn, index) => (
                     <div>
                         <div className="DAndD-item__header" key={btn.id}>
-                            <span className="DAndD-item__header__text">{btn.title !== "СР" ? areasValue[btn.id] : "Самостоятельная работа"}</span>
+                            <span
+                                className="DAndD-item__header__text">{btn.title !== "СР" ? areasValue[btn.id] : "Самостоятельная работа"}</span>
                         </div>
                         <div className="d-flex flex-row justify-content-between">
-                            <ButtonsLogo color={btn.color}>{btn.title}</ButtonsLogo>
+                            <ButtonsLogo idx={index}/>
                             <span className="DAndD-item__header__text mt-1 mr-1">{inputsValue[btn.id]}</span>
                         </div>
                     </div>
@@ -224,13 +199,16 @@ const DragAndDrop = () => {
     return (
         <div className="DAndD text-center">
 
-            <div className="mb-1">
-                <AdminPanel dayIdx={dayIdx} changeDay={AddList}/>
+            <div className="d-flex flex-row">
+                <div className="d-none d-sm-block col-sm-4 col-md-5"/>
+                <div className="col-md-7">
+                    <AdminPanel dayIdx={dayIdx} changeDay={AddList}/>
+                </div>
             </div>
-
+            <hr/>
             <div className="d-flex flex-row">
                 <DragDropContext onDragEnd={onDragEnd}>
-                    <div className="col-6">
+                    <div className="col-5">
                         {Object.keys(Lists).map((list) => (
                             <Droppable key={list} droppableId={list}>
                                 {(provided, snapshot) => (
@@ -286,14 +264,27 @@ const DragAndDrop = () => {
                             </Droppable>
                         ))}
                     </div>
-                    {addWeek()}
+                    <div className="col-7 d-flex">
+                        {addWeek()}
+                    </div>
                 </DragDropContext>
             </div>
+            <hr/>
             <ButtonTimetable
-                onChange={() => (console.log(Lists))}
+                onChange={() => {
+                    console.log(Lists);
+                    history.replace(Urls.home)
+                }}
                 disabled={false}
-                btn={{id: uuid(), color: "#870046"}}
-            >Test</ButtonTimetable>
+                btn={{id: uuid(), color: "#36a51c"}}
+            >
+                <div className="d-flex flex-row align-items-center justify-content-around">
+                    <FontAwesomeIcon icon={faSave} size={"sm"}/>
+                    <div>Save</div>
+                </div>
+
+
+            </ButtonTimetable>
         </div>
     );
 }

@@ -1,0 +1,23 @@
+@import "./src/App/App";
+
+div.Lesson {
+  border-radius: 5px;
+  margin: 5px;
+
+  &__header {
+    border-radius: 5px 5px 0 0;
+    background-color: #efefef;
+    font-weight: bold;
+
+    &__text {
+      word-break: break-all;
+      color: grey;
+    }
+  }
+  &__param {
+    font-weight: bold;
+    color: #2096ff;
+    font-size: 0.7rem;
+    margin-top: -0.3125em;
+  }
+}

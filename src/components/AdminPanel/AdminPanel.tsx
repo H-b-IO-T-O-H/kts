@@ -4,6 +4,7 @@ import ButtonTimetable from "@components/ButtonTimetable";
 import {v4 as uuid} from "uuid";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
+import {faCogs} from "@fortawesome/free-solid-svg-icons/faCogs";
 import InputNumber from "@components/InputNumber";
 
 type Props = {
@@ -43,7 +44,7 @@ const AdminPanel: React.FC<Props> = ({dayIdx, changeDay}) => {
                 break;
         }
         if (newInfo.Week !== 0 && !isNaN(newInfo.Week) && newInfo.WeekType !== "" && newInfo.Semester !== 0 && !isNaN(newInfo.Semester) && newInfo.Group !== 0 && !isNaN(newInfo.Group)) {
-            const newLabel = `${newInfo.Week} Неделя, ${newInfo.WeekType}, Группа ИУ10-${newInfo.Semester}${newInfo.Group}`
+            const newLabel = `${newInfo.Week}-я Неделя, ${newInfo.WeekType}, Группа ИУ10-${newInfo.Semester}${newInfo.Group}`
             setLabel(newLabel)
         } else {
             setLabel("");
@@ -53,36 +54,46 @@ const AdminPanel: React.FC<Props> = ({dayIdx, changeDay}) => {
 
     return (
         <div>
-            <div className="panel">
-                {dayIdx !== -1 ?
-                    <ButtonTimetable
-                        onChange={changeDay}
-                        disabled={false}
-                        btn={{id: uuid(), color: "#4fbfb4"}}
-                    >
-                        <div className="d-flex flex-row flex-nowrap justify-content-around">
-                            <FontAwesomeIcon icon={faPlus} size={"lg"}
-                                             color={"white"}/>
-                            <span
-                                className="DAndD-container__header__text_white">{Week[dayIdx].day}</span>
-                        </div>
-                    </ButtonTimetable>
-                    : null}
-                <div className="ml-1">
-                <InputNumber placeholder="Неделя" id="input-for-week" min={1} max={17} onChange={changeLabelInfo}/>
+            <div className="panel d-flex flex-column">
+                <div className="panel__header">
+                    Настройка параметров учебной группы
+                    <FontAwesomeIcon icon={faCogs} size={"lg"}
+                                     color={"white"}/>
                 </div>
-                <InputNumber placeholder="Группа" id="input-for-group" min={1} max={5} onChange={changeLabelInfo}/>
-                <InputNumber placeholder="Семестр" id="input-for-sem" min={1} max={12} onChange={changeLabelInfo}/>
-                <div className="mr-1">
-                    <select id="input-for-week-type" defaultValue={"1"} className="panel__select" onChange={(e) => {
-                        changeLabelInfo("input-for-week-type", e.target.value)
-                    }}>
-                        <option value="Чс">Чс</option>
-                        <option value="Зн">Зн</option>
-                    </select>
+                <div className="panel__body">
+                    {dayIdx !== -1 ?
+                        <ButtonTimetable
+                            onChange={changeDay}
+                            disabled={false}
+                            btn={{id: uuid(), color: "#4fbfb4"}}
+                        >
+                            <div className="d-flex flex-row flex-nowrap justify-content-around">
+                                <FontAwesomeIcon icon={faPlus} size={"lg"}
+                                                 color={"white"}/>
+                                <span
+                                    className="DAndD-container__header__text_white">{Week[dayIdx].day}</span>
+                            </div>
+                        </ButtonTimetable>
+                        : null}
+                    <div className="ml-1">
+                        <InputNumber placeholder="Неделя" id="input-for-week" min={1} max={17}
+                                     onChange={changeLabelInfo}/>
+                    </div>
+                    <InputNumber placeholder="Группа" id="input-for-group" min={1} max={5} onChange={changeLabelInfo}/>
+                    <InputNumber placeholder="Семестр" id="input-for-sem" min={1} max={12} onChange={changeLabelInfo}/>
+                    <div className="mr-1">
+                        <select id="input-for-week-type" defaultValue={"1"} className="panel__select" onChange={(e) => {
+                            changeLabelInfo("input-for-week-type", e.target.value)
+                        }}>
+                            <option value="Чс">Чс</option>
+                            <option value="Зн">Зн</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="panel__footer">
+                    {panelLabel}
                 </div>
             </div>
-            {panelLabel}
         </div>
     )
 }
