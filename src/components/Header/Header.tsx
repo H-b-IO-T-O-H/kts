@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
+import {useHistory, useLocation} from "react-router-dom";
 import {
     MDBNavbar,
     MDBNavbarBrand,
@@ -10,25 +11,26 @@ import {
     MDBDropdown,
     MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem
 } from "mdbreact";
-import "./Header.scss"
-import {useHistory, useLocation} from "react-router-dom";
+
 import Timer from "@components/Timer";
 import Avatar from "@media/Musya.png"
 import {Urls} from "@config/urls";
-import {Logout} from "../../App/pages/authorization";
+
+import {Logout} from "../../pages/Authorization";
+import "./Header.scss"
 
 
 const Header = () => {
     const location = useLocation();
     const history = useHistory();
 
-    const Rendered = () => ([Urls.timetableCreate, Urls.home, Urls.root].includes(location.pathname))
+    const Rendered = () => ([Urls.timetable.new, Urls.timetable.byId, Urls.root].includes(location.pathname))
 
     const [collapseIsOpen, collapseChange] = useState(false);
 
-    const toggleCollapse = () => {
+    const toggleCollapse = useCallback(() => {
         collapseChange(!collapseIsOpen);
-    };
+    }, [collapseIsOpen]);
 
     return (
         <div>
@@ -41,13 +43,16 @@ const Header = () => {
                     <MDBCollapse id="navbarCollapse3" isOpen={collapseIsOpen} navbar>
                         <MDBNavbarNav left className="col-lg-8">
                             <MDBNavItem active>
-                                <MDBNavLink to={Urls.home}>Главная</MDBNavLink>
-                            </MDBNavItem>
-                            <MDBNavItem className="d-md-none ">
-                                <MDBNavLink to="#!">Личный кабинет</MDBNavLink>
+                                <MDBNavLink to={Urls.timetable.byId}>Главная</MDBNavLink>
                             </MDBNavItem>
                             <MDBNavItem active>
-                                <MDBNavLink to={Urls.timetableCreate}>Конструктор расписания</MDBNavLink>
+                                <MDBNavLink to={Urls.timetable.new}>Конструктор расписания</MDBNavLink>
+                            </MDBNavItem>
+                            <MDBNavItem active className="d-md-none">
+                                <button type="button"
+                                        className="link-logout"
+                                        onClick={() => {Logout(history)}}>
+                                    Выход</button>
                             </MDBNavItem>
                         </MDBNavbarNav>
                         <MDBNavbarNav right className=" d-none d-md-block">

@@ -1,11 +1,15 @@
 import React from "react";
-import "./Lesson.scss"
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faClock} from "@fortawesome/free-solid-svg-icons/faClock"
+import {faMapMarkerAlt} from "@fortawesome/free-solid-svg-icons/faMapMarkerAlt"
+
+import "./Lesson.scss";
 
 type Props = {
     title: string;
     time: string,
     auditorium: string,
-    icon?: JSX.Element,
+    icon?: React.ReactNode,
 }
 
 const Lesson: React.FC<Props> = ({title, time, auditorium, children}) => {
@@ -16,9 +20,15 @@ const Lesson: React.FC<Props> = ({title, time, auditorium, children}) => {
                     {title}</span>
             </div>
             {children}
-            <div className="d-flex flex-row justify-content-between">
-                <div className="Lesson__param">{time}</div>
-                <div className="Lesson__param">{auditorium}</div>
+            <div className="Lesson__param d-flex flex-row justify-content-between">
+                <div className="d-flex flex-row align-items-center">
+                    <FontAwesomeIcon icon={faMapMarkerAlt}/>
+                    <div className="ml-1">{auditorium}</div>
+                </div>
+                <div className="d-flex flex-row align-items-center">
+                    <FontAwesomeIcon icon={faClock}/>
+                    <div className="ml-1">{time}</div>
+                </div>
             </div>
         </div>
     )

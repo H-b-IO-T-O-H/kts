@@ -1,15 +1,17 @@
 import React from "react";
-import "./NotFound.scss"
 import {useHistory} from "react-router-dom";
+
 import {Urls} from "@config/urls";
 
+import "./NotFound.scss"
 
 const NotFoundPage = () => {
     const history = useHistory()
 
-    const homeRedirectHandler = () => {
-        history.replace(Urls.home)
-    }
+    const homeRedirectHandler = React.useCallback(() => {
+        history.replace(Urls.timetable.byId)
+    }, [history]);
+
     return (
         <div className="notFound">
             <div className="overlay"/>
@@ -33,4 +35,4 @@ const NotFoundPage = () => {
     )
 }
 
-export default NotFoundPage;
+export default React.memo(NotFoundPage);

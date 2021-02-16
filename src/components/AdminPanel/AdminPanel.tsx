@@ -1,27 +1,19 @@
 import React from "react";
-import "./AdminPanel.scss"
-import ButtonTimetable from "@components/ButtonTimetable";
 import {v4 as uuid} from "uuid";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 import {faCogs} from "@fortawesome/free-solid-svg-icons/faCogs";
+
+import ButtonTimetable from "@components/ButtonTimetable";
 import InputNumber from "@components/InputNumber";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {Week} from "@config/config";
+import "./AdminPanel.scss"
+
 
 type Props = {
     dayIdx: number;
     changeDay: () => void;
 }
-
-const Week = [
-    {id: 0, day: "Пн", date: ""},
-    {id: 1, day: "Вт", date: ""},
-    {id: 2, day: "Ср", date: ""},
-    {id: 3, day: "Чт", date: ""},
-    {id: 4, day: "Пт", date: ""},
-    {id: 5, day: "Сб", date: ""},
-    {id: 6, day: "Вс", date: ""},
-]
-
 
 const AdminPanel: React.FC<Props> = ({dayIdx, changeDay}) => {
     const [panelLabel, setLabel] = React.useState("")
@@ -43,7 +35,8 @@ const AdminPanel: React.FC<Props> = ({dayIdx, changeDay}) => {
                 newInfo.WeekType = value;
                 break;
         }
-        if (newInfo.Week !== 0 && !isNaN(newInfo.Week) && newInfo.WeekType !== "" && newInfo.Semester !== 0 && !isNaN(newInfo.Semester) && newInfo.Group !== 0 && !isNaN(newInfo.Group)) {
+        if (newInfo.Week !== 0 && !isNaN(newInfo.Week) && newInfo.WeekType !== "" && newInfo.Semester !== 0
+            && !isNaN(newInfo.Semester) && newInfo.Group !== 0 && !isNaN(newInfo.Group)) {
             const newLabel = `${newInfo.Week}-я Неделя, ${newInfo.WeekType}, Группа ИУ10-${newInfo.Semester}${newInfo.Group}`
             setLabel(newLabel)
         } else {

@@ -8,7 +8,6 @@ export const Week = [
     {id: 6, day: "Вс", date: ""},
 ]
 
-
 export const buttonsContent = [
     {id: "btn-0", title: "СЕМ", color: "#348A3D"},
     {id: "btn-1", title: "ЛЕК", color: "#62d76e"},

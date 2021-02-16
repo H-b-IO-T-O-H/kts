@@ -1,6 +1,8 @@
 import React from "react";
-import "./timetable.scss"
+
 import DragAndDrop from "@components/DragAndDrop";
+
+import "./timetable.scss"
 
 
 

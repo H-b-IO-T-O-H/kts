@@ -14,7 +14,7 @@ img.navbar__avatar {
 }
 
 span.main__title {
-  font-family: "Roboto",sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
   color: #d6f0f2;
@@ -22,4 +22,17 @@ span.main__title {
 
 div.navbar__main {
   min-width: 320px;
+}
+
+button.link-logout {
+  font-weight: 300;
+  padding-top: 0.5rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+
+  &:hover, &:focus {
+    text-decoration: none;
+  }
 }

@@ -5,13 +5,13 @@ type Props = {
     id: number;
     title: string;
     currentDay: number;
-    items: JSX.Element[];
+    items: React.ReactNode[];
 }
 
 const Card: React.FC<Props> = ({id, title, currentDay, items}) => {
     return (
         <div className="Home-Card">
-            <h5 className=" Home-Card__title"
+            <h5 className="Home-Card__title"
                 style={{backgroundColor: id < currentDay ? "#b4bdbd" : "#5bc3c3"}}>{title}</h5>
             <ul className="list-group Home-Card__list">
                 {items.map((elem, index) => (

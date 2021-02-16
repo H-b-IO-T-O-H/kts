@@ -1,8 +1,9 @@
 import React from "react";
-import "./ButtonWithInput.scss"
+import {MDBCollapse} from "mdbreact";
 import ButtonTimetable from "@components/ButtonTimetable";
 import HiddenInput from "@components/HiddenInput";
-import {MDBCollapse} from "mdbreact";
+
+import "./ButtonWithInput.scss"
 
 type Props = {
     onInputChange?: (id: string, value: string) => void;
@@ -39,19 +40,19 @@ const ButtonWithInput: React.FC<Props> = ({btn, onBtnChange, onInputChange, onAr
         }
     }, [onBtnChange, activeInput, collapseOpen, btn.disableInputs])
 
-    const changeInputValue = React.useCallback((e: any) => {
+    const changeInputValue = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         if (inputs && inputs.maxInputLength < value.length) {
             return;
         }
-        changeValueInput(e.target.value);
+        changeValueInput(value);
         if (onInputChange) {
-            onInputChange(btn.id, e.target.value);
+            onInputChange(btn.id, value);
         }
-    }, [onInputChange, btn.id, inputs])
+    }, [onInputChange, btn.id, inputs]);
 
 
-    const buttonFields = () => (
+    const buttonFields = React.useCallback(() => (
         <div className="d-flex flex-row align-content-center">
             <div className="m-1">
                 <HiddenInput id={btn.id} value={areaValue}
@@ -65,15 +66,15 @@ const ButtonWithInput: React.FC<Props> = ({btn, onBtnChange, onInputChange, onAr
                        }}/>
             </div>
         </div>
-    )
+    ), [btn.id, inputValue, changeInputValue, changeAreaValue, areaValue, activeInput]);
 
-    const buttonCollapse = () => (
+    const buttonCollapse = React.useCallback(() => (
         <MDBCollapse id={btn.id} isOpen={collapseOpen}>
             <span className="collapse-text m-1">
                 Используйте для создания пропусков между парами.
             </span>
         </MDBCollapse>
-    )
+    ), [btn.id, collapseOpen]);
 
     return (
         <div className="d-flex flex-row align-content-center">

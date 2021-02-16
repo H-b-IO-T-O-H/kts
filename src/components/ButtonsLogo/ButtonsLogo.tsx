@@ -1,5 +1,6 @@
 import React from "react";
 import {buttonsContent} from "@config/config";
+
 import "./ButtonsLogo.scss"
 
 const classNames = require('classnames/bind');

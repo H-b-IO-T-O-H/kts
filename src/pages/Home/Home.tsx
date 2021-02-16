@@ -1,8 +1,10 @@
 import React from "react";
-import "./Home.scss"
+
 import Card from "@components/Card";
 import Lesson from "@components/Lesson";
 import ButtonsLogo from "@components/ButtonsLogo";
+
+import "./Home.scss"
 
 const getWeekData = (): [number, string[]] => {
     const date = new Date();
@@ -16,7 +18,7 @@ const getWeekData = (): [number, string[]] => {
     return [weekDay, days.map((day, index) => (`${day}, ${weekAgo + index} ${months[monthIdx]}`))]
 }
 
-const Items: JSX.Element[] = [
+const Items: React.ReactNode[] = [
     <Lesson title="ТОТР" auditorium="404" time="8:30 - 10:05"><ButtonsLogo xs idx={0}/></Lesson>,
     <Lesson title="ТОТР" auditorium="404" time="8:30 - 10:05"><ButtonsLogo xs idx={1}/></Lesson>,
     <Lesson title="ТОТР" auditorium="404" time="8:30 - 10:05"><ButtonsLogo xs idx={2}/></Lesson>,
@@ -40,4 +42,4 @@ const Home = () => {
     )
 }
 
-export default Home;
+export default React.memo(Home);
