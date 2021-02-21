@@ -13,11 +13,16 @@ const Home = () => {
     const [Err, setErr] = useState(false)
 
     const HandlerChange = () => {
-        setErr(!Err)
+        const current = Err;
+        setErr(true)
+        if (!current) {
+            setTimeout(()=>setErr(false), 4900);
+        }
     }
 
     return (
         <div>
+            <Error content={'weruiop rftyhuiop 5f6gy7hu8l sdrtfyiop rtyiojpkl[ eruiop[ srdtyuiop'} displayed={Err}/>
             <div className="Home d-flex flex-row flex-nowrap">
                 <Card title={'День недели и дата'} item1={'Дисциплина'} item2={'Дисциплина'} item3={'Дисциплина'} item4={'Дисциплина'}/>
                 <Card title={'День недели и дата'} item1={'Дисциплина'} item2={'Дисциплина'} item3={'Дисциплина'} item4={'Дисциплина'}/>
@@ -27,12 +32,7 @@ const Home = () => {
                 <Card title={'День недели и дата'} item1={'Дисциплина'} item2={'Дисциплина'} item3={'Дисциплина'} item4={'Дисциплина'}/>
                 <Card title={'День недели и дата'} item1={'Дисциплина'} item2={'Дисциплина'} item3={'Дисциплина'} item4={'Дисциплина'}/>
             </div>
-            <div className="Show"> {
-                Err?<Error content={'fghjk'} displayed={true}/>:null
-            }
-            </div>
-            <button type="button" className="btn btn-danger" onClick={HandlerChange}>Ошибка</button>
-
+            <button type="button" className="btn btn-danger er" onClick={HandlerChange}>Ошибка</button>
         </div>
     )
 }

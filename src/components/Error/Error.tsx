@@ -7,11 +7,11 @@ type Props = {
 }
 
 const Error: React.FC<Props> = ({content, displayed}) => {
-    return(
-        <div className="Error text-center">
-            {displayed? <div>...</div> :
-                null}
-            <p>{content}</p>
+    return (
+        <div className="Error">
+            {displayed ? <div className="Error__content text-center">
+                <div>{content}</div>
+            </div> : null}
         </div>
     )
 }
