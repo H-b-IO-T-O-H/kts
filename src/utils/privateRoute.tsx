@@ -17,7 +17,7 @@ export const PrivateRoute: React.FC<Props> = ({component: Component, authMethod,
                render={props => authed ?
                    props.location.pathname === "/" ?
                        <Redirect to={{
-                           pathname: Urls.home,
+                           pathname: Urls.timetable.byId,
                            state: {from: props.location}
                        }}
                        /> :

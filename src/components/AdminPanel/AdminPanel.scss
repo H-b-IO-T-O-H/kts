@@ -1,14 +1,44 @@
-div.panel {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;
+@import "../../styles/main";
+
+.panel {
+  //margin-bottom: 15px;
   border-radius: 10px;
   max-width: 400px;
-  border:1px solid black;
-  margin: auto;
+  min-height: 50px;
+  background-color: #e7e7e7;
+
+
+  &__header{
+    min-height: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    color: grey;
+    font-weight: bold;
+    background-color: #a5d9d1;
+    border-radius: 10px 10px 0 0;
+    border: 1px solid transparent;
+  }
+  &__body {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    margin-bottom: 3px;
+  }
+  &__footer {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: grey;
+  }
+  @media screen and (max-width: #{$little-screen-min}) {
+    font-size: 0.8rem;
+  }
 }
+
 
 select.panel__select {
   border: 1px solid #a8a8a8;
@@ -22,5 +52,8 @@ select.panel__select {
 
   &:focus {
     border-color: #4db6ac;
+  }
+  @media screen and (max-width: #{$little-screen-min}) {
+    width: 32px;
   }
 }

@@ -11,7 +11,7 @@ type Props = {
 }
 
 const HiddenInput: React.FC<Props> = ({id, disabled, title, onChange, value}) => {
-    const handleChange = React.useCallback((e) => {
+    const handleChange = React.useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (onChange) {
             onChange(e.target.value, id);
         }

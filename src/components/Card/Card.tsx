@@ -2,23 +2,21 @@ import React from "react";
 import "./Card.scss";
 
 type Props = {
+    id: number;
     title: string;
-    item1: string;
-    item2: string;
-    item3: string;
-    item4: string;
+    currentDay: number;
+    items: React.ReactNode[];
 }
 
-const Card: React.FC<Props> = ({title, item1,item2,item3,item4}) => {
-    return(
+const Card: React.FC<Props> = ({id, title, currentDay, items}) => {
+    return (
         <div className="Home-Card">
-                <h5 className=" Home-Card__title">{title}</h5>
-                <ul className="list-group Home-Card__list">
-                    <li className="list-group-item Home-Card-list__item">{item1}</li>
-                    <li className="list-group-item Home-Card-list__item">{item2}</li>
-                    <li className="list-group-item Home-Card-list__item">{item3}</li>
-                    <li className="list-group-item Home-Card-list__item">{item4}</li>
-                </ul>
+            <h5 className="Home-Card__title"
+                style={{backgroundColor: id < currentDay ? "#b4bdbd" : "#5bc3c3"}}>{title}</h5>
+            <ul className="list-group Home-Card__list">
+                {items.map((elem, index) => (
+                    <li key={index} className="list-group-item Home-Card-list__item">{elem}</li>))}
+            </ul>
         </div>
     )
 }

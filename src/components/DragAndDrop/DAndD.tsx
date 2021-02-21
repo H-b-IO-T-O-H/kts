@@ -1,155 +1,47 @@
 import React, {useState} from "react";
 import {v4 as uuid} from "uuid";
-import "./DAndD.scss"
-import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
+import {DragDropContext, DropResult} from "react-beautiful-dnd";
+import {useHistory} from "react-router-dom";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {faSave} from "@fortawesome/free-solid-svg-icons/faSave";
+
 import ButtonTimetable from "@components/ButtonTimetable";
 import ButtonWithInput from "@components/ButtonWithInput";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes"
-import {faBars} from "@fortawesome/free-solid-svg-icons/faBars";
-import ButtonsLogo from "@components/ButtonsLogo";
 import AdminPanel from "@components/AdminPanel";
+import {Urls} from "@config/urls";
+import {buttonsContent, Week} from "@config/config";
+import DroppableElem from "@components/DragAndDrop/DroppableElem";
+import DraggableArea from "@components/DragAndDrop/DraggableArea";
+import DroppableArea from "@components/DragAndDrop/DroppableArea";
+import {findNextDay, copy, reorder} from "@components/DragAndDrop/config";
 
-const PlusComponent = () => (
-    <FontAwesomeIcon className={"icon-remover"} icon={faTimes} size={"lg"}
-                     color={"#e85050"}/>
-)
-
-const reorder = (list: Array<object>, startIndex: number, endIndex: number) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-
-    return result;
-};
-
-const copy = (source: Array<object>, destination: Array<object>, droppableSource: { index: number }, droppableDestination: { index: number }) => {
-    const sourceClone = Array.from(source);
-    const destClone = Array.from(destination);
-    const item = sourceClone[droppableSource.index];
-
-    destClone.splice(droppableDestination.index, 0, {...item, id: uuid()});
-    return destClone;
-};
-
-const Week = [
-    {id: 0, day: "Пн", date: ""},
-    {id: 1, day: "Вт", date: ""},
-    {id: 2, day: "Ср", date: ""},
-    {id: 3, day: "Чт", date: ""},
-    {id: 4, day: "Пт", date: ""},
-    {id: 5, day: "Сб", date: ""},
-    {id: 6, day: "Вс", date: ""},
-]
-
-
-const buttonsContent = [
-    {id: "btn-0", title: "СЕМ", color: "#348A3D"},
-    {id: "btn-1", title: "ЛЕК", color: "#62d76e"},
-    {id: "btn-2", title: "ЛР", color: "#8ebd3b"},
-    {id: "btn-3", title: "ДЗ", color: "#e8722c"},
-    {id: "btn-4", title: "РК", color: "#eabf19"},
-    {id: "btn-5", title: "КОНС", color: "#5c70d9"},
-    {id: "btn-6", title: "ЭКЗ", color: "#ce2c2c"},
-    {id: "btn-7", title: "СР", color: "#3ca490", disableInputs: true},
-]
-
-const LessonsTime = [
-    "8:30 - 10:05",
-    "10:15 - 11:50",
-    "12:00 - 13:35",
-    "13:50 - 15:25",
-    "15:40 - 17:15",
-    "17:25 - 19:00",
-    "19:10 - 20:45",
-]
-
-
-const FindNextDay = (Lists: object) => {
-    let idx = 0;
-    const isFull = !Week.some((item) => {
-        if (!Lists[item.id]) {
-            idx = item.id;
-            return true;
-        }
-        return false;
-    })
-    return isFull ? -1 : idx;
-}
-
+import "./DAndD.scss"
 
 const DragAndDrop = () => {
+    const history = useHistory();
     const [Lists, ChangeList] = useState<object>({0: []})
     const [dayIdx, ChangeDayIdx] = useState<number>(1)
     const [areasValue, setAreasValues] = useState({})
     const [inputsValue, setValues] = useState({})
 
-    const changeArea = (id: string, value: string) => {
+    const changeArea = React.useCallback((id: string, value: string) => {
         const oldAreas = areasValue
         oldAreas[id] = value
         setAreasValues(oldAreas);
-    }
+    }, [areasValue]);
 
-    const changeInput = (id: string, value: string) => {
+    const changeInput = React.useCallback((id: string, value: string) => {
         const oldInputs = inputsValue
         oldInputs[id] = value
         setValues(oldInputs);
-    }
+    }, [inputsValue]);
 
-    const droppableColumn = buttonsContent.map((btn, idx) => (
-        <ButtonWithInput key={idx} btn={btn} onAreaChange={changeArea} onInputChange={changeInput} inputs={{maxInputLength: 5, maxAreaLength: 70}}/>
-    ))
+    const droppableColumn = React.useMemo(() => (buttonsContent.map((btn, idx) => (
+        <ButtonWithInput key={idx} btn={btn} onAreaChange={changeArea} onInputChange={changeInput}
+                         inputs={{maxInputLength: 5, maxAreaLength: 70}}/>
+    ))), [changeInput, changeArea])
 
-    const addWeek = () => {
-        return (
-            <Droppable droppableId="items" isDropDisabled={true}>
-                {(provided) => (
-                    <div ref={provided.innerRef}>
-                        {
-                            droppableColumn.map((item, index) => {
-                                return (
-                                    <Draggable
-                                        key={item.props.btn.id}
-                                        draggableId={item.props.btn.id}
-                                        index={index}
-                                    >
-                                        {(provided, snapshot) => (
-                                            <React.Fragment>
-                                                <div ref={provided.innerRef}
-                                                     {...provided.draggableProps}
-                                                     {...provided.dragHandleProps}
-                                                >
-                                                    <div className="DAndD-items__column" style={{
-                                                        border: snapshot.isDragging ?
-                                                            "1px dashed #000" : "1px solid #ddd"
-                                                    }}>
-                                                        <FontAwesomeIcon className="DAndD-items__column__drop ml-1"
-                                                                         icon={faBars} size={"lg"}
-                                                                         style={{color: snapshot.isDragging ? "#35b8b8" : ""}}/>
-
-                                                        {item}
-                                                    </div>
-                                                </div>
-                                                {snapshot.isDragging && (
-                                                    <div className="DAndD-items__column__dragged">
-                                                        <div style={{opacity: "0"}}>
-                                                            {item}
-                                                        </div>
-                                                    </div>)
-                                                }
-                                            </React.Fragment>
-                                        )}
-                                    </Draggable>)
-                            })}
-
-                        {provided.placeholder}
-                    </div>
-                )}
-            </Droppable>
-        )
-    }
-
-    const onDragEnd = (result: any) => {
+    const onDragEnd = React.useCallback((result: DropResult) => {
         const {source, destination} = result;
 
         if (!destination) {
@@ -172,128 +64,78 @@ const DragAndDrop = () => {
                 if (Lists[destination.droppableId].length === Week.length) {
                     return;
                 }
-                const draggableColumn = buttonsContent.map((btn) => (
-                    <div>
-                        <div className="DAndD-item__header" key={btn.id}>
-                            <span className="DAndD-item__header__text">{btn.title !== "СР" ? areasValue[btn.id] : "Самостоятельная работа"}</span>
-                        </div>
-                        <div className="d-flex flex-row justify-content-between">
-                            <ButtonsLogo color={btn.color}>{btn.title}</ButtonsLogo>
-                            <span className="DAndD-item__header__text mt-1 mr-1">{inputsValue[btn.id]}</span>
-                        </div>
-                    </div>
-                ))
+
+                const draggable = <DroppableElem sourceIdx={source.index}
+                                                 header={buttonsContent[source.index].title !== "СР" ?
+                                                     areasValue[buttonsContent[source.index].id] : "Самостоятельная работа"}
+                                                 footer={inputsValue[buttonsContent[source.index].id]}/>
+
                 newList[destination.droppableId] = copy(
-                    draggableColumn,
+                    draggable,
                     newList[destination.droppableId],
-                    source,
-                    destination
+                    destination.index
                 )
                 break;
-
         }
         ChangeList(newList);
-    };
+    },[Lists, areasValue, inputsValue]);
 
-    const AddList = () => {
-        const idx = FindNextDay(Lists)
+    const AddList = React.useCallback(() => {
+        const idx = findNextDay(Lists)
         if (idx === -1) {
             return;
         }
         const newList = {...Lists};
         newList[idx] = [];
         ChangeList(newList);
-        ChangeDayIdx(FindNextDay(newList));
-    };
+        ChangeDayIdx(findNextDay(newList));
+    }, [Lists]);
 
-    const removeItem = (list: string, index: number) => {
+    const removeItem = React.useCallback((list: string, index: number) => {
         const newList = {...Lists};
         newList[list].splice(index, 1);
         ChangeList(newList);
-    };
+    }, [Lists]);
 
-    const removeList = (list: number) => {
+    const removeList = React.useCallback((list: number) => {
         const newList = {...Lists};
         delete newList[list];
         ChangeList(newList);
-        const idx = FindNextDay(newList);
+        const idx = findNextDay(newList);
         ChangeDayIdx(idx);
-    }
-
+    }, [Lists]);
 
     return (
         <div className="DAndD text-center">
-
-            <div className="mb-1">
-                <AdminPanel dayIdx={dayIdx} changeDay={AddList}/>
+            <div className="d-flex flex-row">
+                <div className="d-none d-sm-block col-sm-4 col-md-5"/>
+                <div className="col-md-7">
+                    <AdminPanel dayIdx={dayIdx} changeDay={AddList}/>
+                </div>
             </div>
-
+            <hr/>
             <div className="d-flex flex-row">
                 <DragDropContext onDragEnd={onDragEnd}>
-                    <div className="col-6">
-                        {Object.keys(Lists).map((list) => (
-                            <Droppable key={list} droppableId={list}>
-                                {(provided, snapshot) => (
-                                    <div className="DAndD-container" ref={provided.innerRef}
-                                         style={{border: snapshot.isDraggingOver ? "3px dashed #000" : "3px solid #ddd"}}>
-                                        <div
-                                            className="DAndD-container__header d-flex flex-row justify-content-between">
-                                            <span className="DAndD-container__header__text">{Week[list].day}</span>
-                                            <button type="button"
-                                                    className="link-button"
-                                                    onClick={() => {
-                                                        removeList(parseInt(list))
-                                                    }}
-                                                    style={{display: Lists[list].length ? "none" : ""}}
-                                            >
-                                                {PlusComponent()}
-                                            </button>
-                                        </div>
-
-                                        <div className="DAndD__content">
-                                            {Lists[list].length ? Lists[list].map((item: { id: string }, index: number) => (
-                                                    <Draggable key={item.id} draggableId={item.id}
-                                                               index={index}>
-                                                        {(provided, snapshot) => (
-                                                            <div ref={provided.innerRef} {...provided.draggableProps}
-                                                                 style={
-                                                                     provided.draggableProps.style
-                                                                 }>
-                                                                <div className="DAndD-item"
-                                                                     style={{border: snapshot.isDragging ? "1px dashed #000" : "1px solid #ddd"}} {...provided.dragHandleProps}>
-                                                                    <button type="button"
-                                                                            className="link-button DAndD-item__close"
-                                                                            onClick={() => {
-                                                                                removeItem(list, index)
-                                                                            }}>
-                                                                        {PlusComponent()}
-                                                                    </button>
-                                                                    {item}
-                                                                    <div
-                                                                        className="DAndD-item__lessons">{LessonsTime[index]}</div>
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </Draggable>)) :
-                                                <div className="text-center">
-                                                    <span className="text-black-50">Drop items here</span>
-                                                </div>
-                                            }
-                                            {provided.placeholder}
-                                        </div>
-                                    </div>
-                                )}
-                            </Droppable>
-                        ))}
+                    <div className="col-5">
+                        <DroppableArea Lists={Lists} removeList={removeList} removeItem={removeItem}/>
                     </div>
-                    {addWeek()}
+                    <div className="col-7 d-flex">
+                        <DraggableArea droppableColumn={droppableColumn}/>
+                    </div>
                 </DragDropContext>
             </div>
+            <hr/>
             <ButtonTimetable
-                onChange={() => (console.log(Lists))}
-                disabled={false}
-                btn={{id: uuid(), color: "#870046"}}
-            >Test</ButtonTimetable>
+                onChange={() => {
+                    history.replace(Urls.timetable.byId)
+                }}
+                btn={{id: uuid(), color: "#36a51c"}}
+            >
+                <div className="d-flex flex-row align-items-center justify-content-around">
+                    <FontAwesomeIcon icon={faSave} size={"sm"}/>
+                    <div>Save</div>
+                </div>
+            </ButtonTimetable>
         </div>
     );
 }

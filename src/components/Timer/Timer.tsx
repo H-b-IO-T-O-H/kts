@@ -1,8 +1,6 @@
 import React, {useEffect, useState, useCallback} from "react";
-import {PROTECTED_SESSION_TIME} from "@utils/constants";
 
-//type MyProps = { onZero: () => void };
-//type MyState = { time: { h: number, m: number, s: number }, seconds: number };
+import {PROTECTED_SESSION_TIME} from "../../pages/Authorization/config";
 
 const secondsToTime = (s: number) => {
     const h = Math.trunc(s / 3600);
@@ -17,7 +15,7 @@ const secondsToTime = (s: number) => {
 
 type Props = {
     id?: string,
-    onZero?: any,
+    onZero?: () => void,
     size: { sm?: boolean, xs?: boolean, lg?: boolean }
 }
 
@@ -28,7 +26,9 @@ const Timer: React.FC<Props> = ({id, onZero, size}) => {
 
     const OnStopCallback = useCallback(
         () => {
-            onZero();
+            if (onZero) {
+                onZero();
+            }
         },
         [onZero],
     );
@@ -41,9 +41,9 @@ const Timer: React.FC<Props> = ({id, onZero, size}) => {
     }
 
     useEffect(() => {
-        let timer: ReturnType<typeof setInterval> | number = 0;
+        let timer = 0;
         if (isActive) {
-            timer = setInterval(() => {
+            timer = window.setInterval(() => {
                 let seconds = time.seconds - 1;
                 changeTime({
                     time: secondsToTime(seconds),
@@ -55,9 +55,9 @@ const Timer: React.FC<Props> = ({id, onZero, size}) => {
                 }
             }, 1000);
         } else if (!isActive && time.seconds !== 0) {
-            clearInterval(timer);
+            window.clearInterval(timer);
         }
-        return () => clearInterval(timer as NodeJS.Timeout);
+        return () => window.clearInterval(timer);
     }, [isActive, time.seconds, OnStopCallback]);
 
     return (
@@ -67,7 +67,6 @@ const Timer: React.FC<Props> = ({id, onZero, size}) => {
             </div>
         </div>
     );
-
 }
 
 export default Timer;

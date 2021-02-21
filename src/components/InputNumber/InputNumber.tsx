@@ -10,21 +10,22 @@ type Props = {
 }
 
 const InputNumber: React.FC<Props> = ({id, min, max, onChange, placeholder}) => {
-    const [value, setValue] = useState("")
+    const [value, setValue] = useState(0)
 
-    const changeInputValue = useCallback((e: any) => {
+    const changeInputValue = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         let inputValue = parseInt(e.target.value);
         if (inputValue < min || inputValue > max) {
             return;
         }
-        setValue(e.target.value);
+        setValue(inputValue);
         if (onChange) {
             onChange(id, inputValue);
         }
     }, [onChange, id, min, max])
 
     return (
-        <input type="number" placeholder={placeholder} className="input-number" value={value} onChange={(e) => {changeInputValue(e)}}/>
+        <input type="number" placeholder={placeholder} className="input-number" value={value}
+               onChange={changeInputValue}/>
     );
 
 }

@@ -1,16 +1,33 @@
 import React from "react";
+import {buttonsContent} from "@config/config";
+
 import "./ButtonsLogo.scss"
 
+const classNames = require('classnames/bind');
+
+const styles = {
+    btn: 'btn-logo',
+    btnXs: 'btn-logo__xs',
+};
+
+const btnLogo = classNames.bind(styles);
+
 type Props = {
-    color: string
+    idx: number;
+    xs?: boolean;
 }
 
-const ButtonsLogo: React.FC<Props> = ({color, children}) => {
+const ButtonsLogo: React.FC<Props> = ({idx, xs}) => {
+    let className = btnLogo({
+        btn: true,
+        btnXs: !!xs
+    });
+
     return (
-        <div className="btn-logo" style={{backgroundColor: color}}>
-            {children}
+        <div className={className} style={{backgroundColor: buttonsContent[idx].color}}>
+            {buttonsContent[idx].title}
         </div>
     )
 }
 
-export default ButtonsLogo;
+export default React.memo(ButtonsLogo);

@@ -1,0 +1,23 @@
+@import "../../styles/main";
+
+.Lesson {
+  border-radius: 5px;
+
+  &__header {
+    text-align: center;
+    border-radius: 4px 4px 0 0;
+    background-color: #efefef;
+    font-weight: bold;
+
+    &__text {
+      word-break: break-all;
+      color: grey;
+    }
+  }
+  &__param {
+    margin: .375rem;
+    font-weight: bold;
+    color: #2096ff;
+    font-size: 0.7rem;
+  }
+}

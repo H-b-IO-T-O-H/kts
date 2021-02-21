@@ -1,13 +1,16 @@
 import React from 'react';
-import Timetable from "./pages/Timetable";
-import "./App.scss"
-import Auth, {DefaultCheckLogin} from "./pages/authorization";
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
+
 import {PrivateRoute} from "@utils/privateRoute"
-import NotFoundPage from "./pages/notFound";
-import {Urls} from "@config/urls"
-import Home from "./pages/Home";
 import Header from "@components/Header";
+import {Urls} from "@config/urls"
+
+import Timetable from "../pages/Timetable";
+import Auth, {DefaultCheckLogin} from "../pages/Authorization";
+import NotFoundPage from "../pages/NotFound";
+import Home from "../pages/Home";
+import "../styles/main.scss"
+
 
 const App = () => {
     return (
@@ -17,9 +20,9 @@ const App = () => {
                 <Switch>
                     <PrivateRoute exact path={Urls.root} authMethod={DefaultCheckLogin}
                                   component={Home}/>
-                    <PrivateRoute exact path={Urls.home} authMethod={DefaultCheckLogin}
+                    <PrivateRoute exact path={Urls.timetable.byId} authMethod={DefaultCheckLogin}
                                   component={Home}/>
-                    <PrivateRoute exact path={Urls.timetableCreate} authMethod={DefaultCheckLogin}
+                    <PrivateRoute exact path={Urls.timetable.new} authMethod={DefaultCheckLogin}
                                   component={Timetable}/>
                     <Route exact path={Urls.auth} component={Auth}/>
                     <Route path={Urls.notFound} component={NotFoundPage}/>
