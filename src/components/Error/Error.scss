@@ -1,0 +1,19 @@
+div.Error {
+  position: absolute;
+  z-index: 1;
+  right: 15px;
+  opacity: .83;
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    min-width: 50px;
+    max-width: 250px;
+    background-color: #DF1B1B;
+    border-radius: 7px;
+    color: white;
+    font-weight: bold;
+  }
+}
