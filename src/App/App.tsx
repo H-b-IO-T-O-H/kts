@@ -20,9 +20,9 @@ const App = () => {
                 <Switch>
                     <PrivateRoute exact path={Urls.root} authMethod={DefaultCheckLogin}
                                   component={Home}/>
-                    <PrivateRoute exact path={Urls.timetable.byId} authMethod={DefaultCheckLogin}
+                    <PrivateRoute exact path={Urls.timetable.slugRoot} authMethod={DefaultCheckLogin}
                                   component={Home}/>
-                    <PrivateRoute exact path={Urls.timetable.new} authMethod={DefaultCheckLogin}
+                    <PrivateRoute exact path={Urls.timetable.slugEdit} authMethod={DefaultCheckLogin}
                                   component={Timetable}/>
                     <Route exact path={Urls.auth} component={Auth}/>
                     <Route path={Urls.notFound} component={NotFoundPage}/>

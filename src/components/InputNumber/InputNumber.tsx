@@ -2,6 +2,7 @@ import React, {useCallback, useState} from "react";
 import "./InputNumber.scss"
 
 type Props = {
+    disabled?: boolean;
     placeholder: string;
     id: string;
     min: number;
@@ -9,22 +10,24 @@ type Props = {
     onChange?: (id: string, value: number) => void;
 }
 
-const InputNumber: React.FC<Props> = ({id, min, max, onChange, placeholder}) => {
-    const [value, setValue] = useState(0)
+const InputNumber: React.FC<Props> = ({id, min, max, onChange, placeholder, disabled}) => {
+    const [value, setValue] = useState("")
 
     const changeInputValue = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        let inputValue = parseInt(e.target.value);
-        if (inputValue < min || inputValue > max) {
+        const value = e.target.value;
+        let intValue = parseInt(value);
+        if (intValue < min || intValue > max) {
             return;
         }
-        setValue(inputValue);
+        setValue(value);
         if (onChange) {
-            onChange(id, inputValue);
+            onChange(id, intValue);
         }
     }, [onChange, id, min, max])
 
     return (
-        <input type="number" placeholder={placeholder} className="input-number" value={value}
+        <input disabled={disabled} type="number" placeholder={placeholder} className="input-number"
+               value={value}
                onChange={changeInputValue}/>
     );
 

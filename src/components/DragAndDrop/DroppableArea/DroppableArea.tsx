@@ -45,7 +45,7 @@ const DroppableArea: React.FC<Props> = ({Lists, removeList, removeItem}) => {
                                                     <div className="DAndD-item"
                                                          style={{border: snapshot.isDragging ? "1px dashed #000" : "1px solid #ddd"}} {...provided.dragHandleProps}>
                                                         <button type="button"
-                                                                className="link-button DAndD-item__close"
+                                                                className="link-button DAndD-item__close icon-red"
                                                                 onClick={() => {
                                                                     removeItem(list, index)
                                                                 }}>

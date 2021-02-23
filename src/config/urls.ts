@@ -1,15 +1,19 @@
+export const DOMAIN = "http://localhost:8080/api/v1/";
+export const LOGIN = "users/login";
+
 const BASE_URL = "/";
-const TIMETABLE_URL = `${BASE_URL}timetable`;
+export const TIMETABLE_URL = `${BASE_URL}timetable`;
 const AUTH_URL = `${BASE_URL}auth`;
 const ANY_URL = "*"
 
 export const Urls = {
     root: BASE_URL,
     timetable: {
-        new:`${TIMETABLE_URL}/new`,
-        //byId:`${TIMETABLE_URL}[:id]`,
-        byId:`${TIMETABLE_URL}`,
-        create:(id:string)=>`${TIMETABLE_URL}/${id}`
+        slugEdit: `${TIMETABLE_URL}/edit`,
+        slugRoot: `${TIMETABLE_URL}`,
+        get: (group: string, week: number): string => `${DOMAIN}timetable/${group}/${week}`,
+        post: () => `${DOMAIN}timetable/create`,
+        delete: () => `${DOMAIN}timetable/`
     },
     auth: AUTH_URL,
     notFound: ANY_URL,

@@ -9,7 +9,7 @@ const NotFoundPage = () => {
     const history = useHistory()
 
     const homeRedirectHandler = React.useCallback(() => {
-        history.replace(Urls.timetable.byId)
+        history.replace(Urls.timetable.slugRoot)
     }, [history]);
 
     return (

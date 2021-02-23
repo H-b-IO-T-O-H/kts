@@ -10,7 +10,9 @@
     font-weight: bold;
 
     &__text {
-      word-break: break-all;
+      font-size: 0.8rem;
+      padding: 3px;
+      word-wrap: break-word;
       color: grey;
     }
   }

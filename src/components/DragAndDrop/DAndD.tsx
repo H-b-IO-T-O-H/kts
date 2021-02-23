@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {v4 as uuid} from "uuid";
 import {DragDropContext, DropResult} from "react-beautiful-dnd";
 import {useHistory} from "react-router-dom";
@@ -8,21 +8,79 @@ import {faSave} from "@fortawesome/free-solid-svg-icons/faSave";
 import ButtonTimetable from "@components/ButtonTimetable";
 import ButtonWithInput from "@components/ButtonWithInput";
 import AdminPanel from "@components/AdminPanel";
-import {Urls} from "@config/urls";
+
 import {buttonsContent, Week} from "@config/config";
 import DroppableElem from "@components/DragAndDrop/DroppableElem";
 import DraggableArea from "@components/DragAndDrop/DraggableArea";
 import DroppableArea from "@components/DragAndDrop/DroppableArea";
-import {findNextDay, copy, reorder} from "@components/DragAndDrop/config";
+import {findNextDay, copy, reorder, checkFill, saveTimetable, Labels} from "@components/DragAndDrop/config";
 
 import "./DAndD.scss"
+import {makeGet} from "@utils/network";
+import {Urls} from "@config/urls";
+
+type Lesson = {
+    lesson_id: string;
+    title: string;
+    lesson_type: string;
+    auditorium: string;
+}
+
+const prepareLessons = (lessons: Array<Lesson>) => {
+    return lessons.map((lesson) => ({
+        id: lesson.lesson_id, ...<DroppableElem isEmpty={lesson.lesson_type === "free"}
+                                                sourceIdx={Labels[lesson.lesson_type]}
+                                                header={lesson.title}
+                                                footer={lesson.auditorium}/>
+    }))
+}
+
+
+const prepareWeek = (weekDays: Array<{ day_id: string, day_order: number, lessons: Array<Lesson> }>) => {
+    const newList = {};
+
+    weekDays.map((day, index) => {
+        if (day.lessons) {
+            newList[index] = prepareLessons(day.lessons)
+        } else {
+            newList[index] = []
+        }
+    })
+    return newList
+}
+
 
 const DragAndDrop = () => {
     const history = useHistory();
-    const [Lists, ChangeList] = useState<object>({0: []})
-    const [dayIdx, ChangeDayIdx] = useState<number>(1)
+    const [deleted, changeDeleted] = useState<{ lessons: Array<string> }>({
+        lessons: []
+    })
+    const [Lists, changeList] = useState<object>({0: []})
+    const [dayIdx, changeDayIdx] = useState<number>(1)
     const [areasValue, setAreasValues] = useState({})
     const [inputsValue, setValues] = useState({})
+
+    useEffect(() => {
+        makeGet(Urls.timetable.get("IU10-73", 1)).then((response) => {
+            console.log("Ответ сервера успешно получен!");
+            const savedWeek = prepareWeek(response.data.week.days)
+            changeList(savedWeek)
+            changeDayIdx(findNextDay(savedWeek))
+
+        }).catch((error) => {
+            console.log(error)
+            // if (error.response) {
+            //     if (error.response.status === 404) {
+            //         setUserError(ERROR_AUTHORIZATION);
+            //     } else {
+            //         setUserError(ERROR_SERVER);
+            //     }
+            // } else {
+            //     setUserError(SERVER_UNAVAILABLE);
+            // }
+            return;
+        });
+    }, [])
 
     const changeArea = React.useCallback((id: string, value: string) => {
         const oldAreas = areasValue
@@ -38,7 +96,7 @@ const DragAndDrop = () => {
 
     const droppableColumn = React.useMemo(() => (buttonsContent.map((btn, idx) => (
         <ButtonWithInput key={idx} btn={btn} onAreaChange={changeArea} onInputChange={changeInput}
-                         inputs={{maxInputLength: 5, maxAreaLength: 70}}/>
+                         inputs={{maxInputLength: 5, maxAreaLength: 50}}/>
     ))), [changeInput, changeArea])
 
     const onDragEnd = React.useCallback((result: DropResult) => {
@@ -64,11 +122,17 @@ const DragAndDrop = () => {
                 if (Lists[destination.droppableId].length === Week.length) {
                     return;
                 }
+                const title = areasValue[buttonsContent[source.index].id];
+                const auditorium = inputsValue[buttonsContent[source.index].id];
+                const isEmpty = buttonsContent[source.index].title === "СР";
 
-                const draggable = <DroppableElem sourceIdx={source.index}
-                                                 header={buttonsContent[source.index].title !== "СР" ?
-                                                     areasValue[buttonsContent[source.index].id] : "Самостоятельная работа"}
-                                                 footer={inputsValue[buttonsContent[source.index].id]}/>
+                if (!isEmpty && !checkFill(title, auditorium)) {
+                    return;
+                }
+
+                const draggable = <DroppableElem isEmpty={isEmpty} sourceIdx={source.index}
+                                                 header={isEmpty ? "Самостоятельная работа" : title}
+                                                 footer={auditorium}/>
 
                 newList[destination.droppableId] = copy(
                     draggable,
@@ -77,8 +141,9 @@ const DragAndDrop = () => {
                 )
                 break;
         }
-        ChangeList(newList);
-    },[Lists, areasValue, inputsValue]);
+        changeList(newList);
+        console.log(Lists)
+    }, [Lists, areasValue, inputsValue]);
 
     const AddList = React.useCallback(() => {
         const idx = findNextDay(Lists)
@@ -87,22 +152,26 @@ const DragAndDrop = () => {
         }
         const newList = {...Lists};
         newList[idx] = [];
-        ChangeList(newList);
-        ChangeDayIdx(findNextDay(newList));
+        changeList(newList);
+        changeDayIdx(findNextDay(newList));
     }, [Lists]);
 
     const removeItem = React.useCallback((list: string, index: number) => {
         const newList = {...Lists};
+        const id: string = newList[list][index].id
+        const deletedLessons: Array<string> = [...deleted.lessons]
+        deletedLessons.push(id)
+        changeDeleted({lessons: deletedLessons});
         newList[list].splice(index, 1);
-        ChangeList(newList);
+        changeList(newList);
     }, [Lists]);
 
     const removeList = React.useCallback((list: number) => {
         const newList = {...Lists};
         delete newList[list];
-        ChangeList(newList);
+        changeList(newList);
         const idx = findNextDay(newList);
-        ChangeDayIdx(idx);
+        changeDayIdx(idx);
     }, [Lists]);
 
     return (
@@ -127,7 +196,8 @@ const DragAndDrop = () => {
             <hr/>
             <ButtonTimetable
                 onChange={() => {
-                    history.replace(Urls.timetable.byId)
+                    saveTimetable(Lists, deleted)
+                    //history.replace(Urls.timetable.byId)
                 }}
                 btn={{id: uuid(), color: "#36a51c"}}
             >

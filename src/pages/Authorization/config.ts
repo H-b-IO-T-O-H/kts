@@ -1,5 +1,7 @@
 export const DEFAULT_SESSION_TIME = 3 * 24 * 60 * 60 * 1000; // 3 days in ms
 export const PROTECTED_SESSION_TIME = 2 * 3600; // 2 hours in sec
+export const ERROR_SERVER = "Внутренняя ошибка сервера, попробуйте позже!";
+export const SERVER_UNAVAILABLE = "Связь с сервером потеряна!";
 export const ERROR_AUTHORIZATION = "Неверное имя пользователя или пароль!";
 export const PASSWORD_MAX_LENGTH = 35;
 export const PASSWORD_MIN_LENGTH = 5;

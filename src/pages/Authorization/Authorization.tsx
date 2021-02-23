@@ -1,15 +1,17 @@
 import React, {useEffect, useState} from "react";
 import {useHistory} from "react-router-dom"
 
-import {Urls} from "@config/urls";
+import {DOMAIN, LOGIN, Urls} from "@config/urls";
 
 import {
     PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH,
     EMPTY_EMAIL_FIELD, EMPTY_PASSWORD_FIELD, ERROR_AUTHORIZATION,
-    ERROR_EMAIL_FIELD, ERROR_PASSWORD_FIELD, DEFAULT_SESSION_TIME
+    ERROR_EMAIL_FIELD, ERROR_PASSWORD_FIELD, DEFAULT_SESSION_TIME, SERVER_UNAVAILABLE, ERROR_SERVER
 } from "./config";
 import "./Authorization.scss"
 import AuthError from "@components/AuthError";
+import {makePost} from "@utils/network";
+import {addUsers} from "@utils/addUsers";
 
 export const Logout = (history: any) => {
     localStorage.setItem("loginTime", "");
@@ -20,11 +22,6 @@ export const DefaultCheckLogin = () => {
     const lastAuthTime = parseInt(localStorage.getItem("loginTime") as string);
     return lastAuthTime != null && Date.now() - lastAuthTime < DEFAULT_SESSION_TIME;
 }
-
-const userPupkin = {
-    email: "email@y.ru",
-    password: "email@y.ru"
-};
 
 const Auth = () => {
     const [email, setEmail] = useState('');
@@ -44,14 +41,32 @@ const Auth = () => {
 
     const HandleSubmit = React.useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
-        //TODO: get data from server + checkbox treatment
-        if (email !== userPupkin.email || password !== userPupkin.password) {
-            setUserError(ERROR_AUTHORIZATION);
+
+        //addUsers();
+
+        makePost(`${DOMAIN}${LOGIN}`, {
+            email: email,
+            password: password,
+            checkbox: checkBox
+        }).then((response) => {
+            console.log("Ответ сервера успешно получен!");
+            console.log(response.data.user);
+            localStorage.setItem("loginTime", Date.now().toString());
+            history.push(Urls.timetable.slugRoot);
+        }).catch((error) => {
+            if (error.response) {
+                if (error.response.status === 404) {
+                    setUserError(ERROR_AUTHORIZATION);
+                } else {
+                    setUserError(ERROR_SERVER);
+                }
+            } else {
+                setUserError(SERVER_UNAVAILABLE);
+            }
             return;
-        }
-        localStorage.setItem("loginTime", Date.now().toString());
-        history.push(Urls.timetable.byId);
-    }, [email, password, history]);
+        });
+
+    }, [email, password, checkBox,history]);
 
     useEffect(() => {
         if (emailError || passwordError) {

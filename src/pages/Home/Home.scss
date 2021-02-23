@@ -1,11 +1,11 @@
 .Home {
+  min-width: 320px;
   overflow-x: auto;
-  width: 86%;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 3rem;
+  margin-right: 3rem;
   border-radius: 15px;
   box-shadow: 0 0 5px #d2d2d2;
-  margin-top: 10px;
+  margin-top: 1rem;
 }
 
 ::-webkit-scrollbar-button {
@@ -22,8 +22,7 @@
 ::-webkit-scrollbar-thumb {
   -webkit-border-radius: 0;
   border-radius: 10px;
-  background-color: transparent; //#7CC7C1;
-  //border: 1px solid #448680;
+  background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb:hover {

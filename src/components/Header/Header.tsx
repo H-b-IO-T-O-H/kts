@@ -24,7 +24,7 @@ const Header = () => {
     const location = useLocation();
     const history = useHistory();
 
-    const Rendered = () => ([Urls.timetable.new, Urls.timetable.byId, Urls.root].includes(location.pathname))
+    const Rendered = () => ([Urls.timetable.slugRoot, Urls.timetable.slugEdit, Urls.root].includes(location.pathname))
 
     const [collapseIsOpen, collapseChange] = useState(false);
 
@@ -43,10 +43,10 @@ const Header = () => {
                     <MDBCollapse id="navbarCollapse3" isOpen={collapseIsOpen} navbar>
                         <MDBNavbarNav left className="col-lg-8">
                             <MDBNavItem active>
-                                <MDBNavLink to={Urls.timetable.byId}>Главная</MDBNavLink>
+                                <MDBNavLink to={Urls.timetable.slugRoot}>Главная</MDBNavLink>
                             </MDBNavItem>
                             <MDBNavItem active>
-                                <MDBNavLink to={Urls.timetable.new}>Конструктор расписания</MDBNavLink>
+                                <MDBNavLink to={Urls.timetable.slugEdit}>Конструктор расписания</MDBNavLink>
                             </MDBNavItem>
                             <MDBNavItem active className="d-md-none">
                                 <button type="button"
