@@ -1,5 +1,7 @@
 export const DOMAIN = "http://localhost:8080/api/v1/";
 export const LOGIN = "users/login";
+export const LOGOUT = "users/logout";
+export const ME = "users/me"
 
 const BASE_URL = "/";
 export const TIMETABLE_URL = `${BASE_URL}timetable`;

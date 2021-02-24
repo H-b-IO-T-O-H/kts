@@ -35,15 +35,3 @@ export const makeDelete = async (url: string, data: any) => {
     });
 };
 
-// const makeRequest = async () => {
-//     axios({
-//         method: "get",
-//         url: "https://api.github.com/users"
-//     }).then(response => {
-//         setUsers(response.data.reduce((acc, user) => [...acc, {
-//             id: user.id,
-//             name: user.login,
-//             avatarUrl: user.avatar_url
-//         }], []))
-//     });
-// }

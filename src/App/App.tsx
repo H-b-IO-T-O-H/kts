@@ -6,7 +6,7 @@ import Header from "@components/Header";
 import {Urls} from "@config/urls"
 
 import Timetable from "../pages/Timetable";
-import Auth, {DefaultCheckLogin} from "../pages/Authorization";
+import Auth from "../pages/Authorization";
 import NotFoundPage from "../pages/NotFound";
 import Home from "../pages/Home";
 import "../styles/main.scss"
@@ -18,11 +18,11 @@ const App = () => {
             <div className="App h-100">
                 <Header/>
                 <Switch>
-                    <PrivateRoute exact path={Urls.root} authMethod={DefaultCheckLogin}
+                    <PrivateRoute exact path={Urls.root}
                                   component={Home}/>
-                    <PrivateRoute exact path={Urls.timetable.slugRoot} authMethod={DefaultCheckLogin}
+                    <PrivateRoute exact path={Urls.timetable.slugRoot}
                                   component={Home}/>
-                    <PrivateRoute exact path={Urls.timetable.slugEdit} authMethod={DefaultCheckLogin}
+                    <PrivateRoute exact path={Urls.timetable.slugEdit}
                                   component={Timetable}/>
                     <Route exact path={Urls.auth} component={Auth}/>
                     <Route path={Urls.notFound} component={NotFoundPage}/>

@@ -38,13 +38,6 @@ export const checkFill = (header_text: string, footer_text: string): boolean => 
     return header_text?.length >= 2 && footer_text?.length >= 2
 }
 
-type Lesson = {
-    lesson_id: string;
-    title: string;
-    lesson_type: string;
-    auditorium: number;
-}
-
 export const getDayDataFromList = (day: Array<{ id: string, props: any }>) => {
     return day.map((lesson, index) => ({
         lesson_order: index + 1,
@@ -55,18 +48,33 @@ export const getDayDataFromList = (day: Array<{ id: string, props: any }>) => {
     }))
 }
 
-export const saveTimetable = (Lists: object, deleted: { lessons: Array<string> }) => {
+const changeWeekType = (week_type: string) => {
+    return week_type === "Чc" ? "numerator" : "denominator";
+}
+
+const postWeekData = (week: object, ShowLabel: (err:any) => void) => {
+    makePost(Urls.timetable.post(), week).then((resp) => {
+        console.log(resp)
+        if (resp.status !== 201) {
+            ShowLabel({content:"Не удалось сохранить изменения!", success: false})
+        } else {
+            ShowLabel({content:"Успех!", success: true})
+        }
+    }).catch(() => {
+        ShowLabel({content:"Не удалось сохранить изменения!", success: false})
+    })
+}
+
+export const saveTimetable = (Lists: object, deleted: { lessons: Array<string> }, panelData: { group: number; semester: number; week: number; weekType: string },
+                              ShowLabel: any) => {
     const week = {
-        //timetable_id: "cb168d61-3592-42d1-b491-7a34d52277e5",
-        //group_id: "af594367-b7a9-4d1c-bdeb-6f83150c6049",
-        group: "IU10-73",
-        week_type: "numerator",
-        week_number: 1,
+        group: `IU10-${panelData.semester}${panelData.group}`,
+        week_type: changeWeekType(panelData.weekType),
+        week_number: panelData.weekType === "Чс" ? 1 : 2,
         days: <Array<object>>[]
     }
-    console.log(deleted)
     const idx = Object.keys(Lists)
-    idx.map((i) => {
+    idx.forEach((i) => {
         week.days.push(
             {
                 day_order: parseInt(i) + 1,
@@ -74,17 +82,25 @@ export const saveTimetable = (Lists: object, deleted: { lessons: Array<string> }
             }
         )
     });
+    ShowLabel({content:"", success:false});
+
+    console.log(week)
+
+
     makeDelete(Urls.timetable.delete(), {lessons_ids: deleted.lessons}).then((response) => {
         if (response.status === 200) {
-            makePost(Urls.timetable.post(), week).then((resp) => {
-                console.log(response.status)
-            }).catch((error) => {
-                alert(error.toString())
-            })
+            postWeekData(week, ShowLabel)
+        } else {
+            ShowLabel({content:"Ошибка при удалении записей!", success: false})
         }
-    }).catch((error) => {
-        if (error.response) {
-            console.log(error.response)
+    }).catch((err) => {
+        if (err.response && err.response.status === 403) {
+            ShowLabel({content:"Недостаточно прав для изменения!", success: false})
+        } else {
+            ShowLabel({content:"Ошибка при удалении записей!", success: false})
         }
+
     })
+
+
 }

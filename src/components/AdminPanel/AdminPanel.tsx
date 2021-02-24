@@ -13,37 +13,44 @@ import "./AdminPanel.scss"
 type Props = {
     dayIdx: number;
     changeDay: () => void;
+    getPanelData: (group: number, semester: number, week: number, weekType: string) => void;
 }
 
-const AdminPanel: React.FC<Props> = ({dayIdx, changeDay}) => {
+const AdminPanel: React.FC<Props> = ({dayIdx, changeDay, getPanelData}) => {
     const [panelLabel, setLabel] = React.useState("")
-    const [groupInfo, setInfo] = React.useState({Week: 0, Group: 0, Semester: 0, WeekType: "Чс"})
+    const [groupInfo, setInfo] = React.useState({week: 0, group: 0, semester: 0, weekType: "Чс"})
 
     const changeLabelInfo = React.useCallback((id, value) => {
         const newInfo = groupInfo;
         switch (id) {
             case "input-for-week":
-                newInfo.Week = value;
+                newInfo.week = value;
                 break;
             case "input-for-group":
-                newInfo.Group = value;
+                newInfo.group = value;
                 break;
             case "input-for-sem":
-                newInfo.Semester = value;
+                newInfo.semester = value;
                 break;
             case "input-for-week-type":
-                newInfo.WeekType = value;
+                newInfo.weekType = value;
                 break;
         }
-        if (newInfo.Week !== 0 && !isNaN(newInfo.Week) && newInfo.WeekType !== "" && newInfo.Semester !== 0
-            && !isNaN(newInfo.Semester) && newInfo.Group !== 0 && !isNaN(newInfo.Group)) {
-            const newLabel = `${newInfo.Week}-я Неделя, ${newInfo.WeekType}, Группа ИУ10-${newInfo.Semester}${newInfo.Group}`
+        /*if (newInfo.week !== 0 && !isNaN(newInfo.week) && newInfo.weekType !== "" && newInfo.semester !== 0
+            && !isNaN(newInfo.semester) && newInfo.group !== 0 && !isNaN(newInfo.group)) {
+            const newLabel = `${newInfo.week}-я Неделя, ${newInfo.weekType}, Группа ИУ10-${newInfo.semester}${newInfo.group}`
             setLabel(newLabel)
+            getPanelData(newInfo.group, newInfo.semester, newInfo.week, newInfo.weekType)*/
+        if ( newInfo.weekType !== "" && newInfo.semester !== 0
+            && !isNaN(newInfo.semester) && newInfo.group !== 0 && !isNaN(newInfo.group)) {
+            const newLabel = `Группа ИУ10-${newInfo.semester}${newInfo.group}, ${newInfo.weekType}`
+            setLabel(newLabel)
+            getPanelData(newInfo.group, newInfo.semester, newInfo.week, newInfo.weekType)
         } else {
             setLabel("");
         }
         setInfo(newInfo);
-    }, [groupInfo])
+    }, [groupInfo, getPanelData])
 
     return (
         <div>
@@ -69,7 +76,7 @@ const AdminPanel: React.FC<Props> = ({dayIdx, changeDay}) => {
                         </ButtonTimetable>
                         : null}
                     <div className="ml-1">
-                        <InputNumber placeholder="Неделя" id="input-for-week" min={1} max={17}
+                        <InputNumber disabled  placeholder="Неделя" id="input-for-week" min={1} max={17}
                                      onChange={changeLabelInfo}/>
                     </div>
                     <InputNumber placeholder="Группа" id="input-for-group" min={1} max={5} onChange={changeLabelInfo}/>

@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {v4 as uuid} from "uuid";
 import {DragDropContext, DropResult} from "react-beautiful-dnd";
-import {useHistory} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {faSave} from "@fortawesome/free-solid-svg-icons/faSave";
 
@@ -18,6 +17,8 @@ import {findNextDay, copy, reorder, checkFill, saveTimetable, Labels} from "@com
 import "./DAndD.scss"
 import {makeGet} from "@utils/network";
 import {Urls} from "@config/urls";
+import {getWeekType} from "../../pages/Home/Home";
+import StatusLabel from "@components/StatusLabel";
 
 type Lesson = {
     lesson_id: string;
@@ -39,11 +40,9 @@ const prepareLessons = (lessons: Array<Lesson>) => {
 const prepareWeek = (weekDays: Array<{ day_id: string, day_order: number, lessons: Array<Lesson> }>) => {
     const newList = {};
 
-    weekDays.map((day, index) => {
+    weekDays.forEach((day, index) => {
         if (day.lessons) {
             newList[index] = prepareLessons(day.lessons)
-        } else {
-            newList[index] = []
         }
     })
     return newList
@@ -51,46 +50,38 @@ const prepareWeek = (weekDays: Array<{ day_id: string, day_order: number, lesson
 
 
 const DragAndDrop = () => {
-    const history = useHistory();
-    const [deleted, changeDeleted] = useState<{ lessons: Array<string> }>({
-        lessons: []
-    })
-    const [Lists, changeList] = useState<object>({0: []})
-    const [dayIdx, changeDayIdx] = useState<number>(1)
-    const [areasValue, setAreasValues] = useState({})
-    const [inputsValue, setValues] = useState({})
+    const [err, ShowLabel] = useState({content: "", success: false});
+    const [deleted, changeDeleted] = useState<{ lessons: Array<string> }>({lessons: []});
+    const [Lists, changeList] = useState<object>({0: []});
+    const [dayIdx, changeDayIdx] = useState<number>(1);
+    const [areasValue, setAreasValues] = useState({});
+    const [inputsValue, setValues] = useState({});
+    const [panelData, setPanelData] = useState({group: 0, semester: 0, week: 0, weekType: ""});
 
     useEffect(() => {
-        makeGet(Urls.timetable.get("IU10-73", 1)).then((response) => {
-            console.log("Ответ сервера успешно получен!");
-            const savedWeek = prepareWeek(response.data.week.days)
-            changeList(savedWeek)
-            changeDayIdx(findNextDay(savedWeek))
-
-        }).catch((error) => {
-            console.log(error)
-            // if (error.response) {
-            //     if (error.response.status === 404) {
-            //         setUserError(ERROR_AUTHORIZATION);
-            //     } else {
-            //         setUserError(ERROR_SERVER);
-            //     }
-            // } else {
-            //     setUserError(SERVER_UNAVAILABLE);
-            // }
-            return;
-        });
-    }, [])
+        if (panelData.semester !== 0) {
+            ShowLabel({content:"", success: false})
+            makeGet(Urls.timetable.get(`IU10-${panelData.semester}${panelData.group}`, getWeekType(panelData.weekType))).then((response) => {
+                const savedWeek = prepareWeek(response.data.week.days);
+                changeList(savedWeek);
+                changeDayIdx(findNextDay(savedWeek));
+            }).catch((error) => {
+                ShowLabel({content:"Указанная группа не найдена", success: false})
+                changeList({0: []});
+                return;
+            });
+        }
+    }, [panelData])
 
     const changeArea = React.useCallback((id: string, value: string) => {
-        const oldAreas = areasValue
-        oldAreas[id] = value
+        const oldAreas = areasValue;
+        oldAreas[id] = value;
         setAreasValues(oldAreas);
     }, [areasValue]);
 
     const changeInput = React.useCallback((id: string, value: string) => {
-        const oldInputs = inputsValue
-        oldInputs[id] = value
+        const oldInputs = inputsValue;
+        oldInputs[id] = value;
         setValues(oldInputs);
     }, [inputsValue]);
 
@@ -164,7 +155,7 @@ const DragAndDrop = () => {
         changeDeleted({lessons: deletedLessons});
         newList[list].splice(index, 1);
         changeList(newList);
-    }, [Lists]);
+    }, [Lists, deleted.lessons]);
 
     const removeList = React.useCallback((list: number) => {
         const newList = {...Lists};
@@ -174,12 +165,17 @@ const DragAndDrop = () => {
         changeDayIdx(idx);
     }, [Lists]);
 
+    const getPanelDataHandler = React.useCallback((group: number, semester: number, week: number, weekType: string) => {
+        setPanelData({group: group, semester: semester, week: week, weekType: weekType})
+    }, [])
+
     return (
         <div className="DAndD text-center">
+            <StatusLabel info={err}/>
             <div className="d-flex flex-row">
                 <div className="d-none d-sm-block col-sm-4 col-md-5"/>
                 <div className="col-md-7">
-                    <AdminPanel dayIdx={dayIdx} changeDay={AddList}/>
+                    <AdminPanel dayIdx={dayIdx} changeDay={AddList} getPanelData={getPanelDataHandler}/>
                 </div>
             </div>
             <hr/>
@@ -194,18 +190,21 @@ const DragAndDrop = () => {
                 </DragDropContext>
             </div>
             <hr/>
-            <ButtonTimetable
-                onChange={() => {
-                    saveTimetable(Lists, deleted)
-                    //history.replace(Urls.timetable.byId)
-                }}
-                btn={{id: uuid(), color: "#36a51c"}}
-            >
-                <div className="d-flex flex-row align-items-center justify-content-around">
-                    <FontAwesomeIcon icon={faSave} size={"sm"}/>
-                    <div>Save</div>
-                </div>
-            </ButtonTimetable>
+            <div>
+                <ButtonTimetable
+                    onChange={() => {
+                        saveTimetable(Lists, deleted, panelData, ShowLabel)
+                        //history.replace(Urls.timetable.byId)
+                    }}
+                    btn={{id: uuid(), color: "#36a51c"}}
+                >
+                    <div className="d-flex flex-row align-items-center justify-content-around">
+                        <FontAwesomeIcon icon={faSave} size={"sm"}/>
+                        <div>Save</div>
+                    </div>
+                </ButtonTimetable>
+            </div>
+
         </div>
     );
 }

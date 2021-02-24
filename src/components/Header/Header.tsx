@@ -37,7 +37,7 @@ const Header = () => {
             {Rendered() ? <div className="navbar__main">
                 <MDBNavbar className="mb-3" color="teal lighten-2" dark expand="md">
                     <MDBNavbarBrand>
-                        <strong className="white-text">Navbar</strong>
+                        <strong className="white-text">10-tka</strong>
                     </MDBNavbarBrand>
                     <MDBNavbarToggler onClick={toggleCollapse}/>
                     <MDBCollapse id="navbarCollapse3" isOpen={collapseIsOpen} navbar>

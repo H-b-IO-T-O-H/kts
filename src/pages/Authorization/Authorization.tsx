@@ -1,12 +1,19 @@
 import React, {useEffect, useState} from "react";
 import {useHistory} from "react-router-dom"
 
-import {DOMAIN, LOGIN, Urls} from "@config/urls";
+import {DOMAIN, LOGIN, LOGOUT, Urls} from "@config/urls";
 
 import {
-    PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH,
-    EMPTY_EMAIL_FIELD, EMPTY_PASSWORD_FIELD, ERROR_AUTHORIZATION,
-    ERROR_EMAIL_FIELD, ERROR_PASSWORD_FIELD, DEFAULT_SESSION_TIME, SERVER_UNAVAILABLE, ERROR_SERVER
+    DEFAULT_SESSION_TIME,
+    EMPTY_EMAIL_FIELD,
+    EMPTY_PASSWORD_FIELD,
+    ERROR_AUTHORIZATION,
+    ERROR_EMAIL_FIELD,
+    ERROR_PASSWORD_FIELD,
+    ERROR_SERVER,
+    PASSWORD_MAX_LENGTH,
+    PASSWORD_MIN_LENGTH,
+    SERVER_UNAVAILABLE
 } from "./config";
 import "./Authorization.scss"
 import AuthError from "@components/AuthError";
@@ -14,7 +21,8 @@ import {makePost} from "@utils/network";
 import {addUsers} from "@utils/addUsers";
 
 export const Logout = (history: any) => {
-    localStorage.setItem("loginTime", "");
+    makePost(`${DOMAIN}${LOGOUT}`, null).then((r)=>{}).catch((e)=>{})
+    localStorage.clear()
     history.replace(Urls.auth);
 }
 
@@ -49,9 +57,12 @@ const Auth = () => {
             password: password,
             checkbox: checkBox
         }).then((response) => {
-            console.log("Ответ сервера успешно получен!");
-            console.log(response.data.user);
             localStorage.setItem("loginTime", Date.now().toString());
+            const userGroup = response.data.user.group;
+            console.log("User = ", response.data.user)
+            if (userGroup !== "") {
+                localStorage.setItem("user_group", response.data.user.group)
+            }
             history.push(Urls.timetable.slugRoot);
         }).catch((error) => {
             if (error.response) {
@@ -66,7 +77,7 @@ const Auth = () => {
             return;
         });
 
-    }, [email, password, checkBox,history]);
+    }, [email, password, checkBox, history]);
 
     useEffect(() => {
         if (emailError || passwordError) {

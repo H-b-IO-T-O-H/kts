@@ -87,9 +87,9 @@
   }
 
   &-draggable {
-    max-height: 350px;
+    //max-height: 350px;
     position: sticky;
-    top: 0;
+    top: 10px;
   }
 
   &-items__column {
