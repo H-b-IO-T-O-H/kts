@@ -21,7 +21,9 @@ import {makePost} from "@utils/network";
 import {addUsers} from "@utils/addUsers";
 
 export const Logout = (history: any) => {
-    makePost(`${DOMAIN}${LOGOUT}`, null).then((r)=>{}).catch((e)=>{})
+    makePost(`${DOMAIN}${LOGOUT}`, null).then((r) => {
+    }).catch((e) => {
+    })
     localStorage.clear()
     history.replace(Urls.auth);
 }
@@ -117,30 +119,63 @@ const Auth = () => {
     }, []);
 
     return (
-        <div className="Auth h-100 d-flex justify-content-center align-items-center text-center">
-            <form className="Auth__form">
-                <div className="form-group">
-                    <label>Email</label>
-                    {(emailDirty && emailError) && <AuthError msg={emailError}/>}
-                    <input onChange={EmailHandler} value={email} name="email" onBlur={BlurHandler}
-                           type="text" className="form-control"
-                           placeholder="Введите email"/>
+        // <div className="Auth h-100 d-flex justify-content-center align-items-center text-center">
+        //     <form className="Auth__form">
+        //         <div className="form-group">
+        //             <div>Email</div>
+        //             {(emailDirty && emailError) && <AuthError msg={emailError}/>}
+        //             <input onChange={EmailHandler} value={email} name="email" onBlur={BlurHandler}
+        //                    type="text" className="form-control"
+        //                    placeholder="Введите email"/>
+        //         </div>
+        //         <div className="form-group">
+        //             <div>Пароль</div>
+        //             {(passwordDirty && passwordError) && <AuthError msg={passwordError}/>}
+        //             <input onChange={PasswordHandler} value={password} name="password"
+        //                    onBlur={BlurHandler} type="password" className="form-control Auth__pass"
+        //                    placeholder="Введите пароль"/>
+        //         </div>
+        //         <div className="form-check">
+        //             <input onChange={CheckBoxHandler} type="checkbox" className="form-check-input"/>
+        //             <div className="form-check-div">Запомнить</div>
+        //         </div>
+        //         {(userError) && <AuthError msg={userError}/>}
+        //         <button disabled={!formValid} onClick={HandleSubmit} type="submit" className="btn Auth__btn mt-2">Войти
+        //         </button>
+        //     </form>
+        // </div>
+        <div className="container-fluid d-flex h-100 justify-content-center align-items-center text-center">
+            <div className="row bg-white shadow-sm m-1">
+                <div className="col border rounded p-4">
+                    <form>
+                        <div className="form-group">
+                            <div>Email</div>
+                            {(emailDirty && emailError) && <AuthError msg={emailError}/>}
+                            <input onBlur={BlurHandler} onChange={EmailHandler} value={email}
+                                   type="text" className="form-control" name="email" placeholder="Введите email..."/>
+                            <small id="emailHelp" className="form-text text-muted">Мы не передаем ваши данные
+                                сторонним источникам</small>
+                        </div>
+                        <div className="form-group">
+                            <div>Пароль</div>
+                            {(passwordDirty && passwordError) && <AuthError msg={passwordError}/>}
+                            <input onBlur={BlurHandler} onChange={PasswordHandler} value={password}
+                                   className="form-control" type="password"
+                                   placeholder="Введите пароль..."/>
+                        </div>
+                        <div className="d-flex flex-row justify-content-center align-items-center">
+                            <input className="mr-1" onChange={CheckBoxHandler} type="checkbox"/>
+                            <div>Запомнить меня</div>
+                        </div>
+                        <div className="p-0"> {(userError) && <AuthError msg={userError}/>}</div>
+                        <div className="p-3">
+                            <button disabled={!formValid} onClick={HandleSubmit} type="submit"
+                                    className="btn Auth__btn mt-2">Войти
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div className="form-group">
-                    <label>Пароль</label>
-                    {(passwordDirty && passwordError) && <AuthError msg={passwordError}/>}
-                    <input onChange={PasswordHandler} value={password} name="password"
-                           onBlur={BlurHandler} type="password" className="form-control Auth__pass"
-                           placeholder="Введите пароль"/>
-                </div>
-                <div className="form-check">
-                    <input onChange={CheckBoxHandler} type="checkbox" className="form-check-input"/>
-                    <label className="form-check-label">Запомни меня</label>
-                </div>
-                {(userError) && <AuthError msg={userError}/>}
-                <button disabled={!formValid} onClick={HandleSubmit} type="submit" className="btn Auth__btn">Войти
-                </button>
-            </form>
+            </div>
         </div>
     )
 }
