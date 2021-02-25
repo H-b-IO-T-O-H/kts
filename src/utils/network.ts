@@ -1,4 +1,5 @@
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
 export const makeGet = async (url: string) => {
     return axios({
@@ -17,6 +18,7 @@ export const makePost = async (url: string, data: any) => {
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         },
+
         url: url,
         data: data,
         withCredentials: true
