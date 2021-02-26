@@ -9,7 +9,7 @@ const StatusLabel: React.FC<Props> = ({info}) => {
     const [shown, isShown] = useState(false)
 
     const HandlerChange = React.useEffect(() => {
-        const timer = setTimeout(() => isShown(false), 20000);
+        const timer = setTimeout(() => isShown(false), 2000);
         isShown(info.content !== "")
         return () => {
             clearTimeout(timer);
