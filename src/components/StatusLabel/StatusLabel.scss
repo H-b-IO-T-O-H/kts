@@ -3,6 +3,7 @@
 
 div.StatusLabel {
   position: fixed;
+  z-index: 9999;
   border-radius: 7px;
   right: 15px;
   top:  10px;

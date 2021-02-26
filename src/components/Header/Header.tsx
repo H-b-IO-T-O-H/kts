@@ -13,7 +13,7 @@ import {
 } from "mdbreact";
 
 import Timer from "@components/Timer";
-import Avatar from "@media/Musya.png"
+import Avatar from "@media/student.png"
 import {Urls} from "@config/urls";
 
 import {Logout} from "../../pages/Authorization";
@@ -64,7 +64,7 @@ const Header = () => {
                                 </MDBNavItem>
                                 <MDBNavItem
                                     className="container-fluid flex-column justify-content-center text-center">
-                                    <span className="main__title">Кошка Муся</span>
+                                    <span className="main__title">Вася Пупкин</span>
                                     <div className="text-black-50">
                                         <Timer size={{sm: true}} onZero={() => {
                                             Logout(history);

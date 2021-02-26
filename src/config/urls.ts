@@ -1,5 +1,5 @@
 //export const DOMAIN = "http://localhost:8080/api/v1/";
-export const DOMAIN = "http://135.181.207.76:8080/api/v1/"
+export const DOMAIN = "http://10-tka.pp.ua:8080/api/v1/"
 export const LOGIN = "users/login";
 export const LOGOUT = "users/logout";
 export const ME = "users/me"

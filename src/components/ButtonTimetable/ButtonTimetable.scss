@@ -24,6 +24,7 @@
 
   @media screen and (max-width: #{$little-screen-min}) {
     width: 45px;
+    max-height: 20px;
     font-size: 0.7rem;
   }
   @media screen and (min-width: #{$little-screen-min}) and (max-width: #{$medium-screen-min}) {
