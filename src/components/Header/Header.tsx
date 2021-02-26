@@ -69,7 +69,8 @@ const Header = () => {
                                 </MDBNavItem>
                                 <MDBNavItem
                                     className="container-fluid flex-column justify-content-center text-center">
-                                    <span className="main__title">Вася Пупкин</span>
+                                    <span
+                                        className="main__title">{localStorage.getItem("user_role") === "admin" ? "Admin" : "Вася Пупкин"}</span>
                                     <div className="text-black-50">
                                         <Timer size={{sm: true}} onZero={() => {
                                             Logout(history);
