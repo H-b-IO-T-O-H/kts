@@ -7,6 +7,7 @@ export const makeGet = async (url: string) => {
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         },
+        httpsAgent: true,
         withCredentials: true,
         url: url
     });
