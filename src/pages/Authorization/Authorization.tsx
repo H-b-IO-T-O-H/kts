@@ -61,10 +61,11 @@ const Auth = () => {
         }).then((response) => {
             localStorage.setItem("loginTime", Date.now().toString());
             const userGroup = response.data.user.group;
-            console.log("User = ", response.data.user)
+            //console.log("User = ", response.data.user)
             if (userGroup !== "") {
                 localStorage.setItem("user_group", response.data.user.group)
             }
+            localStorage.setItem("user_role", response.data.user.role)
             history.push(Urls.timetable.slugRoot);
         }).catch((error) => {
             if (error.response) {

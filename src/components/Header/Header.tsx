@@ -14,6 +14,7 @@ import {
 
 import Timer from "@components/Timer";
 import Avatar from "@media/student.png"
+import Admin from "@media/admin.jpg"
 import {Urls} from "@config/urls";
 
 import {Logout} from "../../pages/Authorization";
@@ -51,8 +52,11 @@ const Header = () => {
                             <MDBNavItem active className="d-md-none">
                                 <button type="button"
                                         className="link-logout"
-                                        onClick={() => {Logout(history)}}>
-                                    Выход</button>
+                                        onClick={() => {
+                                            Logout(history)
+                                        }}>
+                                    Выход
+                                </button>
                             </MDBNavItem>
                         </MDBNavbarNav>
                         <MDBNavbarNav right className=" d-none d-md-block">
@@ -60,7 +64,8 @@ const Header = () => {
                                 className="d-flex align-items-center justify-content-end flex-nowrap">
                                 <MDBNavItem>
                                     <img className="navbar__avatar"
-                                         src={Avatar} alt="oops"/>
+                                         src={localStorage.getItem("user_role") === "admin" ? Admin : Avatar}
+                                         alt="oops"/>
                                 </MDBNavItem>
                                 <MDBNavItem
                                     className="container-fluid flex-column justify-content-center text-center">
