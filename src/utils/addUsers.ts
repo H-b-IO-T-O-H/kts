@@ -4,12 +4,13 @@ import {DOMAIN} from "@config/urls";
 export const addUsers = () => {
     const users = [
         {
-            "role": "guest",
+            "role": "student",
             "email": "g@g.ru",
             "name": "guest",
             "surname": "guest",
             "patronymic": "guest",
-            "password": "12345"
+            "password": "guest",
+            "group": "IU10-11"
         },
         {
             "role": "admin",
@@ -17,7 +18,7 @@ export const addUsers = () => {
             "name": "admin",
             "surname": "admin",
             "patronymic": "admin",
-            "password": "admin"
+            "password": "15813709vl"
         },
         {
             "role": "student",
@@ -26,7 +27,7 @@ export const addUsers = () => {
             "surname": "pupkin",
             "patronymic": "alexandrovich",
             "password": "student",
-            "group": "IU10-73"
+            "group": "IU10-83"
         }
     ]
     users.forEach((u) => {
