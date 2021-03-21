@@ -1,53 +1,72 @@
 import React from "react";
 import "./UsersControl.scss"
+import InputNumber from "@components/InputNumber";
 
 //     placeholder="Имя"
+// <p>{`Iu10-${1}`}</p>
 
 const UsersControl = () => {
     //const [name, changeName] = React.useState("")
     const [userType, setUserType] = React.useState("Студент")
+    const [sem, setSem] = React.useState(1)
+    const [group, setGroup] = React.useState(1)
 
     const handleUserType = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setUserType(e.target.value)
+    }
+    const handleSem = (id: string, nmb: number) => {
+        setSem(nmb)
+    }
+    const handleGroup = (id: string, nmb: number) => {
+        setGroup(nmb)
     }
 
     const defineRole = () => {
         if (userType === "Студент") {
             return (
-            <div className="d-flex justify-content-center" >
-                <div className="student-sem mr-2">
-                <div>Семестр</div>
-                <select className="student-sem_select">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>11</option>
-                    <option>12</option>
-                </select>
+                <div>
+                    <div className="d-flex justify-content-center">
+                        <div className="student-sem mr-2">
+                            <div>Семестр</div>
+                            <InputNumber placeholder={"Сем"} onChange={handleSem} id={"0"} min={1} max={12}/>
+                        </div>
+                        <div className="student-group mr-2">
+                            <div>Группа</div>
+                            <InputNumber placeholder={"Группа"} onChange={handleGroup} id={"0"} min={1} max={5}/>
+                        </div>
+                        <div className="IU mt-4">{`ИУ10-${sem}${group}`}</div>
+                    </div>
+                    <div className="student-phone">
+                        <div>Телефон</div>
+                        <input className="student-phone_input"/>
+                    </div>
+                    <div className="student-email">
+                        <div>Email</div>
+                        <input className="student-email_input"/>
+                    </div>
                 </div>
-            <div className="student-group mr-2">
-                <div>Группа</div>
-                <select className="student-group_select">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                </select>
-            </div>
-            </div>
             )
         } else if (userType === "Преподаватель") {
-            return <div>2</div>;
+            return (
+            <div>
+                <div className="prof-info mt-2">
+                    <input  placeholder="О себе" className="prof-info_input"/>
+                </div>
+                <div className="prof-phone">
+                    <div>Телефон</div>
+                    <input className="prof-phone_input"/>
+                </div>
+                <div className="prof-email">
+                    <div>Email</div>
+                    <input className="prof-email_input"/>
+                </div>
+            </div>
+            )
         }
-        return 3;
+        return (
+            <div className="met-info mt-2">
+            <input  placeholder="О себе" className="met-info_input"/>
+        </div>);
     }
 
     return (
@@ -73,6 +92,7 @@ const UsersControl = () => {
                 </select>
             </div>
             {defineRole()}
+            <button type="button" className="btn users-control_load mt-2">Сохранить</button>
         </form>
     )
 }

@@ -8,21 +8,22 @@
   box-shadow: 0 0 9px #a9a7a7;
 }
 
-.form-control_surname{
-  outline-color: #939aa9;
-}
-
-.form-control_name{
-  outline-color: #939aa9;
-}
-
-.form-control_patronymic{
-  outline-color: #939aa9;
-}
-
 .form-control_roles {
   color: #496a73;
   outline-color: #939aa9;
+}
+
+.users-control_load{
+  color: #f3f4fa;
+  font-weight: bold;
+  background-color: #4db6ac;
+    &:hover {
+      box-shadow: 0 0 10px #66666c;
+      color: #f3f4fa;
+    }
+    &:active {
+      background: #578989;
+    }
 }
 
 .student {
@@ -30,6 +31,7 @@
   margin: 10px;
 }
 
-.student-sem{
-
+.IU {
+  font-weight: bolder;
+  color: #3c545a;
 }
