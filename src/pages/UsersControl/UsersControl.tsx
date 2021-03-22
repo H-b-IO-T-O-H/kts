@@ -8,8 +8,14 @@ import InputNumber from "@components/InputNumber";
 const UsersControl = () => {
     //const [name, changeName] = React.useState("")
     const [userType, setUserType] = React.useState("Студент")
-    const [sem, setSem] = React.useState(1)
-    const [group, setGroup] = React.useState(1)
+    const [sem, setSem] = React.useState(NaN)
+    const [group, setGroup] = React.useState(NaN)
+    const [tags, changeTags] = React.useState<Array<React.ReactNode>>([])
+    const [inp, setInp] = React.useState("")
+
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInp(e.target.value)
+    }
 
     const handleUserType = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setUserType(e.target.value)
@@ -19,6 +25,21 @@ const UsersControl = () => {
     }
     const handleGroup = (id: string, nmb: number) => {
         setGroup(nmb)
+    }
+
+    const addTag = () => {
+        const tagsOld = [...tags]
+        tagsOld.push(<div className="tag mt-1" key={tagsOld.length}>{inp}</div>)
+        changeTags(tagsOld)
+        setInp("")
+    }
+
+    const groupInfo = () => {
+        if (!isNaN(sem) && !isNaN(group)) {
+            return (
+                <div className="IU mt-4">{`ИУ10-${sem}${group}`}</div>)
+        }
+        return null;
     }
 
     const defineRole = () => {
@@ -32,9 +53,9 @@ const UsersControl = () => {
                         </div>
                         <div className="student-group mr-2">
                             <div>Группа</div>
-                            <InputNumber placeholder={"Группа"} onChange={handleGroup} id={"0"} min={1} max={5}/>
+                            <InputNumber placeholder={"Группа"} onChange={handleGroup} id={"1"} min={1} max={5}/>
                         </div>
-                        <div className="IU mt-4">{`ИУ10-${sem}${group}`}</div>
+                        {groupInfo()}
                     </div>
                     <div className="student-phone">
                         <div>Телефон</div>
@@ -48,25 +69,31 @@ const UsersControl = () => {
             )
         } else if (userType === "Преподаватель") {
             return (
-            <div>
-                <div className="prof-info mt-2">
-                    <input  placeholder="О себе" className="prof-info_input"/>
+                <div>
+                    <div>
+                        <div>{tags}</div>
+                        <input value={inp} onChange={handleInput} type="text" className="Lesson mt-2"
+                               placeholder="Дисциплина"/>
+                        <button type="button" onClick={addTag} className="add text-center">+</button>
+                    </div>
+                    <div className="prof-info mt-2">
+                        <input placeholder="О себе" className="prof-info_input"/>
+                    </div>
+                    <div className="prof-phone">
+                        <div>Телефон</div>
+                        <input className="prof-phone_input"/>
+                    </div>
+                    <div className="prof-email">
+                        <div>Email</div>
+                        <input className="prof-email_input"/>
+                    </div>
                 </div>
-                <div className="prof-phone">
-                    <div>Телефон</div>
-                    <input className="prof-phone_input"/>
-                </div>
-                <div className="prof-email">
-                    <div>Email</div>
-                    <input className="prof-email_input"/>
-                </div>
-            </div>
             )
         }
         return (
             <div className="met-info mt-2">
-            <input  placeholder="О себе" className="met-info_input"/>
-        </div>);
+                <input placeholder="О себе" className="met-info_input"/>
+            </div>);
     }
 
     return (
