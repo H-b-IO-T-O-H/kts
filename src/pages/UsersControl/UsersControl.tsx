@@ -1,21 +1,13 @@
 import React from "react";
 import "./UsersControl.scss"
 import InputNumber from "@components/InputNumber";
-
-//     placeholder="Имя"
-// <p>{`Iu10-${1}`}</p>
+import Tags from "@components/Tags";
 
 const UsersControl = () => {
     //const [name, changeName] = React.useState("")
     const [userType, setUserType] = React.useState("Студент")
     const [sem, setSem] = React.useState(NaN)
     const [group, setGroup] = React.useState(NaN)
-    const [tags, changeTags] = React.useState<Array<React.ReactNode>>([])
-    const [inp, setInp] = React.useState("")
-
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInp(e.target.value)
-    }
 
     const handleUserType = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setUserType(e.target.value)
@@ -25,13 +17,6 @@ const UsersControl = () => {
     }
     const handleGroup = (id: string, nmb: number) => {
         setGroup(nmb)
-    }
-
-    const addTag = () => {
-        const tagsOld = [...tags]
-        tagsOld.push(<div className="tag mt-1" key={tagsOld.length}>{inp}</div>)
-        changeTags(tagsOld)
-        setInp("")
     }
 
     const groupInfo = () => {
@@ -70,12 +55,7 @@ const UsersControl = () => {
         } else if (userType === "Преподаватель") {
             return (
                 <div>
-                    <div>
-                        <div>{tags}</div>
-                        <input value={inp} onChange={handleInput} type="text" className="Lesson mt-2"
-                               placeholder="Дисциплина"/>
-                        <button type="button" onClick={addTag} className="add text-center">+</button>
-                    </div>
+                    <Tags placeholder={"Dis"} id={"1"}/>
                     <div className="prof-info mt-2">
                         <input placeholder="О себе" className="prof-info_input"/>
                     </div>

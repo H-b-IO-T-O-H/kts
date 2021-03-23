@@ -35,27 +35,3 @@
   font-weight: bolder;
   color: #3c545a;
 }
-
-.add {
-  background-color: #4db6ac;
-  border-radius: 7px;
-  font-weight: bold;
-  height: 30px;
-  width: 30px;
-  color: #f3f4fa;
-  border: 0;
-  outline: none;
-    &:hover {
-      box-shadow: 0 0 10px #66666c;
-      color: #f3f4fa;
-    }
-    &:active {
-      background: #578989;
-    }
-}
-
-.tag {
-  color: #41575e;
-  background-color: #9ce2dc;
-  border-radius: 10px;
-}
