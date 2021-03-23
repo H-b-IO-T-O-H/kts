@@ -91,9 +91,16 @@ const UsersControl = () => {
             )
         }
         return (
-            <div className="met-info mt-2">
-                <input placeholder="О себе" className="met-info_input"/>
-            </div>);
+            <div>
+                <div className="met-info mt-2">
+                    <input placeholder="О себе" className="met-info_input"/>
+                </div>
+                <div className="met-email">
+                    <div>Email</div>
+                    <input className="met-email_input"/>
+                </div>
+            </div>
+        );
     }
 
     return (
