@@ -13,37 +13,38 @@ import UsersControl from "../pages/UsersControl";
 import "../styles/main.scss"
 
 
+const App = () => {
+    return (
+        <BrowserRouter>
+            <div className="App h-100">
+                <Header/>
+                <Switch>
+                    <PrivateRoute exact path={Urls.root}
+                                  component={Home}/>
+                    <PrivateRoute exact path={Urls.timetable.slugRoot}
+                                  component={Home}/>
+                    <PrivateRoute exact path={Urls.timetable.slugEdit}
+                                  component={Timetable}/>
+                    <PrivateRoute exact path={Urls.panel.slugRoot}
+                                  component={UsersControl}/>
+                    <Route exact path={Urls.auth} component={Auth}/>
+                    <Route path={Urls.notFound} component={NotFoundPage}/>
+                </Switch>
+            </div>
+        </BrowserRouter>
+    )
+}
 
 // const App = () => {
 //     return (
 //         <BrowserRouter>
 //             <div className="App h-100">
 //                 <Header/>
-//                 <Switch>
-//                     <PrivateRoute exact path={Urls.root}
-//                                   component={Home}/>
-//                     <PrivateRoute exact path={Urls.timetable.slugRoot}
-//                                   component={Home}/>
-//                     <PrivateRoute exact path={Urls.timetable.slugEdit}
-//                                   component={Timetable}/>
-//                     <Route exact path={Urls.auth} component={Auth}/>
-//                     <Route path={Urls.notFound} component={NotFoundPage}/>
-//                 </Switch>
+//                 <UsersControl/>
 //             </div>
 //         </BrowserRouter>
 //     )
 // }
-
-const App = () => {
-    return (
-        <BrowserRouter>
-            <div className="App h-100">
-                <Header/>
-                <UsersControl/>
-            </div>
-        </BrowserRouter>
-    )
-}
 
 export default App;
 

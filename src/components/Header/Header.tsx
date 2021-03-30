@@ -49,6 +49,9 @@ const Header = () => {
                             <MDBNavItem active>
                                 <MDBNavLink to={Urls.timetable.slugEdit}>Конструктор расписания</MDBNavLink>
                             </MDBNavItem>
+                            <MDBNavItem active>
+                                <MDBNavLink to={Urls.panel.slugRoot}>Пользователи</MDBNavLink>
+                            </MDBNavItem>
                             <MDBNavItem active className="d-md-none">
                                 <button type="button"
                                         className="link-logout"
