@@ -20,6 +20,7 @@
     "classnames": "^2.2.6",
     "mdbreact": "^5.0.1",
     "node-sass": "^5.0.0",
+    "password-generator": "^2.3.2",
     "react": "^17.0.1",
     "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^17.0.1",

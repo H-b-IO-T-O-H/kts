@@ -10,11 +10,13 @@
 
   &__header{
     min-height: 30px;
+    font-size: 0.95rem;
+    padding: 5px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    color: grey;
+    color: #ffffff;
     font-weight: bold;
     background-color: #a5d9d1;
     border-radius: 10px 10px 0 0;

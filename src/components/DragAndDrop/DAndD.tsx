@@ -50,7 +50,7 @@ const prepareWeek = (weekDays: Array<{ day_id: string, day_order: number, lesson
 
 
 const DragAndDrop = () => {
-    const [err, ShowLabel] = useState({content: "", success: false});
+    const [err, showLabel] = useState({content: "", success: false});
     const [deleted, changeDeleted] = useState<{ lessons: Array<string> }>({lessons: []});
     const [Lists, changeList] = useState<object>({0: []});
     const [dayIdx, changeDayIdx] = useState<number>(1);
@@ -60,13 +60,13 @@ const DragAndDrop = () => {
 
     useEffect(() => {
         if (panelData.semester !== 0) {
-            ShowLabel({content:"", success: false})
+            showLabel({content:"", success: false})
             makeGet(Urls.timetable.get(`IU10-${panelData.semester}${panelData.group}`, getWeekType(panelData.weekType))).then((response) => {
                 const savedWeek = prepareWeek(response.data.week.days);
                 changeList(savedWeek);
                 changeDayIdx(findNextDay(savedWeek));
             }).catch((error) => {
-                ShowLabel({content:"Указанная группа не найдена", success: false})
+                showLabel({content:"Указанная группа не найдена", success: false})
                 changeList({0: []});
                 return;
             });
@@ -193,7 +193,7 @@ const DragAndDrop = () => {
             <div>
                 <ButtonTimetable
                     onChange={() => {
-                        saveTimetable(Lists, deleted, panelData, ShowLabel)
+                        saveTimetable(Lists, deleted, panelData, showLabel)
                         //history.replace(Urls.timetable.byId)
                     }}
                     btn={{id: uuid(), color: "#36a51c"}}

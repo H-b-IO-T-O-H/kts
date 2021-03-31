@@ -1,0 +1,10 @@
+div.users-table {
+  width: 40%;
+  min-width: 320px;
+  margin: 0 0 10px 10px;
+  text-align: center;
+  &__body {
+    border-radius: 0 0 10px 10px;
+    background-color: #F2F2FA;
+  }
+}

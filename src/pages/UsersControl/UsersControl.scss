@@ -1,29 +1,46 @@
-.users-control {
-  width: 300px;
+.users {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
   margin: 20px;
+}
+
+.users-control {
+  margin: 0 0 10px 10px;
+  min-width: 320px;
   background-color: #F2F2FA;
-  padding: 7px;
   text-align: center;
-  border-radius: 10%;
-  box-shadow: 0 0 9px #a9a7a7;
+  border-radius: 10px;
+  //box-shadow: 0 0 9px #a9a7a7;
+
+  &_input {
+    width: 100%;
+  }
+
+  &_select {
+    color: #496a73;
+    outline-color: #939aa9;
+  }
+
+  &_label {
+    color: #496a73;
+    font-weight: bold;
+  }
 }
 
-.form-control_roles {
-  color: #496a73;
-  outline-color: #939aa9;
-}
-
-.users-control_load{
+.users-control_load {
   color: #f3f4fa;
   font-weight: bold;
   background-color: #4db6ac;
-    &:hover {
-      box-shadow: 0 0 10px #66666c;
-      color: #f3f4fa;
-    }
-    &:active {
-      background: #578989;
-    }
+
+  &:hover {
+    box-shadow: 0 0 10px #66666c;
+    color: #f3f4fa;
+  }
+
+  &:active {
+    background: #578989;
+  }
 }
 
 .student {
@@ -34,4 +51,13 @@
 .IU {
   font-weight: bolder;
   color: #3c545a;
+}
+
+div.users-control_block {
+  margin: 0 auto;
+  max-width: 220px;
+}
+
+.icon-reload:hover {
+  color: #cbcbcb;
 }

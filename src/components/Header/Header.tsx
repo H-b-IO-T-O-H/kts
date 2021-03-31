@@ -25,7 +25,7 @@ const Header = () => {
     const location = useLocation();
     const history = useHistory();
 
-    const Rendered = () => ([Urls.timetable.slugRoot, Urls.timetable.slugEdit, Urls.root].includes(location.pathname))
+    const Rendered = () => ([Urls.timetable.slugRoot, Urls.timetable.slugEdit, Urls.panel.slugRoot, Urls.root].includes(location.pathname))
 
     const [collapseIsOpen, collapseChange] = useState(false);
 
@@ -49,9 +49,11 @@ const Header = () => {
                             <MDBNavItem active>
                                 <MDBNavLink to={Urls.timetable.slugEdit}>Конструктор расписания</MDBNavLink>
                             </MDBNavItem>
-                            <MDBNavItem active>
-                                <MDBNavLink to={Urls.panel.slugRoot}>Пользователи</MDBNavLink>
-                            </MDBNavItem>
+                            {localStorage.getItem("user_role") === "admin" ?
+                                <MDBNavItem active>
+                                    <MDBNavLink to={Urls.panel.slugRoot}>Пользователи</MDBNavLink>
+                                </MDBNavItem> : null}
+
                             <MDBNavItem active className="d-md-none">
                                 <button type="button"
                                         className="link-logout"
