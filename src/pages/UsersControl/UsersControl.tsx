@@ -78,7 +78,7 @@ const UsersControl = () => {
         } else if (userType === "Преподаватель") {
             return (
                 <div>
-                    <Tags placeholder={"Дисциплина"} id={"1"}/>
+                    <Tags placeholder={"Дисциплина"} />
                     <div className="prof-info mt-2">
                         <input placeholder="О себе" className="users-control_input"/>
                     </div>

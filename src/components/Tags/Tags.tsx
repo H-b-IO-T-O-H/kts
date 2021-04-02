@@ -4,32 +4,47 @@ import IconPlus from "@components/IconPlus";
 
 type Props = {
     placeholder: string;
-    id: string;
+    //id: string;
 }
 
-const Tags: React.FC<Props> = ({id,placeholder}) => {
-    const [tags, changeTags] = React.useState<Array<React.ReactNode>>([])
+const Tags: React.FC<Props> = ({placeholder}) => {
+    const [tags, changeTags] = React.useState<Array<{ tagId: string, elem: React.ReactNode }>>([])
     const [inp, setInp] = React.useState("")
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInp(e.target.value)
     }
 
+    const handleDelete = (e: any) => {
+        const tagId = e.target.id;
+        console.log(tags);
+        const idx = tags.find((obj)=>(obj.tagId===tagId));
+        console.log(idx)
+
+    }
+
     const addTag = () => {
-        const tagsOld = [...tags]
+        const tagsOld = [...tags];
+        const id = `tag-${tagsOld.length.toString()}`;
+
         tagsOld.push(
-            <div className="d-flex justify-content-center align-items-center">
-                <div className="tag mt-1 mr-1" key={tagsOld.length} id={id}>{inp}</div>
-                <IconPlus/>
-            </div>
+            {
+                tagId: id,
+                elem: <div className="d-flex justify-content-center align-items-center" key={id}>
+                    <div className="tag mt-1 mr-1">{inp}</div>
+                    <button className="btn btn_delete" onClick={handleDelete}><IconPlus/></button>
+                </div>
+            }
         )
 
         changeTags(tagsOld)
+        console.log("tags = ", tags)
+        console.log(tagsOld)
         setInp("")
     }
     return (
         <div>
-            <div>{tags}</div>
+            <div>{tags.map((tag) => (tag.elem))}</div>
             <input value={inp} onChange={handleInput} type="text" className="Lesson mt-2"
                    placeholder={placeholder}/>
             <button type="button" onClick={addTag} className="add text-center">+</button>
