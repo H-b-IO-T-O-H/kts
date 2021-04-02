@@ -13,23 +13,38 @@ import "../styles/main.scss"
 import "../styles/fontawesome-free-5.15.3-web/css/all.min.css"
 
 
+// const App = () => {
+//     return (
+//         <BrowserRouter>
+//             <div className="App h-100">
+//                 <Header/>
+//                 <Switch>
+//                     <PrivateRoute exact path={Urls.root}
+//                                   component={Home}/>
+//                     <PrivateRoute exact path={Urls.timetable.slugRoot}
+//                                   component={Home}/>
+//                     <PrivateRoute exact path={Urls.timetable.slugEdit}
+//                                   component={Timetable}/>
+//                     <PrivateRoute exact path={Urls.panel.slugRoot}
+//                                   component={UsersControl}/>
+//                     <Route exact path={Urls.auth} component={Auth}/>
+//                     <Route path={Urls.notFound} component={NotFoundPage}/>
+//                 </Switch>
+//             </div>
+//         </BrowserRouter>
+//     )
+// }
+
 const App = () => {
     return (
         <BrowserRouter>
             <div className="App h-100">
                 <Header/>
-                <Switch>
-                    <PrivateRoute exact path={Urls.root}
-                                  component={Home}/>
-                    <PrivateRoute exact path={Urls.timetable.slugRoot}
-                                  component={Home}/>
-                    <PrivateRoute exact path={Urls.timetable.slugEdit}
-                                  component={Timetable}/>
-                    <PrivateRoute exact path={Urls.panel.slugRoot}
-                                  component={UsersControl}/>
-                    <Route exact path={Urls.auth} component={Auth}/>
-                    <Route path={Urls.notFound} component={NotFoundPage}/>
-                </Switch>
+
+
+                <Route exact path={Urls.panel.slugRoot}
+                              component={UsersControl}/>
+
             </div>
         </BrowserRouter>
     )
