@@ -4,13 +4,13 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {PrivateRoute} from "@utils/privateRoute"
 import Header from "@components/Header";
 import {Urls} from "@config/urls"
-
 import Timetable from "../pages/Timetable";
 import Auth from "../pages/Authorization";
 import NotFoundPage from "../pages/NotFound";
 import Home from "../pages/Home";
 import UsersControl from "../pages/UsersControl";
 import "../styles/main.scss"
+import "../styles/fontawesome-free-5.15.3-web/css/all.min.css"
 
 
 const App = () => {

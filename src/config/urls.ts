@@ -1,7 +1,6 @@
-export const DOMAIN = "http://localhost:8080/api/v1/";
-//export const DOMAIN = "https://10-tka.pp.ua:8080/api/v1/"
+//export const DOMAIN = "http://localhost:8080/api/v1/";
 
-//export const DOMAIN = "http://10-tka.ru:8080/api/v1/";
+export const DOMAIN = "http://10-tka.ru:8080/api/v1/";
 export const ADD_USER = "users/create"
 export const LOGIN = "users/login";
 export const LOGOUT = "users/logout";
@@ -18,12 +17,13 @@ export const Urls = {
     timetable: {
         slugEdit: `${TIMETABLE_URL}/edit`,
         slugRoot: `${TIMETABLE_URL}`,
-        get: (group: string, week: number): string => `${DOMAIN}timetable/${group}/${week}`,
+        get: (group: string, week: number) => `${DOMAIN}timetable/${group}/${week}`,
         post: () => `${DOMAIN}timetable/create`,
         delete: () => `${DOMAIN}timetable/`
     },
     panel: {
-        slugRoot: `${PANEL_URL}`
+        slugRoot: `${PANEL_URL}`,
+        getUsersAll: (userType: string) => (`${DOMAIN}users/${userType}/all`)
     },
     auth: AUTH_URL,
     notFound: ANY_URL,
