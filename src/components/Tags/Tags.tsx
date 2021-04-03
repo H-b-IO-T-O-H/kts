@@ -4,7 +4,6 @@ import IconPlus from "@components/IconPlus";
 
 type Props = {
     placeholder: string;
-    //id: string;
 }
 
 const Tags: React.FC<Props> = ({placeholder}) => {
@@ -32,7 +31,7 @@ const Tags: React.FC<Props> = ({placeholder}) => {
                 tagId: id,
                 elem: <div className="d-flex justify-content-center align-items-center" key={id}>
                     <div className="tag mt-1 mr-1">{inp}</div>
-                    <button className="btn btn_delete" onClick={handleDelete}><IconPlus/></button>
+                    <button className="btn_delete text-center" onClick={handleDelete}><IconPlus/></button>
                 </div>
             }
         )

@@ -26,3 +26,14 @@
 .d-flex {
   justify-content: left;
 }
+
+.btn_delete {
+  border-radius: 30px;
+  border: 1px black;
+  &:hover {
+    box-shadow: 0 0 10px #66666c;
+  }
+  &:active {
+    background: #96c7c7;
+  }
+}

@@ -41,6 +41,7 @@ const App = () => {
             <div className="App h-100">
                 <Header/>
 
+                <UsersControl/>
 
                 <Route exact path={Urls.panel.slugRoot}
                               component={UsersControl}/>
