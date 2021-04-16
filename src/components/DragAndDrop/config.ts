@@ -2,7 +2,6 @@ import {Week} from "@config/config";
 import {v4 as uuid} from "uuid";
 import {makeDelete, makePost} from "@utils/network";
 import {Urls} from "@config/urls";
-import React from "react";
 
 export const Labels = {'sem': 0, 'lek': 1, 'lr': 2, 'dz': 3, 'rk': 4, 'cons': 5, 'exam': 6, 'free': 7}
 const LabelsInt = {0: 'sem', 1: 'lek', 2: 'lr', 3: 'dz', 4: 'rk', 5: 'cons', 6: 'exam', 7: 'free'}
