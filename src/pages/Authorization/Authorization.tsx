@@ -54,31 +54,36 @@ const Auth = () => {
 
         //addUsers();
 
-        makePost(`${DOMAIN}${LOGIN}`, {
-            email: email,
-            password: password,
-            checkbox: checkBox
-        }).then((response) => {
-            localStorage.setItem("loginTime", Date.now().toString());
-            const userGroup = response.data.user.group;
-            //console.log("User = ", response.data.user)
-            if (userGroup !== "") {
-                localStorage.setItem("user_group", response.data.user.group)
-            }
-            localStorage.setItem("user_role", response.data.user.role)
-            history.push(Urls.timetable.slugRoot);
-        }).catch((error) => {
-            if (error.response) {
-                if (error.response.status === 404) {
-                    setUserError(ERROR_AUTHORIZATION);
-                } else {
-                    setUserError(ERROR_SERVER);
-                }
-            } else {
-                setUserError(SERVER_UNAVAILABLE);
-            }
-            return;
-        });
+        localStorage.setItem("loginTime", Date.now().toString());
+        localStorage.setItem("user_role", 'admin')
+        const userGroup = "IU10-83";
+        history.push(Urls.feed.slugRoot);
+
+        // makePost(`${DOMAIN}${LOGIN}`, {
+        //     email: email,
+        //     password: password,
+        //     checkbox: checkBox
+        // }).then((response) => {
+        //     localStorage.setItem("loginTime", Date.now().toString());
+        //     const userGroup = response.data.user.group;
+        //     //console.log("User = ", response.data.user)
+        //     if (userGroup !== "") {
+        //         localStorage.setItem("user_group", response.data.user.group)
+        //     }
+        //     localStorage.setItem("user_role", response.data.user.role)
+        //     history.push(Urls.timetable.slugRoot);
+        // }).catch((error) => {
+        //     if (error.response) {
+        //         if (error.response.status === 404) {
+        //             setUserError(ERROR_AUTHORIZATION);
+        //         } else {
+        //             setUserError(ERROR_SERVER);
+        //         }
+        //     } else {
+        //         setUserError(SERVER_UNAVAILABLE);
+        //     }
+        //     return;
+        // });
 
     }, [email, password, checkBox, history]);
 

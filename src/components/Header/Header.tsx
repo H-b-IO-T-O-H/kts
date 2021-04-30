@@ -25,7 +25,7 @@ const Header = () => {
     const location = useLocation();
     const history = useHistory();
 
-    const Rendered = () => ([Urls.timetable.slugRoot, Urls.timetable.slugEdit, Urls.panel.slugRoot, Urls.root].includes(location.pathname))
+    const Rendered = () => ([Urls.feed.slugRoot, Urls.timetable.slugEdit, Urls.panel.slugRoot, Urls.root, Urls.post.slugRoot, Urls.post.slugCreate].includes(location.pathname))
 
     const [collapseIsOpen, collapseChange] = useState(false);
 
@@ -44,14 +44,25 @@ const Header = () => {
                     <MDBCollapse id="navbarCollapse3" isOpen={collapseIsOpen} navbar>
                         <MDBNavbarNav left className="col-lg-8">
                             <MDBNavItem active>
-                                <MDBNavLink to={Urls.timetable.slugRoot}>Главная</MDBNavLink>
+                                <MDBNavLink className="navbar__main_link" to={Urls.feed.slugRoot}>
+                                    <div className="navbar__main_strong">Главная</div>
+                                </MDBNavLink>
                             </MDBNavItem>
                             <MDBNavItem active>
-                                <MDBNavLink to={Urls.timetable.slugEdit}>Конструктор расписания</MDBNavLink>
+                                <MDBNavLink className="navbar__main_link" to={Urls.post.slugCreate}>
+                                    <div className="navbar__main_strong">Создать пост</div>
+                                </MDBNavLink>
+                            </MDBNavItem>
+                            <MDBNavItem active>
+                                <MDBNavLink className="navbar__main_link" to={Urls.timetable.slugEdit}>
+                                    <div className="navbar__main_strong">Конструктор расписания</div>
+                                </MDBNavLink>
                             </MDBNavItem>
                             {localStorage.getItem("user_role") === "admin" ?
                                 <MDBNavItem active>
-                                    <MDBNavLink to={Urls.panel.slugRoot}>Пользователи</MDBNavLink>
+                                    <MDBNavLink className="navbar__main_link" to={Urls.panel.slugRoot}>
+                                        <div className="navbar__main_strong">Пользователи</div>
+                                    </MDBNavLink>
                                 </MDBNavItem> : null}
 
                             <MDBNavItem active className="d-md-none">
@@ -60,7 +71,7 @@ const Header = () => {
                                         onClick={() => {
                                             Logout(history)
                                         }}>
-                                    Выход
+                                    <div className="navbar__main_strong">Выход</div>
                                 </button>
                             </MDBNavItem>
                         </MDBNavbarNav>

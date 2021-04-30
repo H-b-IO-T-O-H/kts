@@ -28,3 +28,8 @@ export const LessonsTime = [
     "17:25 - 19:00",
     "19:10 - 20:45",
 ]
+
+//blog
+export const TAG_GENERAL = "Общие вопросы";
+export const TAG_IMPORTANT = "Важное";
+export const TAG_EDUCATIONAL = "Учебная работа";

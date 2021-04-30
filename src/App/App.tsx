@@ -11,51 +11,42 @@ import Home from "../pages/Home";
 import UsersControl from "../pages/UsersControl";
 import "../styles/main.scss"
 import "../styles/fontawesome-free-5.15.3-web/css/all.min.css"
+import CreatePost from "../pages/Post";
 
-
-// const App = () => {
-//     return (
-//         <BrowserRouter>
-//             <div className="App h-100">
-//                 <Header/>
-//                 <Switch>
-//                     <PrivateRoute exact path={Urls.root}
-//                                   component={Home}/>
-//                     <PrivateRoute exact path={Urls.timetable.slugRoot}
-//                                   component={Home}/>
-//                     <PrivateRoute exact path={Urls.timetable.slugEdit}
-//                                   component={Timetable}/>
-//                     <PrivateRoute exact path={Urls.panel.slugRoot}
-//                                   component={UsersControl}/>
-//                     <Route exact path={Urls.auth} component={Auth}/>
-//                     <Route path={Urls.notFound} component={NotFoundPage}/>
-//                 </Switch>
-//             </div>
-//         </BrowserRouter>
-//     )
-// }
+export const TEMP: { posts: Array<JSX.Element> } = {
+    posts: [],
+}
 
 const App = () => {
     return (
         <BrowserRouter>
             <div className="App h-100">
                 <Header/>
-
-
-                <Route exact path={Urls.panel.slugRoot}
-                              component={UsersControl}/>
-
+                <Switch>
+                    <PrivateRoute exact path={Urls.root}
+                                  component={Home}/>
+                    <PrivateRoute exact path={Urls.feed.slugRoot}
+                                  component={Home}/>
+                    <PrivateRoute exact path={Urls.timetable.slugEdit}
+                                  component={Timetable}/>
+                    <PrivateRoute exact path={Urls.panel.slugRoot}
+                                  component={UsersControl}/>
+                    <PrivateRoute exact path={Urls.post.slugCreate}
+                                  component={CreatePost}/>
+                    <Route exact path={Urls.auth} component={Auth}/>
+                    <Route path={Urls.notFound} component={NotFoundPage}/>
+                </Switch>
             </div>
         </BrowserRouter>
     )
 }
 
+
 // const App = () => {
 //     return (
 //         <BrowserRouter>
 //             <div className="App h-100">
-//                 <Header/>
-//                 <UsersControl/>
+//                 <CreatePost/>
 //             </div>
 //         </BrowserRouter>
 //     )

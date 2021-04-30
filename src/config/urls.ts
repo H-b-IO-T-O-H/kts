@@ -7,23 +7,33 @@ export const LOGOUT = "users/logout";
 export const ME = "users/me"
 
 const BASE_URL = "/";
-export const TIMETABLE_URL = `${BASE_URL}timetable`;
+const TIMETABLE_URL = `${BASE_URL}timetable`;
 const AUTH_URL = `${BASE_URL}auth`;
 const ANY_URL = "*";
 const PANEL_URL = `${BASE_URL}panel`;
+//const USER_URL = `${BASE_URL}users`
+const POST_URL = `${BASE_URL}posts`
+const FEED_URL = `${BASE_URL}feed`
 
 export const Urls = {
     root: BASE_URL,
+    feed: {
+        slugRoot: FEED_URL
+    },
     timetable: {
+        slugRoot: TIMETABLE_URL,
         slugEdit: `${TIMETABLE_URL}/edit`,
-        slugRoot: `${TIMETABLE_URL}`,
         get: (group: string, week: number) => `${DOMAIN}timetable/${group}/${week}`,
-        post: () => `${DOMAIN}timetable/create`,
-        delete: () => `${DOMAIN}timetable/`
+        post: () => `${TIMETABLE_URL}/create`,
+        delete: () => `${TIMETABLE_URL}/`
     },
     panel: {
-        slugRoot: `${PANEL_URL}`,
+        slugRoot: PANEL_URL,
         getUsersAll: (userType: string) => (`${DOMAIN}users/${userType}/all`)
+    },
+    post: {
+        slugRoot: POST_URL,
+        slugCreate: `${POST_URL}/create`
     },
     auth: AUTH_URL,
     notFound: ANY_URL,
