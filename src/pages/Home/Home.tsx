@@ -9,6 +9,7 @@ import {makeGet} from "@utils/network";
 import {Urls} from "@config/urls";
 import {Labels} from "@components/DragAndDrop/config";
 import {LessonsTime} from "@config/config";
+import PostsList from "../PostsList";
 
 const getWeekData = (): [number, string[], string] => {
     const date = new Date();
@@ -99,6 +100,7 @@ const Home = () => {
                     ))}
                 </div> : null
             }
+            <PostsList/>
         </div>
     )
 }

@@ -11,7 +11,9 @@ import Home from "../pages/Home";
 import UsersControl from "../pages/UsersControl";
 import "../styles/main.scss"
 import "../styles/fontawesome-free-5.15.3-web/css/all.min.css"
-import CreatePost from "../pages/Post";
+import CreatePost from "../pages/PostCreate";
+import ViewPost from "@components/ViewPost";
+import Profile from "../pages/Profile";
 
 export const TEMP: { posts: Array<JSX.Element> } = {
     posts: [],
@@ -33,6 +35,8 @@ const App = () => {
                                   component={UsersControl}/>
                     <PrivateRoute exact path={Urls.post.slugCreate}
                                   component={CreatePost}/>
+                    <PrivateRoute path="/posts/:id" component={ViewPost} />
+                    <PrivateRoute exact path={Urls.user.slugMe} component={Profile} />
                     <Route exact path={Urls.auth} component={Auth}/>
                     <Route path={Urls.notFound} component={NotFoundPage}/>
                 </Switch>

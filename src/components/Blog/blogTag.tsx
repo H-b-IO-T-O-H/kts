@@ -1,6 +1,6 @@
 import React from "react";
 import {TAG_EDUCATIONAL, TAG_GENERAL, TAG_IMPORTANT} from "@config/config";
-import "Css/buttonTag.scss"
+import "./blogTag.scss"
 
 const BlogTag = () => {
     return (

@@ -25,7 +25,10 @@ const Header = () => {
     const location = useLocation();
     const history = useHistory();
 
-    const Rendered = () => ([Urls.feed.slugRoot, Urls.timetable.slugEdit, Urls.panel.slugRoot, Urls.root, Urls.post.slugRoot, Urls.post.slugCreate].includes(location.pathname))
+    const Rendered = () => ([Urls.feed.slugRoot, Urls.timetable.slugEdit,
+        Urls.panel.slugRoot, Urls.root,
+        Urls.post.slugRoot, Urls.post.slugCreate,
+        Urls.user.slugMe, Urls.user.slugRoot].includes(location.pathname))
 
     const [collapseIsOpen, collapseChange] = useState(false);
 
@@ -98,6 +101,9 @@ const Header = () => {
                                         <MDBDropdownToggle className="dropdown-toggle navbar__dropdown">
                                         </MDBDropdownToggle>
                                         <MDBDropdownMenu right basic>
+                                            <MDBDropdownItem onClick={() => {
+                                                history.push(Urls.user.slugMe)
+                                            }}>Профиль</MDBDropdownItem>
                                             <MDBDropdownItem onClick={() => {
                                                 Logout(history);
                                             }}>Выйти</MDBDropdownItem>

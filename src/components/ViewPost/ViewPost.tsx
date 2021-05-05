@@ -1,7 +1,11 @@
-import React, {Component} from "react";
-import "Css/postView.scss"
+import React from "react";
+import "./ViewPost.scss"
 import BlogTag from "@components/Blog/blogTag";
 import {Link} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
+import PostComment from "@components/PostCommentView";
+import Hamster from "@media/hamster.webp"
+import CommentView from "@components/PostCommentView";
 
 let answersExample = [
     {text: "first answer text"},
@@ -11,189 +15,28 @@ let answersExample = [
 ]
 
 
-// class CommentAnswers extends Component {
-//
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             clicked: false,
-//             answers: [],
-//             answerCnt: this.props.answers ? this.props.answers.length : 0,
-//             commentAuthor: ""
-//         };
-//         this.answerView = this.answerView.bind(this)
-//         this.prepareAnswers(answersExample, this.props.commentAuthor);
-//     }
-//
-//     answerView = (key, text, answerAuthor, commentAuthor) => {
-//         return (
-//             <div className="post-comment post-comment-answer w-50 ml-3" key={key}>
-//                 <div className="ml-4">
-//                     <div className="d-flex flex-row justify-content-between">
-//                         <div className="d-flex flex-row ">
-//                             <img className="post-comment-avatar" src="/public/img/hamster.webp"
-//                                  alt="img not loaded"/>
-//                             <div><Link className="ml-3" to="/profile">{answerAuthor}</Link> <small
-//                                 className="grey-text">ответил {commentAuthor}</small></div>
-//                         </div>
-//                     </div>
-//                     <div>{text ? <p>{text}</p> :
-//                         <p>Some quick example text to build on the card title and make up the bulk of the card's
-//                             content.</p>
-//                     }</div>
-//                     <div className="d-flex flex-row justify-content-between align-items-center">
-//                         <small className="date-time grey-text"> 25 января 2021 г. в 12:58</small>
-//
-//                         <button className="btn-post-social btn-post-comment blue-color ml-2"
-//                                 onClick={e => {
-//                                     this.setState({clicked: !this.state.clicked, commentAuthor: answerAuthor});
-//                                 }}><small>Ответить</small>
-//                         </button>
-//                     </div>
-//                     <hr className="mt-0"/>
-//
-//                 </div>
-//             </div>
-//         )
-//     }
-//
-//     answerPush = (text, commentAuthor) => {
-//         this.setState({
-//             clicked: false,
-//             answerCnt: ++this.state.answerCnt,
-//             answers: this.state.answers.concat(this.answerView(this.state.answerCnt - 1, text, "Vlad", commentAuthor))
-//         });
-//     }
-//
-//     prepareAnswers = (answers, commentAuthor) => {
-//         for (let i = 0; i < this.state.answerCnt; ++i) {
-//             this.state.answers.push(this.answerView(i, answers[i].text, `Author${i}`, commentAuthor))
-//         }
-//     }
-//
-//     render() {
-//         return (
-//             <div>
-//                 <a id="go-down-answer" className="href-transparent" href="#comment-answer-new"/>
-//                 {this.state.answers}
-//                 {this.state.clicked ? <div className="post-comment-new">
-//                     {$("#go-down-answer")[0].click()}
-//                     <hr/>
-//                     <h5 className="ml-3">Ваш комментарий</h5>
-//                     <div className="d-flex flex-row justify-content-between align-items-center">
-//                         <div className="d-flex flex-row post-comment-content">
-//                             <img className="post-avatar-lg ml-3" src="/public/img/hamster.webp"
-//                                  alt="img not loaded"/>
-//                             <textarea id="comment-answer-new" className="form-control ml-3" rows="1"/>
-//                         </div>
-//                         <button className="btn-post-social"
-//                                 onClick={e => (this.answerPush($("textarea#comment-answer-new").val(), this.state.commentAuthor))}>
-//                             <i
-//                                 className="fa fa-paper-plane fa-lg mr-3 post-icon-comment"/></button>
-//                     </div>
-//                     <hr/>
-//                 </div> : null}
-//             </div>
-//         )
-//     }
-// }
-//
-// const commentView = (key, text, answers, commentAuthor) => (
-//     <div className="post-comment" key={key}>
-//         <div className="card-header d-flex flex-row justify-content-between">
-//             <div>
-//                 <img className="post-comment-avatar" src="/public/img/hamster.webp"
-//                      alt="img not loaded"/>
-//                 <Link className="ml-3" to="/profile">Вася Пупкин</Link>
-//             </div>
-//             <p className="date-time grey-text"> 25 января 2021 г. в 12:58</p>
-//         </div>
-//         <div className="card-body">
-//             <div>{text ? <p>{text}</p> :
-//                 <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-//             }</div>
-//         </div>
-//         <CommentCreate isAnswer={true}/>
-//         <CommentAnswers answers={answers} commentAuthor={commentAuthor}/>
-//     </div>
-// )
-//
-// class CommentCreate extends Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {clicked: false, isAnswer: this.props.isAnswer};
-//     }
-//
-//     postAnswer = () => (
-//         <blockquote className="blockquote mb-0">
-//             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-//             <footer className="blockquote-footer">Someone famous in <cite>Sourc
-//                 Title</cite></footer>
-//         </blockquote>
-//     )
-//
-//     render() {
-//         return (
-//             <div>
-//                 <a id="go-down" className="href-transparent" href="#comment-new"/>
-//                 {!this.state.isAnswer ?
-//                     <div>
-//                         <button className="btn-post-social btn-post-comment blue-color ml-2"
-//                                 style={{color: this.state.clicked ? "red" : null}}
-//                                 onClick={e => {
-//                                     this.setState({clicked: !this.state.clicked});
-//                                 }}>Оставить комментарий
-//                         </button>
-//                     </div> :
-//                     <button className="btn-post-social btn-post-comment blue-color ml-2"
-//                             style={{color: this.state.clicked ? "red" : null}}
-//                             onClick={e => {
-//                                 this.setState({clicked: !this.state.clicked});
-//                             }}>Ответить
-//                     </button>
-//                 }
-//                 {this.state.isAnswer ? <hr/> : null}
-//
-//                 {this.state.clicked ? <div className="post-comment-new"
-//                                            style={this.state.isAnswer ? {
-//                                                borderLeft: ".25rem solid #eceeef",
-//                                                marginLeft: "1rem"
-//                                            } : null}>
-//                     {$("#go-down")[0].click()}
-//                     <hr/>
-//                     <h5 className="ml-3">Ваш комментарий</h5>
-//                     <div className="d-flex flex-row justify-content-between align-items-center">
-//                         <div className="d-flex flex-row post-comment-content">
-//                             <img className="post-avatar-lg ml-3" src="/public/img/hamster.webp"
-//                                  alt="img not loaded"/>
-//                             <textarea id="comment-new" className="form-control ml-3" rows="1"/>
-//                         </div>
-//
-//                         <button className="btn-post-social" onClick={e => {
-//                             this.setState({clicked: false, isAnswer: false})
-//                             this.props.commentsPush($("textarea#comment-new").val());
-//                         }}><i
-//                             className="fa fa-paper-plane fa-lg mr-3 post-icon-comment"/></button>
-//                     </div>
-//                     <hr/>
-//                 </div> : null}
-//
-//             </div>
-//         )
-//     }
-//
-// }
-
-
 type Props = {
-    id: string|number;
+    id: string | number;
+}
+
+type Comment = {
+    commentId: string | number,
+    author: string,
+    authorAvatarPath?: string,
+    text: string,
+    date?: string
 }
 
 export const PostView: React.FC<Props> = ({id}) => {
-
-    const [isOutputFull, changeOutputFull] = React.useState(false);
+    const commentsForm = ["Комментарий", "Комментария", "Комментариев"];
+    const history = useHistory();
+    const location = useLocation();
+    const [isOutputFull, changeOutputFull] = React.useState(location.pathname.includes('/posts'));
     const [isLiked, changeLiked] = React.useState(false);
     const [likesCnt, changeLikesCnt] = React.useState(0);
+    const [commentsCnt, changeCommentsCnt] = React.useState(0);
+    const [comments, changeComments] = React.useState<Array<Comment>>([])
+
 
     const declOfNum = (n: number, text_forms: Array<string>) => {
         n = Math.abs(n) % 100;
@@ -208,6 +51,27 @@ export const PostView: React.FC<Props> = ({id}) => {
             return text_forms[0];
         }
         return text_forms[2];
+    }
+
+    const commentsRedirectHandler = () => {
+        if (!isOutputFull) {
+            history.push(`/posts/${id}`)
+        }
+        document.getElementById("go-to-comments")?.click()
+    }
+
+    const addComment = () => {
+        const oldComments = [...comments];
+
+        oldComments.push({authorAvatarPath: "", date: "", commentId: oldComments.length, text: "aaaa", author: "Vasya"})
+        changeComments(oldComments);
+    }
+
+    const deleteComment = (commentId: string | number) => {
+        const oldComments = [...comments];
+        const idx = oldComments.findIndex((c) => (c.commentId === commentId))
+        oldComments.splice(idx, 1);
+        changeComments(oldComments);
     }
 
 
@@ -262,10 +126,8 @@ export const PostView: React.FC<Props> = ({id}) => {
 
                             <div className="mr-3">
                                 <a id="go-to-comments" className="href-transparent" href="#comments"/>
-                                <button className="btn-post-social" onClick={() => {
-                                    alert(1)
-                                }}><i
-                                    className="fa fa-comments fa-lg post-icon-comment"/></button>
+                                <button className="btn-post-social" onClick={commentsRedirectHandler}>
+                                    <i className="fa fa-comments fa-lg post-icon-comment"/></button>
                                 {'5 комментов'}
                                 <button className="btn-post-social btn-post-like"
                                         onClick={() => {
@@ -282,17 +144,18 @@ export const PostView: React.FC<Props> = ({id}) => {
             </div>
 
             {isOutputFull ? <div>
-                <button className="btn btn-primary btn-sm" onClick={()=>{alert(1)}}>comments-
-                </button>
-                <button className="btn btn-success btn-sm" onClick={()=>{alert(1)}}>comments+
+                <button className="btn btn-success btn-sm" onClick={addComment}>comments+
                 </button>
                 <h1 className="m-3">
-                    <span>{0} </span>{'comments'}
+                    <span>{commentsCnt} </span>{declOfNum(commentsCnt, commentsForm)}
                 </h1>
 
                 <div data-spy="scroll" data-offset="0">
                     <div id="comments">
-                        {0}
+                        {comments.map((comment) => (
+                            <CommentView key={comment.commentId} text={comment.text} viewByAuthor={true}
+                                         onDeleteClick={() => (deleteComment(comment.commentId))}/>
+                        ))}
                     </div>
                     {<div className="text-center">
                         <button className="btn-post-social btn-post-comment blue-color"

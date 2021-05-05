@@ -7,16 +7,20 @@ export const LOGOUT = "users/logout";
 export const ME = "users/me"
 
 const BASE_URL = "/";
+const ANY_URL = "*";
+const USER_URL = `${BASE_URL}users`;
 const TIMETABLE_URL = `${BASE_URL}timetable`;
 const AUTH_URL = `${BASE_URL}auth`;
-const ANY_URL = "*";
 const PANEL_URL = `${BASE_URL}panel`;
-//const USER_URL = `${BASE_URL}users`
 const POST_URL = `${BASE_URL}posts`
 const FEED_URL = `${BASE_URL}feed`
 
 export const Urls = {
     root: BASE_URL,
+    user: {
+        slugRoot: USER_URL,
+        slugMe: `${USER_URL}/me`
+    },
     feed: {
         slugRoot: FEED_URL
     },
