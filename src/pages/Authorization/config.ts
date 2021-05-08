@@ -9,6 +9,9 @@ export const EMPTY_EMAIL_FIELD = "Email не может быть пустым!";
 export const EMPTY_PASSWORD_FIELD = "Пароль не может быть пустым!";
 export const ERROR_EMAIL_FIELD = "Некорректный email!";
 export const ERROR_PASSWORD_FIELD = `Длина пароля должна быть от ${PASSWORD_MIN_LENGTH} до ${PASSWORD_MAX_LENGTH} символов!`;
-export const USER_TYPE_STUDENT = "1";
-export const USER_TYPE_PROFESSOR = "2";
-export const USER_TYPE_ADMIN = "0";
+
+export const USER_TYPE_STUDENT = "student";
+export const USER_TYPE_PROFESSOR = "professor";
+export const USER_TYPE_ADMIN = "admin";
+export const USER_TYPE_METHODIST = "methodist";
+export const USER_TYPE_GUEST = "guest";

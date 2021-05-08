@@ -2,26 +2,22 @@ import React, {useState} from "react";
 import "./StatusLabel.scss"
 
 type Props = {
-    info: { content: string, success: boolean }
-    clearText?: () => void
+    info: { content: string, success: boolean };
 }
 
 
-const StatusLabel: React.FC<Props> = ({info, clearText}) => {
-    const [shown, isShown] = useState(false)
+const StatusLabel: React.FC<Props> = ({info}) => {
+    const [shown, isShown] = useState(false);
 
     React.useEffect(() => {
         const timer = setTimeout(() => {
             isShown(false);
-            if (clearText) {
-                clearText();
-            }
         }, 2000);
-        isShown(info.content !== "")
-        return () => {
-            clearTimeout(timer);
-        }
-    }, [info.content])
+        isShown(info.content !== "");
+        console.log(info)
+        return () => clearTimeout(timer);
+    }, [info])
+
 
     return (
         <div className="StatusLabel"

@@ -37,7 +37,7 @@ const UsersTable: React.FC<Props> = ({title, url}) => {
         setDownload(true);
     }, []);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (needDownload) {
             setReady(true);
             let errContent = "";
@@ -53,7 +53,7 @@ const UsersTable: React.FC<Props> = ({title, url}) => {
                 setReady(false);
             }, 1000);
         }
-    }, [needDownload, url])
+    }, [needDownload, url])*/
 
     return (
         <div className="users-table">
@@ -62,7 +62,7 @@ const UsersTable: React.FC<Props> = ({title, url}) => {
             <div className="users-table__body p-1">
                 {isNotReady ?
                     <i className="fa fa-spinner fa-spin fa-2x fa-fw"/> : null}
-                {!isNotReady && needDownload ? <MDBDataTable data={data}
+                {!isNotReady && needDownload ? <MDBDataTable data={dataNew}
                                                              noRecordsFoundLabel={"Ничего не найдено"}
                                                              striped
                                                              bordered

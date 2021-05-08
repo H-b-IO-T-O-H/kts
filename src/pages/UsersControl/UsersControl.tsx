@@ -3,89 +3,258 @@ import "./UsersControl.scss"
 import InputNumber from "@components/InputNumber";
 import Tags from "@components/Tags";
 import StatusLabel from "@components/StatusLabel";
-import {btnPasswd, saveUser} from "./config";
+import {
+    btnPasswd, checkRussian, ERROR_ABOUT_FIELD,
+    ERROR_NAME_FIELD,
+    ERROR_PATRONYMIC_FIELD, ERROR_PHONE_FIELD,
+    ERROR_SURNAME_FIELD, isValid, MAX_ABOUT,
+    MAX_SNP,
+    MIN_SNP, notEmpty,
+    saveUser
+} from "./config";
 import {engRusMap} from "@utils/en-ru-map";
 import ButtonTimetable from "@components/ButtonTimetable";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faRedoAlt} from "@fortawesome/free-solid-svg-icons/faRedoAlt";
 import UsersTable from "./usersTables";
 import {Urls} from "@config/urls";
+import AuthError from "@components/AuthError/AuthError";
+import {ERROR_EMAIL_FIELD, USER_TYPE_METHODIST, USER_TYPE_PROFESSOR, USER_TYPE_STUDENT} from "../Authorization/config";
+
+type UserProps = {
+    role: string,
+    email: string,
+    phone: string,
+    name: string,
+    surname: string,
+    patronymic: string,
+    password: string,
+    about: string,
+    disciplines: Array<{ id: string, content: string }>,
+    group: number,
+    sem: number
+}
 
 const UsersControl = () => {
-    //const [name, changeName] = React.useState("")
-    const [err, showLabel] = useState({content: "", success: false});
-    const [userInfo, setUserInfo] = useState({
-        "role": "",
-        "email": "",
-        "name": "",
-        "surname": "",
-        "patronymic": "",
-        "password": "",
-        "group": ""
+    const [label, showLabel] = useState({content: "", success: false});
+    const [inputPasswd, setInputPasswd] = useState<HTMLInputElement | null>(null);
+    const [userInfo, setUserInfo] = useState<UserProps>({
+        role: USER_TYPE_STUDENT,
+        email: "",
+        phone: "",
+        name: "",
+        surname: "",
+        patronymic: "",
+        password: "",
+        about: "",
+        disciplines: [],
+        group: NaN,
+        sem: NaN
     });
-    const [passwd, setPasswd] = useState("")
+    const [timer, setTimer] = useState(0);
 
-    const [userType, setUserType] = useState("Студент");
-    const [sem, setSem] = useState(NaN);
-    const [group, setGroup] = useState(NaN);
+    const [userValid, setUserValid] = useState({
+        role: {noFocus: false, msg: ""},
+        email: {noFocus: false, msg: ""},
+        phone: {noFocus: false, msg: ""},
+        name: {noFocus: false, msg: ""},
+        surname: {noFocus: false, msg: ""},
+        patronymic: {noFocus: false, msg: ""},
+        password: {noFocus: false, msg: ""},
+        about: {noFocus: false, msg: ""},
+    });
 
-    const handleUserType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setUserType(e.target.value);
-    }
-    const handleSem = (id: string, nmb: number) => {
-        setSem(nmb);
-    }
-    const handleGroup = (id: string, nmb: number) => {
-        setGroup(nmb);
-    }
-
+    React.useEffect(() => {
+        const inputElem = document.getElementById("input-password") as HTMLInputElement;
+        setInputPasswd(inputElem)
+    }, [])
 
     const handleSubmit = useCallback(() => {
         const newUser = {
-            "role": engRusMap[userType],
-            "email": userInfo.email,
-            "name": userInfo.name,
-            "surname": userInfo.surname,
-            "patronymic": userInfo.patronymic,
-            "password": userInfo.password,
-            "group": `IU10-${sem}${group}`
+            role: userInfo.role,
+            password: userInfo.password,
+            name: userInfo.name,
+            surname: userInfo.surname,
+            patronymic: userInfo.patronymic,
+            email: userInfo.email,
+            phone: userInfo.phone,
+            student_group: userInfo.group,
+            prof_disciplines: null,
         }
-        saveUser(newUser, showLabel)
+
+        let fieldsCanBeEmpty = ["about", "sem", "group"];
+
+        if (!isValid(userValid)) {
+            showLabel({content: "Заполните поля корректно.", success: false});
+            return;
+        }
+
+        if (userInfo.role === USER_TYPE_METHODIST) {
+            fieldsCanBeEmpty.push("disciplines");
+        } else if (userInfo.role === USER_TYPE_STUDENT) {
+            fieldsCanBeEmpty = ["about", "disciplines"];
+        }
+
+        if (!notEmpty(userInfo, fieldsCanBeEmpty)) {
+            showLabel({content: "Заполните пустые поля.", success: false});
+            return;
+        }
+
+        showLabel({content: "Ok", success: true});
+        //saveUser(newUser, showLabel)
+    }, [userValid, userInfo]);
+
+
+    const handlePassword = useCallback(() => {
+        const oldUser = {...userInfo};
+
+        if (inputPasswd) {
+            if (timer !== 0) {
+                clearTimeout(timer);
+            }
+            setTimer(window.setTimeout(() => {
+                inputPasswd.type = "password";
+                clearTimeout(timer);
+            }, 2000));
+            inputPasswd.type = "text";
+        }
+        oldUser.password = btnPasswd.genPasswd(15);
+        setUserInfo(oldUser);
+    }, [inputPasswd, timer, userInfo]);
+
+    const handleBlur = useCallback(() => {
+        const oldUserValid = {...userValid};
+
+        Object.keys(oldUserValid).forEach((key) => {
+            oldUserValid[key].noFocus = true;
+            if (userInfo[key] === "") {
+                oldUserValid[key].msg = "";
+            }
+        });
+
+        setUserValid(oldUserValid);
+    }, [userInfo, userValid]);
+
+
+    const handleUserInfo = useCallback((e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+        const oldUser = {...userInfo};
+        const oldUserValid = {...userValid};
+        const value = e.target.value;
+        const length = value.length;
+
+        switch (e.target.id) {
+            case "input-name":
+                oldUserValid.name.msg = length < MIN_SNP || length >= MAX_SNP || !checkRussian(value) ? ERROR_NAME_FIELD : ""
+                oldUserValid.name.noFocus = false;
+                oldUser.name = value;
+                break;
+            case "input-surname":
+                oldUserValid.surname.msg = length < MIN_SNP || length >= MAX_SNP || !checkRussian(value) ? ERROR_SURNAME_FIELD : ""
+                oldUserValid.surname.noFocus = false;
+                oldUser.surname = value;
+                break;
+            case "input-patronymic":
+                oldUserValid.patronymic.msg = length < MIN_SNP || length >= MAX_SNP || !checkRussian(value) ? ERROR_PATRONYMIC_FIELD : ""
+                oldUserValid.patronymic.noFocus = false;
+                oldUser.patronymic = value;
+                break;
+            case "input-password":
+                oldUserValid.patronymic.msg = length < MIN_SNP || length >= MAX_SNP ? ERROR_PATRONYMIC_FIELD : ""
+                oldUserValid.patronymic.noFocus = false;
+                oldUser.password = value;
+                break;
+            case "select-usertype":
+                oldUser.role = value;
+                break;
+            case "input-email":
+                const reEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                oldUserValid.email.msg = !reEmail.test(String(value).toLowerCase()) ? ERROR_EMAIL_FIELD : "";
+                oldUserValid.email.noFocus = false;
+                oldUser.email = value;
+                break;
+            case "input-phone":
+                const rePhone = /^[\d]{1} \([\d]{2,3}\) [\d]{2,3}-[\d]{2,3}-[\d]{2,3}$/;
+                oldUserValid.phone.msg = !rePhone.test(String(value).toLowerCase()) ? ERROR_PHONE_FIELD : "";
+                oldUserValid.phone.noFocus = false;
+
+                let telephone = "";
+                let numbersOld = oldUser.phone.replace(/\D/g, "").split('');
+                const numbersNew = value.replace(/\D/g, "").split('');
+
+                if (numbersOld.length === numbersNew.length && telephone.length < value.length) {
+                    telephone = value;
+                } else {
+                    for (let i = 0; i < 11 && i < numbersNew.length; ++i) {
+                        if (i === 4) {
+                            telephone += ") ";
+                        } else if (i === 7 || i === 9) {
+                            telephone += "-";
+                        }
+                        telephone += numbersNew[i];
+                        if (i === 0) {
+                            telephone += " (";
+                        }
+                    }
+                }
+
+                oldUser.phone = telephone.trim();
+                break;
+            case "input-about":
+                oldUserValid.about.msg = length > MAX_ABOUT ? ERROR_ABOUT_FIELD + ` (${length})` : "";
+                oldUserValid.about.noFocus = false;
+                oldUser.about = value;
+                break;
+        }
+        setUserInfo(oldUser);
+        setUserValid(oldUserValid);
+    }, [userInfo, userValid]);
+
+
+    const handleInputId = useCallback((id: string, value: number) => {
+        const oldUser = {...userInfo};
+
+        if (id === "input_nmb_sem") {
+            oldUser.sem = value;
+        } else {
+            oldUser.group = value;
+        }
+        setUserInfo(oldUser);
     }, [userInfo])
 
-    const getAllData = React.useCallback(()=>{
-
-    }, [])
-
-    const groupInfo = () => {
-        if (!isNaN(sem) && !isNaN(group)) {
-            return (
-                <div className="IU">{`Группа: ИУ10-${sem}${group}`}</div>)
-        }
-        return null;
-    }
-
     const defineRole = () => {
-        if (userType === "Студент") {
+        if (userInfo.role === USER_TYPE_STUDENT) {
             return (
                 <div>
                     <div className="d-flex justify-content-center">
                         <div className="mr-1">
-                            <InputNumber placeholder={"Сем"} onChange={handleSem} id={"0"} min={1} max={12}/>
+                            <InputNumber placeholder={"Сем"} onChange={handleInputId} id={"input_nmb_sem"} min={1}
+                                         max={12}/>
                         </div>
                         <div className="ml-1">
-                            <InputNumber placeholder={"Группа"} onChange={handleGroup} id={"1"} min={1} max={5}/>
+                            <InputNumber placeholder={"Группа"} onChange={handleInputId} id={"input_nmb_group"} min={1}
+                                         max={5}/>
                         </div>
                     </div>
-                    {groupInfo()}
+                    {!isNaN(userInfo.sem) && !isNaN(userInfo.group) ?
+                        <div className="IU">{`Группа: ИУ10-${userInfo.sem}${userInfo.group}`}</div> : null}
                 </div>
             )
-        } else if (userType === "Преподаватель") {
+        } else if (userInfo.role === USER_TYPE_PROFESSOR) {
             return (
                 <div>
-                    <Tags placeholder={"Дисциплина"} />
+                    <div className="users-control_label">Дисциплина</div>
+                    <Tags tags={userInfo.disciplines} changeTags={(newTags) => {
+                        const oldInfo = {...userInfo};
+                        oldInfo.disciplines = newTags;
+                        setUserInfo(oldInfo);
+                    }
+                    }/>
+                    {(userValid.about.noFocus && userValid.about.msg) &&
+                    <AuthError msg={userValid.about.msg}/>}
                     <div className="prof-info mt-2">
-                        <input placeholder="О себе" className="users-control_input"/>
+                        <div className="users-control_label">Общая информация</div>
+                        <input id="input-about" className="users-control_input"
+                               onChange={handleUserInfo} onBlur={handleBlur}/>
                     </div>
                 </div>
             )
@@ -94,7 +263,7 @@ const UsersControl = () => {
 
     return (
         <div>
-            <StatusLabel info={err}/>
+            <StatusLabel info={label}/>
             <div className="users">
                 <div className="users-control">
                     <div className="panel__header">
@@ -102,45 +271,66 @@ const UsersControl = () => {
                     </div>
                     <div className="users-control_block">
                         <div className="mt-1">
+                            {(userValid.surname.noFocus && userValid.surname.msg) &&
+                            <AuthError msg={userValid.surname.msg}/>}
                             <div className="users-control_label">Фамилия</div>
-                            <input className="users-control_input"/>
+                            <input id="input-surname" className="users-control_input" value={userInfo.surname}
+                                   onChange={handleUserInfo} onBlur={handleBlur}/>
                         </div>
                         <div className="mt-1">
+                            {(userValid.name.noFocus && userValid.name.msg) &&
+                            <AuthError msg={userValid.name.msg}/>}
                             <div className="users-control_label">Имя</div>
-                            <input className="users-control_input"/>
+                            <input id="input-name" className="users-control_input" value={userInfo.name}
+                                   onChange={handleUserInfo} onBlur={handleBlur}/>
                         </div>
                         <div className="mt-1">
+                            {(userValid.patronymic.noFocus && userValid.patronymic.msg) &&
+                            <AuthError msg={userValid.patronymic.msg}/>}
                             <div className="users-control_label">Отчество</div>
-                            <input className="users-control_input"/>
+                            <input id="input-patronymic" className="users-control_input" value={userInfo.patronymic}
+                                   onChange={handleUserInfo} onBlur={handleBlur}/>
                         </div>
-                        <div className="mt-3 mb-2">
-                            <div className="users-control_label">Тип пользователя</div>
-                            <select value={userType} onChange={handleUserType} className="users-control_select">
-                                <option>Студент</option>
-                                <option>Преподаватель</option>
-                                <option>Методист</option>
-                            </select>
-                        </div>
-                        {defineRole()}
                         <div className="mt-1">
+                            {(userValid.phone.noFocus && userValid.phone.msg) &&
+                            <AuthError msg={userValid.phone.msg}/>}
                             <div className="users-control_label">Телефон</div>
-                            <input className="users-control_input"/>
+                            <small className="users-control_advice">Формат: 8 (888) 888-88-88</small>
+                            <input id="input-phone" className="users-control_input" value={userInfo.phone}
+                                   onChange={handleUserInfo} onBlur={handleBlur}/>
                         </div>
                         <div className="mt-1">
+                            {(userValid.email.noFocus && userValid.email.msg) &&
+                            <AuthError msg={userValid.email.msg}/>}
                             <div className="users-control_label">Email</div>
-                            <input className="users-control_input"/>
+                            <input id="input-email" className="users-control_input" value={userInfo.email}
+                                   onChange={handleUserInfo} onBlur={handleBlur}/>
                         </div>
                         <div className="mt-1">
                             <div className="users-control_label">Пароль</div>
                             <div className="d-flex flex-row align-items-center">
-                                <input value={passwd} disabled={true} className="users-control_input"/>
-                                <button type="button" onClick={() => {
-                                    setPasswd(btnPasswd.genPasswd(15));
-                                }} className="add ml-1"><FontAwesomeIcon className="icon-reload" icon={faRedoAlt}
-                                                                         size={"sm"}
-                                                                         color={"#ffffff"}/></button>
+                                <input id="input-password" className="users-control_input"
+                                       value={userInfo.password} onChange={handleUserInfo}
+                                       disabled={true} onBlur={handleBlur}/>
+                                <button type="button" onClick={handlePassword}
+                                        className="tag-btn ml-1"><FontAwesomeIcon className="icon-reload"
+                                                                                  icon={faRedoAlt}
+                                                                                  size={"sm"}
+                                                                                  color={"#ffffff"}/></button>
                             </div>
                         </div>
+
+                        <div className="mt-3 mb-2">
+                            <div className="users-control_label">Тип пользователя</div>
+                            <select id="select-usertype" className="users-control_select" value={userInfo.role}
+                                    onChange={handleUserInfo} onBlur={handleBlur}>
+                                <option value={USER_TYPE_STUDENT}>Студент</option>
+                                <option value={USER_TYPE_PROFESSOR}>Преподаватель</option>
+                                <option value={USER_TYPE_METHODIST}>Методист</option>
+                            </select>
+                        </div>
+                        {defineRole()}
+
                         <button type="button" className="btn users-control_load mt-3 mb-3"
                                 onClick={handleSubmit}>Сохранить
                         </button>
@@ -154,504 +344,3 @@ const UsersControl = () => {
 }
 
 export default UsersControl;
-
-const data =
-    {
-        columns: [
-            {
-                label: 'Name',
-                field: 'name',
-                sort: 'asc',
-                width: 150
-            },
-            {
-                label: 'Position',
-                field: 'position',
-                sort: 'asc',
-                width: 270
-            },
-            {
-                label: 'Office',
-                field: 'office',
-                sort: 'asc',
-                width: 200
-            },
-            {
-                label: 'Age',
-                field: 'age',
-                sort: 'asc',
-                width: 100
-            },
-            {
-                label: 'Start date',
-                field: 'date',
-                sort: 'asc',
-                width: 150
-            },
-            {
-                label: 'Salary',
-                field: 'salary',
-                sort: 'asc',
-                width: 100
-            }
-        ],
-        rows: [
-            {
-                name: 'Tiger Nixon',
-                position: 'System Architect',
-                office: 'Edinburgh',
-                age: '61',
-                date: '2011/04/25',
-                salary: '$320'
-            },
-            {
-                name: 'Garrett Winters',
-                position: 'Accountant',
-                office: 'Tokyo',
-                age: '63',
-                date: '2011/07/25',
-                salary: '$170'
-            },
-            {
-                name: 'Ashton Cox',
-                position: 'Junior Technical Author',
-                office: 'San Francisco',
-                age: '66',
-                date: '2009/01/12',
-                salary: '$86'
-            },
-            {
-                name: 'Cedric Kelly',
-                position: 'Senior Javascript Developer',
-                office: 'Edinburgh',
-                age: '22',
-                date: '2012/03/29',
-                salary: '$433'
-            },
-            {
-                name: 'Airi Satou',
-                position: 'Accountant',
-                office: 'Tokyo',
-                age: '33',
-                date: '2008/11/28',
-                salary: '$162'
-            },
-            {
-                name: 'Brielle Williamson',
-                position: 'Integration Specialist',
-                office: 'New York',
-                age: '61',
-                date: '2012/12/02',
-                salary: '$372'
-            },
-            {
-                name: 'Herrod Chandler',
-                position: 'Sales Assistant',
-                office: 'San Francisco',
-                age: '59',
-                date: '2012/08/06',
-                salary: '$137'
-            },
-            {
-                name: 'Rhona Davidson',
-                position: 'Integration Specialist',
-                office: 'Tokyo',
-                age: '55',
-                date: '2010/10/14',
-                salary: '$327'
-            },
-            {
-                name: 'Colleen Hurst',
-                position: 'Javascript Developer',
-                office: 'San Francisco',
-                age: '39',
-                date: '2009/09/15',
-                salary: '$205'
-            },
-            {
-                name: 'Sonya Frost',
-                position: 'Software Engineer',
-                office: 'Edinburgh',
-                age: '23',
-                date: '2008/12/13',
-                salary: '$103'
-            },
-            {
-                name: 'Jena Gaines',
-                position: 'Office Manager',
-                office: 'London',
-                age: '30',
-                date: '2008/12/19',
-                salary: '$90'
-            },
-            {
-                name: 'Quinn Flynn',
-                position: 'Support Lead',
-                office: 'Edinburgh',
-                age: '22',
-                date: '2013/03/03',
-                salary: '$342'
-            },
-            {
-                name: 'Charde Marshall',
-                position: 'Regional Director',
-                office: 'San Francisco',
-                age: '36',
-                date: '2008/10/16',
-                salary: '$470'
-            },
-            {
-                name: 'Haley Kennedy',
-                position: 'Senior Marketing Designer',
-                office: 'London',
-                age: '43',
-                date: '2012/12/18',
-                salary: '$313'
-            },
-            {
-                name: 'Tatyana Fitzpatrick',
-                position: 'Regional Director',
-                office: 'London',
-                age: '19',
-                date: '2010/03/17',
-                salary: '$385'
-            },
-            {
-                name: 'Michael Silva',
-                position: 'Marketing Designer',
-                office: 'London',
-                age: '66',
-                date: '2012/11/27',
-                salary: '$198'
-            },
-            {
-                name: 'Paul Byrd',
-                position: 'Chief Financial Officer (CFO)',
-                office: 'New York',
-                age: '64',
-                date: '2010/06/09',
-                salary: '$725'
-            },
-            {
-                name: 'Gloria Little',
-                position: 'Systems Administrator',
-                office: 'New York',
-                age: '59',
-                date: '2009/04/10',
-                salary: '$237'
-            },
-            {
-                name: 'Bradley Greer',
-                position: 'Software Engineer',
-                office: 'London',
-                age: '41',
-                date: '2012/10/13',
-                salary: '$132'
-            },
-            {
-                name: 'Dai Rios',
-                position: 'Personnel Lead',
-                office: 'Edinburgh',
-                age: '35',
-                date: '2012/09/26',
-                salary: '$217'
-            },
-            {
-                name: 'Jenette Caldwell',
-                position: 'Development Lead',
-                office: 'New York',
-                age: '30',
-                date: '2011/09/03',
-                salary: '$345'
-            },
-            {
-                name: 'Yuri Berry',
-                position: 'Chief Marketing Officer (CMO)',
-                office: 'New York',
-                age: '40',
-                date: '2009/06/25',
-                salary: '$675'
-            },
-            {
-                name: 'Caesar Vance',
-                position: 'Pre-Sales Support',
-                office: 'New York',
-                age: '21',
-                date: '2011/12/12',
-                salary: '$106'
-            },
-            {
-                name: 'Doris Wilder',
-                position: 'Sales Assistant',
-                office: 'Sidney',
-                age: '23',
-                date: '2010/09/20',
-                salary: '$85'
-            },
-            {
-                name: 'Angelica Ramos',
-                position: 'Chief Executive Officer (CEO)',
-                office: 'London',
-                age: '47',
-                date: '2009/10/09',
-                salary: '$1'
-            },
-            {
-                name: 'Gavin Joyce',
-                position: 'Developer',
-                office: 'Edinburgh',
-                age: '42',
-                date: '2010/12/22',
-                salary: '$92'
-            },
-            {
-                name: 'Jennifer Chang',
-                position: 'Regional Director',
-                office: 'Singapore',
-                age: '28',
-                date: '2010/11/14',
-                salary: '$357'
-            },
-            {
-                name: 'Brenden Wagner',
-                position: 'Software Engineer',
-                office: 'San Francisco',
-                age: '28',
-                date: '2011/06/07',
-                salary: '$206'
-            },
-            {
-                name: 'Fiona Green',
-                position: 'Chief Operating Officer (COO)',
-                office: 'San Francisco',
-                age: '48',
-                date: '2010/03/11',
-                salary: '$850'
-            },
-            {
-                name: 'Shou Itou',
-                position: 'Regional Marketing',
-                office: 'Tokyo',
-                age: '20',
-                date: '2011/08/14',
-                salary: '$163'
-            },
-            {
-                name: 'Michelle House',
-                position: 'Integration Specialist',
-                office: 'Sidney',
-                age: '37',
-                date: '2011/06/02',
-                salary: '$95'
-            },
-            {
-                name: 'Suki Burks',
-                position: 'Developer',
-                office: 'London',
-                age: '53',
-                date: '2009/10/22',
-                salary: '$114'
-            },
-            {
-                name: 'Prescott Bartlett',
-                position: 'Technical Author',
-                office: 'London',
-                age: '27',
-                date: '2011/05/07',
-                salary: '$145'
-            },
-            {
-                name: 'Gavin Cortez',
-                position: 'Team Leader',
-                office: 'San Francisco',
-                age: '22',
-                date: '2008/10/26',
-                salary: '$235'
-            },
-            {
-                name: 'Martena Mccray',
-                position: 'PostCreate-Sales support',
-                office: 'Edinburgh',
-                age: '46',
-                date: '2011/03/09',
-                salary: '$324'
-            },
-            {
-                name: 'Unity Butler',
-                position: 'Marketing Designer',
-                office: 'San Francisco',
-                age: '47',
-                date: '2009/12/09',
-                salary: '$85'
-            },
-            {
-                name: 'Howard Hatfield',
-                position: 'Office Manager',
-                office: 'San Francisco',
-                age: '51',
-                date: '2008/12/16',
-                salary: '$164'
-            },
-            {
-                name: 'Hope Fuentes',
-                position: 'Secretary',
-                office: 'San Francisco',
-                age: '41',
-                date: '2010/02/12',
-                salary: '$109'
-            },
-            {
-                name: 'Vivian Harrell',
-                position: 'Financial Controller',
-                office: 'San Francisco',
-                age: '62',
-                date: '2009/02/14',
-                salary: '$452'
-            },
-            {
-                name: 'Timothy Mooney',
-                position: 'Office Manager',
-                office: 'London',
-                age: '37',
-                date: '2008/12/11',
-                salary: '$136'
-            },
-            {
-                name: 'Jackson Bradshaw',
-                position: 'Director',
-                office: 'New York',
-                age: '65',
-                date: '2008/09/26',
-                salary: '$645'
-            },
-            {
-                name: 'Olivia Liang',
-                position: 'Support Engineer',
-                office: 'Singapore',
-                age: '64',
-                date: '2011/02/03',
-                salary: '$234'
-            },
-            {
-                name: 'Bruno Nash',
-                position: 'Software Engineer',
-                office: 'London',
-                age: '38',
-                date: '2011/05/03',
-                salary: '$163'
-            },
-            {
-                name: 'Sakura Yamamoto',
-                position: 'Support Engineer',
-                office: 'Tokyo',
-                age: '37',
-                date: '2009/08/19',
-                salary: '$139'
-            },
-            {
-                name: 'Thor Walton',
-                position: 'Developer',
-                office: 'New York',
-                age: '61',
-                date: '2013/08/11',
-                salary: '$98'
-            },
-            {
-                name: 'Finn Camacho',
-                position: 'Support Engineer',
-                office: 'San Francisco',
-                age: '47',
-                date: '2009/07/07',
-                salary: '$87'
-            },
-            {
-                name: 'Serge Baldwin',
-                position: 'Data Coordinator',
-                office: 'Singapore',
-                age: '64',
-                date: '2012/04/09',
-                salary: '$138'
-            },
-            {
-                name: 'Zenaida Frank',
-                position: 'Software Engineer',
-                office: 'New York',
-                age: '63',
-                date: '2010/01/04',
-                salary: '$125'
-            },
-            {
-                name: 'Zorita Serrano',
-                position: 'Software Engineer',
-                office: 'San Francisco',
-                age: '56',
-                date: '2012/06/01',
-                salary: '$115'
-            },
-            {
-                name: 'Jennifer Acosta',
-                position: 'Junior Javascript Developer',
-                office: 'Edinburgh',
-                age: '43',
-                date: '2013/02/01',
-                salary: '$75'
-            },
-            {
-                name: 'Cara Stevens',
-                position: 'Sales Assistant',
-                office: 'New York',
-                age: '46',
-                date: '2011/12/06',
-                salary: '$145'
-            },
-            {
-                name: 'Hermione Butler',
-                position: 'Regional Director',
-                office: 'London',
-                age: '47',
-                date: '2011/03/21',
-                salary: '$356'
-            },
-            {
-                name: 'Lael Greer',
-                position: 'Systems Administrator',
-                office: 'London',
-                age: '21',
-                date: '2009/02/27',
-                salary: '$103'
-            },
-            {
-                name: 'Jonas Alexander',
-                position: 'Developer',
-                office: 'San Francisco',
-                age: '30',
-                date: '2010/07/14',
-                salary: '$86'
-            },
-            {
-                name: 'Shad Decker',
-                position: 'Regional Director',
-                office: 'Edinburgh',
-                age: '51',
-                date: '2008/11/13',
-                salary: '$183'
-            },
-            {
-                name: 'Michael Bruce',
-                position: 'Javascript Developer',
-                office: 'Singapore',
-                age: '29',
-                date: '2011/06/27',
-                salary: '$183'
-            },
-            {
-                name: 'Donna Snider',
-                position: 'Customer Support',
-                office: 'New York',
-                age: '27',
-                date: '2011/01/25',
-                salary: '$112'
-            }
-        ]
-    }
-;
