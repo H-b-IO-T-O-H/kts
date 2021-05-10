@@ -17,6 +17,9 @@
   &:active {
     background: #578989;
   }
+  &:disabled {
+    opacity: 50%;
+  }
 }
 
 div.tag {

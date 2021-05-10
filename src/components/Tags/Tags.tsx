@@ -10,10 +10,11 @@ import {v4 as uuid} from "uuid";
 type Props = {
     placeholder?: string;
     tags: Array<{ id: string, content: string }>;
+    selectList: Array<string>;
     changeTags: (tagsOld: Array<{ id: string, content: string }>) => void;
 }
 
-const Tags: React.FC<Props> = ({tags, changeTags, placeholder}) => {
+const Tags: React.FC<Props> = ({tags, changeTags, placeholder, selectList}) => {
     const [tagInput, setTagInp] = React.useState({content: "", noFocus: true, errMsg: ""})
     const [label, showLabel] = useState({content: "", success: false});
 
@@ -78,11 +79,7 @@ const Tags: React.FC<Props> = ({tags, changeTags, placeholder}) => {
             <AuthError msg={tagInput.errMsg}/>}
             <div className="d-flex flex-row align-items-center">
                 <AutoInput id="input-auto_tag" className="users-control_input"
-                           list={["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla",
-                               "Antigua & Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria",
-                               "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
-                               "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia & Herzegovina", "Botswana",
-                               "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi"]}
+                           list={selectList}
                            inputProps={{
                                value: tagInput.content,
                                onChange: handleInput,

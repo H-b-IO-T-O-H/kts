@@ -10,18 +10,19 @@ import {
     ERROR_SURNAME_FIELD, isValid, MAX_ABOUT,
     MAX_SNP,
     MIN_SNP, notEmpty,
-    saveUser
 } from "./config";
-import {engRusMap} from "@utils/en-ru-map";
-import ButtonTimetable from "@components/ButtonTimetable";
+
+import {makeGet, makePost, makePut} from "@utils/network";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faRedoAlt} from "@fortawesome/free-solid-svg-icons/faRedoAlt";
 import UsersTable from "./usersTables";
 import {Urls} from "@config/urls";
 import AuthError from "@components/AuthError/AuthError";
 import {ERROR_EMAIL_FIELD, USER_TYPE_METHODIST, USER_TYPE_PROFESSOR, USER_TYPE_STUDENT} from "../Authorization/config";
+import {v4 as uuid} from "uuid";
 
 type UserProps = {
+    id: string,
     role: string,
     email: string,
     phone: string,
@@ -35,23 +36,29 @@ type UserProps = {
     sem: number
 }
 
+const InitialUser = {
+    id: "",
+    role: USER_TYPE_STUDENT,
+    email: "",
+    phone: "",
+    name: "",
+    surname: "",
+    patronymic: "",
+    password: "",
+    about: "",
+    disciplines: [],
+    group: NaN,
+    sem: NaN
+};
+
 const UsersControl = () => {
     const [label, showLabel] = useState({content: "", success: false});
     const [inputPasswd, setInputPasswd] = useState<HTMLInputElement | null>(null);
-    const [userInfo, setUserInfo] = useState<UserProps>({
-        role: USER_TYPE_STUDENT,
-        email: "",
-        phone: "",
-        name: "",
-        surname: "",
-        patronymic: "",
-        password: "",
-        about: "",
-        disciplines: [],
-        group: NaN,
-        sem: NaN
-    });
+    const [userInfo, setUserInfo] = useState<UserProps>(InitialUser);
     const [timer, setTimer] = useState(0);
+    const [disciplines, setDisciplines] = useState<Array<{ discipline_id: number, discipline_content: string, prof_cnt: number }>>([]);
+    const [isDataForEdit, changeEditFlag] = useState({wasEdit: false, oldPhone: "", oldEmail: ""});
+    const [btnText, setBtnText] = useState("Сохранить")
 
     const [userValid, setUserValid] = useState({
         role: {noFocus: false, msg: ""},
@@ -66,22 +73,22 @@ const UsersControl = () => {
 
     React.useEffect(() => {
         const inputElem = document.getElementById("input-password") as HTMLInputElement;
-        setInputPasswd(inputElem)
-    }, [])
+
+        setInputPasswd(inputElem);
+        if (userInfo.role === USER_TYPE_PROFESSOR) {
+            makeGet(Urls.discipline.getAll()).then((resp) => {
+                if (resp.status === 200) {
+                    if (resp.data && resp.data.disciplines && resp.data.disciplines.length > 0) {
+                        setDisciplines(resp.data.disciplines)
+                    }
+                }
+            }).catch((err) => {
+                showLabel({content: "Не удалось загрузить список дисциплин.", success: false})
+            })
+        }
+    }, [userInfo.role])
 
     const handleSubmit = useCallback(() => {
-        const newUser = {
-            role: userInfo.role,
-            password: userInfo.password,
-            name: userInfo.name,
-            surname: userInfo.surname,
-            patronymic: userInfo.patronymic,
-            email: userInfo.email,
-            phone: userInfo.phone,
-            student_group: userInfo.group,
-            prof_disciplines: null,
-        }
-
         let fieldsCanBeEmpty = ["about", "sem", "group"];
 
         if (!isValid(userValid)) {
@@ -95,14 +102,70 @@ const UsersControl = () => {
             fieldsCanBeEmpty = ["about", "disciplines"];
         }
 
+        if (isDataForEdit.wasEdit) {
+            fieldsCanBeEmpty.push("password");
+        }
+
         if (!notEmpty(userInfo, fieldsCanBeEmpty)) {
             showLabel({content: "Заполните пустые поля.", success: false});
             return;
         }
 
-        showLabel({content: "Ok", success: true});
-        //saveUser(newUser, showLabel)
-    }, [userValid, userInfo]);
+        const newUser = {
+            id: userInfo.id,
+            role: userInfo.role.trim(),
+            password: userInfo.password,
+            name: userInfo.name.trim(),
+            surname: userInfo.surname.trim(),
+            patronymic: userInfo.patronymic.trim(),
+            email: userInfo.email.trim(),
+            phone: userInfo.phone.trim(),
+            student_group: userInfo.role === USER_TYPE_STUDENT ? `${userInfo.sem}${userInfo.group}` : "",
+            prof_disciplines: userInfo.disciplines.map((dis) => (dis.content)),
+        }
+
+        console.log(userInfo.id)
+
+        if (isDataForEdit.wasEdit) {
+            makePut(Urls.user.postCreate(), newUser).then((resp) => {
+                if (resp.status === 201) {
+                    showLabel({content: "Успех!", success: true});
+                    setUserInfo(InitialUser);
+                    changeEditFlag({wasEdit: false, oldEmail: "", oldPhone: ""});
+                    setBtnText("Сохранить")
+                }
+            }).catch((err) => {
+                if (err && err.response && err.response.status === 409) {
+                    showLabel({
+                        content: "Пользователь с данным email или телефоном уже зарегистрирован.",
+                        success: false
+                    });
+                } else {
+                    showLabel({content: "Ошибка сервера. Попробуйте позже.", success: false});
+                }
+            });
+        } else {
+            makePost(Urls.user.postCreate(), newUser).then((resp) => {
+                if (resp.status === 201) {
+                    showLabel({content: "Успех!", success: true});
+                    setUserInfo(InitialUser);
+                    changeEditFlag({wasEdit: false, oldEmail: "", oldPhone: ""});
+                    setBtnText("Сохранить")
+                }
+            }).catch((err) => {
+                if (err && err.response && err.response.status === 409) {
+                    showLabel({
+                        content: "Пользователь с данным email или телефоном уже зарегистрирован.",
+                        success: false
+                    });
+                } else {
+                    showLabel({content: "Ошибка сервера. Попробуйте позже.", success: false});
+                }
+            });
+        }
+
+
+    }, [userValid, userInfo, isDataForEdit]);
 
 
     const handlePassword = useCallback(() => {
@@ -142,6 +205,12 @@ const UsersControl = () => {
         const value = e.target.value;
         const length = value.length;
 
+        if (isDataForEdit.wasEdit) {
+            setBtnText("Редактировать");
+        } else {
+            setBtnText("Сохранить");
+        }
+
         switch (e.target.id) {
             case "input-name":
                 oldUserValid.name.msg = length < MIN_SNP || length >= MAX_SNP || !checkRussian(value) ? ERROR_NAME_FIELD : ""
@@ -171,6 +240,12 @@ const UsersControl = () => {
                 oldUserValid.email.msg = !reEmail.test(String(value).toLowerCase()) ? ERROR_EMAIL_FIELD : "";
                 oldUserValid.email.noFocus = false;
                 oldUser.email = value;
+                // if (value === isDataForEdit.oldEmail) {
+                //     setBtnText("Редактировать");
+                // } else {
+                //     changeEditFlag({wasEdit: false, oldEmail: oldUser.email, oldPhone: isDataForEdit.oldPhone});
+                //     setBtnText("Сохранить");
+                // }
                 break;
             case "input-phone":
                 const rePhone = /^[\d]{1} \([\d]{2,3}\) [\d]{2,3}-[\d]{2,3}-[\d]{2,3}$/;
@@ -198,6 +273,12 @@ const UsersControl = () => {
                 }
 
                 oldUser.phone = telephone.trim();
+                // if (oldUser.phone === isDataForEdit.oldPhone) {
+                //     setBtnText("Редактировать");
+                // } else {
+                //     changeEditFlag({wasEdit: false, oldEmail: isDataForEdit.oldEmail, oldPhone: oldUser.phone});
+                //     setBtnText("Сохранить");
+                // }
                 break;
             case "input-about":
                 oldUserValid.about.msg = length > MAX_ABOUT ? ERROR_ABOUT_FIELD + ` (${length})` : "";
@@ -209,7 +290,6 @@ const UsersControl = () => {
         setUserValid(oldUserValid);
     }, [userInfo, userValid]);
 
-
     const handleInputId = useCallback((id: string, value: number) => {
         const oldUser = {...userInfo};
 
@@ -219,7 +299,42 @@ const UsersControl = () => {
             oldUser.group = value;
         }
         setUserInfo(oldUser);
-    }, [userInfo])
+    }, [userInfo]);
+
+    const handleUserEdit = React.useCallback((user: any) => {
+        let sem = NaN;
+        let group = NaN;
+        //console.log(user.student_group)
+        if (user.student_group.length === 3) {
+            sem = user.student_group.slice(0, 2);
+            group = user.student_group[2];
+        } else if (user.student_group.length === 2) {
+            sem = user.student_group[0];
+            group = user.student_group[1];
+        }
+
+        const prepareUser = {
+            id: user.id,
+            role: user.role,
+            email: user.email,
+            phone: user.phone,
+            name: user.name,
+            surname: user.surname,
+            patronymic: user.patronymic,
+            password: "",
+            about: user.about,
+            disciplines: user.prof_disciplines_str.substring(1, user.prof_disciplines_str.length - 1).split(",").map((d: string) => ({
+                id: `tag-${uuid()}`,
+                content: d
+            })),
+            group: group,
+            sem: sem
+        }
+
+        changeEditFlag({wasEdit: true, oldEmail: user.email, oldPhone: user.phone});
+        setBtnText("Редактировать");
+        setUserInfo(prepareUser);
+    }, []);
 
     const defineRole = () => {
         if (userInfo.role === USER_TYPE_STUDENT) {
@@ -228,11 +343,11 @@ const UsersControl = () => {
                     <div className="d-flex justify-content-center">
                         <div className="mr-1">
                             <InputNumber placeholder={"Сем"} onChange={handleInputId} id={"input_nmb_sem"} min={1}
-                                         max={12}/>
+                                         max={12} defaultValue={userInfo.sem}/>
                         </div>
                         <div className="ml-1">
                             <InputNumber placeholder={"Группа"} onChange={handleInputId} id={"input_nmb_group"} min={1}
-                                         max={5}/>
+                                         max={5} defaultValue={userInfo.group}/>
                         </div>
                     </div>
                     {!isNaN(userInfo.sem) && !isNaN(userInfo.group) ?
@@ -243,12 +358,14 @@ const UsersControl = () => {
             return (
                 <div>
                     <div className="users-control_label">Дисциплина</div>
-                    <Tags tags={userInfo.disciplines} changeTags={(newTags) => {
-                        const oldInfo = {...userInfo};
-                        oldInfo.disciplines = newTags;
-                        setUserInfo(oldInfo);
-                    }
-                    }/>
+                    <Tags tags={userInfo.disciplines}
+                          selectList={disciplines.map(d => (d.discipline_content))}
+                          changeTags={(newTags) => {
+                              const oldInfo = {...userInfo};
+                              oldInfo.disciplines = newTags;
+                              setUserInfo(oldInfo);
+                          }
+                          }/>
                     {(userValid.about.noFocus && userValid.about.msg) &&
                     <AuthError msg={userValid.about.msg}/>}
                     <div className="prof-info mt-2">
@@ -265,6 +382,7 @@ const UsersControl = () => {
         <div>
             <StatusLabel info={label}/>
             <div className="users">
+                <div className="users-block"/>
                 <div className="users-control">
                     <div className="panel__header">
                         Добавление пользователей
@@ -308,6 +426,8 @@ const UsersControl = () => {
                         </div>
                         <div className="mt-1">
                             <div className="users-control_label">Пароль</div>
+                            <small className="users-control_advice">Не заполняется, если нет необходимости обновлять
+                                пароль существующего пользователя.</small>
                             <div className="d-flex flex-row align-items-center">
                                 <input id="input-password" className="users-control_input"
                                        value={userInfo.password} onChange={handleUserInfo}
@@ -332,12 +452,14 @@ const UsersControl = () => {
                         {defineRole()}
 
                         <button type="button" className="btn users-control_load mt-3 mb-3"
-                                onClick={handleSubmit}>Сохранить
+                                onClick={handleSubmit}>{btnText}
                         </button>
                     </div>
                 </div>
-                <UsersTable id={1} url={Urls.panel.getUsersAll("/professor")} title={"Список преподавателей"}/>
-                <UsersTable id={2} url={Urls.panel.getUsersAll("/student")} title={"Список студентов"}/>
+                <UsersTable id={1} url={Urls.user.getProfessorsAll()} userType={USER_TYPE_PROFESSOR}
+                            title={"Список преподавателей"} rowClickEvent={handleUserEdit}/>
+                <UsersTable id={2} url={Urls.user.getStudentsAll()} userType={USER_TYPE_STUDENT}
+                            title={"Список студентов"} rowClickEvent={handleUserEdit}/>
             </div>
         </div>
     )

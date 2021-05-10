@@ -19,7 +19,11 @@ export const Urls = {
     root: BASE_URL,
     user: {
         slugRoot: USER_URL,
-        slugMe: `${USER_URL}/me`
+        slugMe: `${USER_URL}/me`,
+        postCreate: () => `${DOMAIN}users/`,
+        postUpdate: () => `${DOMAIN}users/`,
+        getStudentsAll: () => `${DOMAIN}users/students`,
+        getProfessorsAll: () => `${DOMAIN}users/professors`,
     },
     feed: {
         slugRoot: FEED_URL
@@ -33,11 +37,13 @@ export const Urls = {
     },
     panel: {
         slugRoot: PANEL_URL,
-        getUsersAll: (userType: string) => (`${DOMAIN}users/${userType}/all`)
     },
     post: {
         slugRoot: POST_URL,
         slugCreate: `${POST_URL}/create`
+    },
+    discipline: {
+        getAll: () => `${DOMAIN}disciplines/all`
     },
     auth: AUTH_URL,
     notFound: ANY_URL,

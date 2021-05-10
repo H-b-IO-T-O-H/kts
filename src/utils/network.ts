@@ -25,6 +25,19 @@ export const makePost = async (url: string, data: any) => {
     });
 };
 
+export const makePut = async (url: string, data: any) => {
+    return axios({
+        method: "put",
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        },
+
+        url: url,
+        data: data,
+        withCredentials: true
+    });
+};
+
 export const makeDelete = async (url: string, data: any) => {
     return axios({
         method: "delete",

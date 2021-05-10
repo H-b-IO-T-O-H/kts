@@ -14,7 +14,6 @@ const StatusLabel: React.FC<Props> = ({info}) => {
             isShown(false);
         }, 2000);
         isShown(info.content !== "");
-        console.log(info)
         return () => clearTimeout(timer);
     }, [info])
 
