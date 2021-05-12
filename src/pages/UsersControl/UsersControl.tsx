@@ -382,7 +382,6 @@ const UsersControl = () => {
         <div>
             <StatusLabel info={label}/>
             <div className="users">
-                <div className="users-block"/>
                 <div className="users-control">
                     <div className="panel__header">
                         Добавление пользователей
