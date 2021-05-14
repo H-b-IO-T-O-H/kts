@@ -104,8 +104,11 @@ const UsersControl = () => {
 
         if (isDataForEdit.wasEdit) {
             fieldsCanBeEmpty.push("password");
+        } else {
+            fieldsCanBeEmpty.push("id");
         }
 
+        console.log(userInfo)
         if (!notEmpty(userInfo, fieldsCanBeEmpty)) {
             showLabel({content: "Заполните пустые поля.", success: false});
             return;
