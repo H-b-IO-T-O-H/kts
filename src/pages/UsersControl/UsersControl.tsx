@@ -243,12 +243,12 @@ const UsersControl = () => {
                 oldUserValid.email.msg = !reEmail.test(String(value).toLowerCase()) ? ERROR_EMAIL_FIELD : "";
                 oldUserValid.email.noFocus = false;
                 oldUser.email = value;
-                // if (value === isDataForEdit.oldEmail) {
-                //     setBtnText("Редактировать");
-                // } else {
-                //     changeEditFlag({wasEdit: false, oldEmail: oldUser.email, oldPhone: isDataForEdit.oldPhone});
-                //     setBtnText("Сохранить");
-                // }
+                if (value === isDataForEdit.oldEmail) {
+                    setBtnText("Редактировать");
+                } else {
+                    changeEditFlag({wasEdit: false, oldEmail: oldUser.email, oldPhone: isDataForEdit.oldPhone});
+                    setBtnText("Сохранить");
+                }
                 break;
             case "input-phone":
                 const rePhone = /^[\d]{1} \([\d]{2,3}\) [\d]{2,3}-[\d]{2,3}-[\d]{2,3}$/;
@@ -276,12 +276,12 @@ const UsersControl = () => {
                 }
 
                 oldUser.phone = telephone.trim();
-                // if (oldUser.phone === isDataForEdit.oldPhone) {
-                //     setBtnText("Редактировать");
-                // } else {
-                //     changeEditFlag({wasEdit: false, oldEmail: isDataForEdit.oldEmail, oldPhone: oldUser.phone});
-                //     setBtnText("Сохранить");
-                // }
+                if (oldUser.phone === isDataForEdit.oldPhone) {
+                    setBtnText("Редактировать");
+                } else {
+                    changeEditFlag({wasEdit: false, oldEmail: isDataForEdit.oldEmail, oldPhone: oldUser.phone});
+                    setBtnText("Сохранить");
+                }
                 break;
             case "input-about":
                 oldUserValid.about.msg = length > MAX_ABOUT ? ERROR_ABOUT_FIELD + ` (${length})` : "";
@@ -291,7 +291,7 @@ const UsersControl = () => {
         }
         setUserInfo(oldUser);
         setUserValid(oldUserValid);
-    }, [userInfo, userValid]);
+    }, [isDataForEdit, userInfo, userValid]);
 
     const handleInputId = useCallback((id: string, value: number) => {
         const oldUser = {...userInfo};
