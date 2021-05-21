@@ -10,7 +10,7 @@ type Props = {
 const Tags: React.FC<Props> = ({placeholder}) => {
     const [tags, changeTags] = React.useState<Array<{ id: string, content: string }>>([])
     const [inp, setInp] = React.useState("")
-    const [err, showLabel] = useState<{content:string, success:boolean}>({content: '', success: false});
+    const [err, showLabel] = useState<{ content: string, success: boolean }>({content: '', success: false});
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInp(e.target.value)
@@ -19,9 +19,12 @@ const Tags: React.FC<Props> = ({placeholder}) => {
     const handleDelete = React.useCallback((e: any) => {
         const tagId = e.target.id;
         console.log(tags)
-        tags.findIndex((obj)=>(obj.id == e.target.id))
-        tags.splice(tagId, 1)
-
+        console.log(e.target)
+        console.log('tagId=', tagId);
+        const newTags: Array<{ id: string, content: string }> = [...tags]
+        const idx = newTags.findIndex((obj) => (obj.id === e.target.id));
+        newTags.splice(idx, 1);
+        changeTags(newTags);
     }, [tags]);
 
 
@@ -40,17 +43,19 @@ const Tags: React.FC<Props> = ({placeholder}) => {
     }, [tags, inp, err])
 
 
-
     return (
         <div>
-            <StatusLabel info={err} clearText={()=>{showLabel({content:'', success:err.success})}}/>
-            <div>{tags.map((tag, id) => (
-                <div className="d-flex justify-content-center align-items-center" key={tag.id}>
-                    <div className="tag mt-1 mr-1">{tag.content}</div>
-                    <button id={tag.id} className="btn_delete" onClick={handleDelete}><IconPlus/></button>
-                </div>
-            ))}</div>
-            <div>{tags.length}</div>
+            <StatusLabel info={err} clearText={() => {
+                showLabel({content: '', success: err.success})
+            }}/>
+            <div>{tags.map((tag) => {
+                console.log('id = ', tag.id)
+                return (
+                    <div className="d-flex justify-content-center align-items-center" key={tag.id}>
+                        <div className="tag mt-1 mr-1">{tag.content}</div>
+                        <button id={tag.id} className="btn_delete" onClick={handleDelete}><IconPlus/></button>
+                    </div>)
+            })}</div>
             <input value={inp} onChange={handleInput} type="text" className="Lesson mt-2"
                    placeholder={placeholder}/>
             <button type="button" onClick={addTag} className="add text-center">+</button>
