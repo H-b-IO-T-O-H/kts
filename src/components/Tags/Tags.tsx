@@ -2,63 +2,91 @@ import React, {useState} from "react";
 import "./Tags.scss"
 import IconPlus from "@components/IconPlus";
 import StatusLabel from "@components/StatusLabel";
+import AuthError from "@components/AuthError/AuthError";
+import AutoInput from "@components/AutoCompleteInput";
+import {isTagValid} from "@components/Tags/config";
+import {v4 as uuid} from "uuid";
 
 type Props = {
-    placeholder: string;
+    placeholder?: string;
+    tags: Array<{ id: string, content: string }>;
+    selectList: Array<string>;
+    changeTags: (tagsOld: Array<{ id: string, content: string }>) => void;
 }
 
-const Tags: React.FC<Props> = ({placeholder}) => {
-    const [tags, changeTags] = React.useState<Array<{ id: string, content: string }>>([])
-    const [inp, setInp] = React.useState("")
-    const [err, showLabel] = useState<{ content: string, success: boolean }>({content: '', success: false});
+const Tags: React.FC<Props> = ({tags, changeTags, placeholder, selectList}) => {
+    const [tagInput, setTagInp] = React.useState({content: "", noFocus: true, errMsg: ""})
+    const [label, showLabel] = useState({content: "", success: false});
 
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInp(e.target.value)
-    }
+    const handleInput = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        const tagInfo = {...tagInput};
+        tagInfo.content = e.target.value;
+        tagInfo.errMsg = isTagValid(tags, tagInfo);
+        tagInfo.noFocus = false;
+        setTagInp(tagInfo);
+    }, [tagInput, tags]);
 
-    const handleDelete = React.useCallback((e: any) => {
-        const tagId = e.target.id;
-        console.log(tags)
-        console.log(e.target)
-        console.log('tagId=', tagId);
-        const newTags: Array<{ id: string, content: string }> = [...tags]
-        const idx = newTags.findIndex((obj) => (obj.id === e.target.id));
-        newTags.splice(idx, 1);
-        changeTags(newTags);
-    }, [tags]);
+    const handleBlur = React.useCallback(() => {
+        const tagInfo = {...tagInput};
+
+        if (tags.length > 0 && tagInfo.content === "") {
+            tagInfo.errMsg = "";
+        }
+        tagInfo.noFocus = true;
+        setTagInp(tagInfo);
+    }, [tagInput, tags]);
+
+    const handleDelete = React.useCallback((id: string | number) => {
+        const tagsOld = [...tags];
+        const tagId = tagsOld.findIndex((obj) => (obj.id === id))
+        tagsOld.splice(tagId, 1);
+        changeTags(tagsOld);
+    }, [changeTags, tags]);
 
 
     const addTag = React.useCallback(() => {
         const tagsOld = [...tags];
-        const id = `tag-${tagsOld.length.toString()}`;
-        if (inp === '') {
+        const tagOld = {...tagInput};
+        const id = `tag-${uuid()}`;
+
+        if (tagInput.content === '') {
             showLabel({content: 'Введите дисциплину!', success: false})
             return;
         }
-
-        tagsOld.push({id: id, content: inp})
-
+        if (tagInput.errMsg !== "") {
+            return;
+        }
+        tagsOld.push({id: id, content: tagInput.content})
         changeTags(tagsOld)
-        setInp("")
-    }, [tags, inp, err])
-
+        tagOld.content = "";
+        setTagInp(tagOld);
+    }, [tags, tagInput, changeTags])
 
     return (
         <div>
-            <StatusLabel info={err} clearText={() => {
-                showLabel({content: '', success: err.success})
-            }}/>
-            <div>{tags.map((tag) => {
-                console.log('id = ', tag.id)
-                return (
-                    <div className="d-flex justify-content-center align-items-center" key={tag.id}>
-                        <div className="tag mt-1 mr-1">{tag.content}</div>
-                        <button id={tag.id} className="btn_delete" onClick={handleDelete}><IconPlus/></button>
-                    </div>)
-            })}</div>
-            <input value={inp} onChange={handleInput} type="text" className="Lesson mt-2"
-                   placeholder={placeholder}/>
-            <button type="button" onClick={addTag} className="add text-center">+</button>
+            <StatusLabel info={label}/>
+            <div className="mb-2">{tags.map((tag) => (
+                <div className="tag" key={tag.id}>
+                    <div className="tag-block">
+                        {tag.content}
+                    </div>
+                    <button className="btn-delete" onClick={() => handleDelete(tag.id)}><IconPlus/></button>
+                </div>
+            ))}</div>
+            {(tagInput.noFocus && tagInput.errMsg) &&
+            <AuthError msg={tagInput.errMsg}/>}
+            <div className="d-flex flex-row align-items-center">
+                <AutoInput id="input-auto_tag" className="users-control_input"
+                           list={selectList}
+                           inputProps={{
+                               value: tagInput.content,
+                               onChange: handleInput,
+                               onBlur: handleBlur,
+                               placeholder: placeholder
+                           }}
+                />
+                <button type="button" onClick={addTag} className="tag-btn ml-1">+</button>
+            </div>
         </div>
     )
 }

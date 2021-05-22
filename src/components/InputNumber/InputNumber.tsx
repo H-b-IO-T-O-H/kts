@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import "./InputNumber.scss"
 
 type Props = {
@@ -8,10 +8,15 @@ type Props = {
     min: number;
     max: number;
     onChange?: (id: string, value: number) => void;
+    defaultValue: number
 }
 
-const InputNumber: React.FC<Props> = ({id, min, max, onChange, placeholder, disabled}) => {
-    const [value, setValue] = useState("")
+const InputNumber: React.FC<Props> = ({id, min, max, onChange, placeholder, disabled, defaultValue}) => {
+    const [value, setValue] = useState("");
+
+    useEffect(() => {
+        setValue(defaultValue.toString());
+    }, [defaultValue])
 
     const changeInputValue = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;

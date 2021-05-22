@@ -11,32 +11,33 @@ type Props = {
 }
 
 export const PrivateRoute: React.FC<Props> = ({component: Component, ...rest}) => {
-    const history = useHistory()
+    // const history = useHistory()
+    //
+    // useEffect(() => {
+    //     const ServerCheckLogin = async () => {
+    //         return makeGet(`${DOMAIN}${ME}`);
+    //     }
+    //
+    //     ServerCheckLogin().then((r) => {
+    //         if (r.status !== 200) {
+    //             localStorage.setItem("loginTime", "");
+    //             history.push(Urls.auth)
+    //         }
+    //     }).catch(() => {
+    //         localStorage.setItem("loginTime", "");
+    //         history.push(Urls.auth)
+    //     })
+    // }, [history, history.location.pathname])
 
-    useEffect(() => {
-        const ServerCheckLogin = async () => {
-            return makeGet(`${DOMAIN}${ME}`);
-        }
-
-        ServerCheckLogin().then((r) => {
-            if (r.status !== 200) {
-                localStorage.setItem("loginTime", "");
-                history.push(Urls.auth)
-            }
-        }).catch(() => {
-            localStorage.setItem("loginTime", "");
-            history.push(Urls.auth)
-        })
-    }, [history, history.location.pathname])
-
-    const authed = DefaultCheckLogin()
+    //const authed = DefaultCheckLogin();
+    const authed = true;
 
     return (
         <Route {...rest}
                render={props => authed ?
                    props.location.pathname === "/" ?
                        <Redirect to={{
-                           pathname: Urls.timetable.slugRoot,
+                           pathname: Urls.feed.slugRoot,
                            state: {from: props.location}
                        }}
                        /> :

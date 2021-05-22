@@ -5,16 +5,17 @@
   margin: 20px;
 }
 
+
 .users-control {
+  height: 100%;
   margin: 0 0 10px 10px;
-  max-height: 620px;
   min-width: 320px;
   background-color: #F2F2FA;
   text-align: center;
   border-radius: 10px;
-  //box-shadow: 0 0 9px #a9a7a7;
 
   &_input {
+    color: #496a73;
     width: 100%;
   }
 
@@ -26,6 +27,11 @@
   &_label {
     color: #496a73;
     font-weight: bold;
+  }
+
+  &_advice {
+    color: #496a73;
+    font-size: 0.6rem;
   }
 }
 

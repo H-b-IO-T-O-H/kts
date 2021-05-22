@@ -41,7 +41,7 @@ const AdminPanel: React.FC<Props> = ({dayIdx, changeDay, getPanelData}) => {
             const newLabel = `${newInfo.week}-я Неделя, ${newInfo.weekType}, Группа ИУ10-${newInfo.semester}${newInfo.group}`
             setLabel(newLabel)
             getPanelData(newInfo.group, newInfo.semester, newInfo.week, newInfo.weekType)*/
-        if ( newInfo.weekType !== "" && newInfo.semester !== 0
+        if (newInfo.weekType !== "" && newInfo.semester !== 0
             && !isNaN(newInfo.semester) && newInfo.group !== 0 && !isNaN(newInfo.group)) {
             const newLabel = `Группа ИУ10-${newInfo.semester}${newInfo.group}, ${newInfo.weekType}`
             setLabel(newLabel)
@@ -76,11 +76,13 @@ const AdminPanel: React.FC<Props> = ({dayIdx, changeDay, getPanelData}) => {
                         </ButtonTimetable>
                         : null}
                     <div className="ml-1">
-                        <InputNumber disabled  placeholder="Неделя" id="input-for-week" min={1} max={17}
-                                     onChange={changeLabelInfo}/>
+                        <InputNumber disabled placeholder="Неделя" id="input-for-week" min={1} max={17}
+                                     onChange={changeLabelInfo} defaultValue={NaN}/>
                     </div>
-                    <InputNumber placeholder="Группа" id="input-for-group" min={1} max={5} onChange={changeLabelInfo}/>
-                    <InputNumber placeholder="Семестр" id="input-for-sem" min={1} max={12} onChange={changeLabelInfo}/>
+                    <InputNumber placeholder="Группа" id="input-for-group" min={1} max={5} onChange={changeLabelInfo}
+                                 defaultValue={NaN}/>
+                    <InputNumber placeholder="Семестр" id="input-for-sem" min={1} max={12} onChange={changeLabelInfo}
+                                 defaultValue={NaN}/>
                     <div className="mr-1">
                         <select id="input-for-week-type" defaultValue={"1"} className="panel__select" onChange={(e) => {
                             changeLabelInfo("input-for-week-type", e.target.value)
