@@ -20,8 +20,11 @@ export const Urls = {
     user: {
         slugRoot: USER_URL,
         slugMe: `${USER_URL}/me`,
+        slugProfile: `${USER_URL}/profile/`,
+
         postCreate: () => `${DOMAIN}users/`,
         postUpdate: () => `${DOMAIN}users/`,
+        getUser: (id: string | number) => `${USER_URL}/profile/${id}`,
         getStudentsAll: () => `${DOMAIN}users/students`,
         getProfessorsAll: () => `${DOMAIN}users/professors`,
     },

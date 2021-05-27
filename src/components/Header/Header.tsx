@@ -25,10 +25,14 @@ const Header = () => {
     const location = useLocation();
     const history = useHistory();
 
-    const Rendered = () => ([Urls.feed.slugRoot, Urls.timetable.slugEdit,
+    const Rendered = () => {
+        console.log(location.pathname)
+        return true
+        return [Urls.feed.slugRoot, Urls.timetable.slugEdit,
         Urls.panel.slugRoot, Urls.root,
         Urls.post.slugRoot, Urls.post.slugCreate,
-        Urls.user.slugMe, Urls.user.slugRoot].includes(location.pathname))
+        Urls.user.slugMe, Urls.user.slugRoot, Urls.user.slugProfile].includes(location.pathname)
+    }
 
     const [collapseIsOpen, collapseChange] = useState(false);
 

@@ -21,7 +21,6 @@ const Tags: React.FC<Props> = ({tags, changeTags, placeholder, selectList}) => {
     const handleInput = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const tagInfo = {...tagInput};
         tagInfo.content = e.target.value;
-
         tagInfo.errMsg = isTagValid(tags, tagInfo);
         tagInfo.noFocus = false;
         setTagInp(tagInfo);
@@ -62,7 +61,6 @@ const Tags: React.FC<Props> = ({tags, changeTags, placeholder, selectList}) => {
         tagOld.content = "";
         setTagInp(tagOld);
     }, [tags, tagInput, changeTags])
-
 
     return (
         <div>

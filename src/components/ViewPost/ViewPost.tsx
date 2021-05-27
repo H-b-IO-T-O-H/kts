@@ -6,6 +6,7 @@ import {useHistory, useLocation} from "react-router-dom";
 import PostComment from "@components/PostCommentView";
 import Hamster from "@media/hamster.webp"
 import CommentView from "@components/PostCommentView";
+import {Urls} from "@config/urls";
 
 let answersExample = [
     {text: "first answer text"},
@@ -119,7 +120,7 @@ export const PostView: React.FC<Props> = ({id}) => {
                             <div className="ml-0">
                                 <img className="post-avatar-sm" src="/public/img/hamster.webp"
                                      alt="img not loaded"/>
-                                <Link to="/profile">
+                                <Link to={Urls.user.getUser(1)}>
                                     Сергей Козлачков
                                 </Link>
                             </div>

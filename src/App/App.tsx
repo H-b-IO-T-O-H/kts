@@ -37,6 +37,7 @@ const App = () => {
                                   component={CreatePost}/>
                     <PrivateRoute path="/posts/:id" component={ViewPost} />
                     <PrivateRoute exact path={Urls.user.slugMe} component={Profile} />
+                    <PrivateRoute path={Urls.user.slugProfile} component={()=>(<div>Profile</div>)} />
                     <Route exact path={Urls.auth} component={Auth}/>
                     <Route path={Urls.notFound} component={NotFoundPage}/>
                 </Switch>
